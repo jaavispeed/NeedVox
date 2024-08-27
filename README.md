@@ -67,3 +67,5 @@ Nota: (Al hacer esto, se solicita en github y el administrador tiene que hacer e
 
 --- Adicional ( CRLF - el problema no es nada serio) ---
 1. git config core.autocrlf true
+
+--- Comandos git
