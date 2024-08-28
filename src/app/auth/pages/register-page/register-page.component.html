@@ -1,1 +1,145 @@
-<p>register-page works!</p>
+<div
+  id="login-popup"
+  tabindex="-1"
+  class="bg-black/50 overflow-y-auto overflow-x-hidden fixed top-0 right-0 left-0 z-50 h-full items-center justify-center flex"
+>
+  <div class="relative p-4 w-full max-w-md h-full md:h-auto">
+
+    <div class="relative bg-white rounded-lg shadow-lg">
+      <button
+        type="button"
+        class="absolute top-3 right-2.5 text-gray-400 bg-transparent hover:bg-gray-200 hover:text-gray-900 rounded-lg text-sm p-1.5 ml-auto inline-flex items-center popup-close"
+      >
+        <svg
+          aria-hidden="true"
+          class="w-5 h-5"
+          fill="#c6c7c7"
+          viewBox="0 0 20 20"
+          xmlns="http://www.w3.org/2000/svg"
+        >
+          <path
+            fill-rule="evenodd"
+            d="M4.293 4.293a1 1 0 011.414 0L10 8.586l4.293-4.293a1 1 0 111.414 1.414L11.414 10l4.293 4.293a1 1 0 01-1.414 1.414L10 11.414l-4.293 4.293a1 1 0 01-1.414-1.414L8.586 10 4.293 5.707a1 1 0 010-1.414z"
+            clip-rule="evenodd"
+          ></path>
+        </svg>
+        <span class="sr-only">Close popup</span>
+      </button>
+
+      <div class="p-5">
+        <h3 class="text-2xl mb-0.5 font-medium"></h3>
+        <p class="mb-4 text-sm font-normal text-gray-800"></p>
+
+        <div class="text-center">
+          <p class="mb-3 text-2xl font-semibold font-rubik leading-5 text-slate-900">
+            Únete a Needvox!
+          </p>
+          <p class="mt-2 text-sm leading-4 text-slate-600 font-rubik font-light">
+            Diseñada para empresas <br>de todos los tamaños.
+          </p>
+        </div>
+
+        <div class="flex w-full items-center gap-2 py-6 text-sm text-slate-600 font-rubik">
+          <div class="h-px w-full bg-slate-200"></div>
+        </div>
+
+        <form class="w-full" [formGroup]="registerform">
+          <!-- Correo electrónico -->
+          <label for="email" class="sr-only">Correo</label>
+          <input
+            name="email"
+            type="email"
+            autocomplete="email"
+            required=""
+            formControlName="email"
+            class="block w-full rounded-md border-0 py-2 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-500 focus:ring-2 focus:ring-inset focus:ring-gray-100 sm:text-sm sm:leading-6 px-2 font-rubik font-light"
+            placeholder="Correo electrónico"
+            value=""
+          />
+          <div
+            *ngIf="registerform.get('email')?.invalid && registerform.get('email')?.touched"
+            class="font-rubik text-red-500 sm:text-sm sm:leading-5 px-2"
+          >
+            <p *ngIf="registerform.get('email')?.errors?.['required']">
+              Ingrese su correo.
+            </p>
+            <p *ngIf="registerform.get('email')?.errors?.['email']">
+              Ingrese un correo válido.
+            </p>
+          </div>
+          <!-- Correo electrónico -->
+
+          <!-- Contraseña -->
+          <label for="password" class="sr-only">Contraseña</label>
+          <input
+            name="password"
+            type="password"
+            autocomplete="current-password"
+            required=""
+            formControlName="password"
+            class="mt-2 block w-full rounded-md border-0 py-2 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-500 focus:ring-2 focus:ring-inset focus:ring-gray-100 sm:text-sm sm:leading-6 px-2 font-rubik font-light"
+            placeholder="Contraseña"
+            value=""
+          />
+          <div
+            *ngIf="registerform.get('password')?.invalid && registerform.get('password')?.touched"
+            class="font-rubik text-red-500 sm:text-sm sm:leading-5 px-2"
+          >
+            <p *ngIf="registerform.get('password')?.errors?.['required']">
+              Ingrese una contraseña
+            </p>
+            <p *ngIf="registerform.get('password')?.errors?.['minlength']">
+              Mínimo 6 caracteres.
+            </p>
+          </div>
+          <!-- Contraseña -->
+
+          <!-- Texto de Confirma-Contraseña -->
+          <div>
+            <!-- Input de Confirma-Contraseña -->
+            <div class="mt-0">
+              <input
+                id="confirmpassword"
+                name="confirmpassword"
+                type="password"
+                placeholder="Confirma tu contraseña"
+                autocomplete="confirmpassword"
+                formControlName="confirmpassword"
+                class="mt-2 block w-full rounded-md border-0 py-2 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-500 focus:ring-2 focus:ring-inset focus:ring-gray-100 sm:text-sm sm:leading-6 px-2 font-rubik font-light"
+              />
+            </div>
+            <div
+              *ngIf="registerform.get('confirmpassword')?.invalid && registerform.get('confirmpassword')?.touched"
+              class="font-rubik text-red-500 sm:text-sm sm:leading-5 px-2"
+            >
+              <p *ngIf="registerform.get('confirmpassword')?.errors?.['required']">
+                Ingrese una contraseña
+              </p>
+            </div>
+            <p
+              *ngIf="registerform.errors?.['passwordMismatchError']"
+              class="font-rubik text-red-500 sm:text-sm sm:leading-5 px-2"
+            >
+              Las contraseñas no coinciden
+            </p>
+          </div>
+          <!-- Texto de Confirma-Contraseña -->
+
+          <!-- Botón registrarse -->
+          <button [disabled]="registerform.invalid"
+            type="submit"
+            class="inline-flex w-full items-center justify-center rounded-lg bg-black p-2 py-3 text-sm font-medium text-white outline-none focus:ring-2 focus:ring-black focus:ring-offset-1 mt-4 disabled:bg-gray-400 font-rubik"
+          >
+            Registrarme
+          </button>
+          <!-- Botón registrarse -->
+        </form>
+
+        <div class="mt-6 text-center text-sm text-slate-600 font-rubik">
+          ¿Ya tienes cuenta?
+          <a href="/login" class="font-medium text-[#4285f4] font-rubik">Inicia Sesión!</a>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
