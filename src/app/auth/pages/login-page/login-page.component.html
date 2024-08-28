@@ -48,33 +48,53 @@
                 </div>
 
 
-                <form class="w-full">
+                <form class="w-full" [formGroup]="loginform" (ngSubmit)="onSubmit()">
+                  <!--Correo electronico-->
                     <label for="email" class="sr-only">Correo</label>
-                    <input name="email" type="email" autocomplete="email" required=""
+                    <input name="email" type="email" autocomplete="email" required="" formControlName="email"
                         class="block w-full rounded-lg border border-gray-300 px-3 py-2 shadow-sm outline-none placeholder:text-gray-400 focus:ring-2 focus:ring-black focus:ring-offset-1 font-rubik"
                         placeholder="Correo electronico" value="">
+                        <div *ngIf="loginform.get('email')?.invalid && loginform.get('email')?.touched"
+                          class="font-rubik text-red-500 sm:text-sm sm:leading-5 px-2">
+                            <p *ngIf="loginform.get('email')?.errors?.['email']">Ingrese un correo valido.</p>
+                            <p *ngIf="loginform.get('email')?.errors?.['required']">Ingrese un correo.</p>
+                        </div>
+                  <!--Correo electronico-->
+
+                  <!--Contraseña -->
                     <label for="password" class="sr-only">Contraseña</label>
-                    <input name="password" type="password" autocomplete="current-password" required=""
+                    <input name="password" type="password" autocomplete="current-password" required="" formControlName="password"
                         class="mt-2 block w-full rounded-lg border border-gray-300 px-3 py-2 shadow-sm outline-none placeholder:text-gray-400 focus:ring-2 focus:ring-black focus:ring-offset-1 font-rubik"
                         placeholder="Contraseña" value="">
+                        <div *ngIf="loginform.get('password')?.invalid && loginform.get('password')?.touched"
+                          class="font-rubik text-red-500 sm:text-sm sm:leading-5 px-2">
+                            <p *ngIf="loginform.get('password')?.errors?.['required']">Ingrese su contraseña.</p>
+                            <p *ngIf="loginform.get('password')?.errors?.['minlength']">Minimo 6 caracteres.</p>
+                        </div>
+                    <!--Contraseña -->
+
+                    <!--Olvidaste tu contraseña-->
                     <p class="mb-3 mt-2 text-sm text-gray-500">
                         <a href="#" class="text-blue-800 hover:text-blue-600 font-rubik">Olvidaste tu contraseña?</a>
                     </p>
+                    <!--Olvidaste tu contraseña-->
+
+                    <!--Boton Continuar-->
                     <button type="submit"
                         class="inline-flex w-full items-center justify-center rounded-lg
                          bg-black p-2 py-3 text-sm font-medium
                          text-white outline-none focus:ring-2
                          focus:ring-black focus:ring-offset-1
                          disabled:bg-gray-400
-                         font-rubik">
-                        Continuar
-                    </button>
+                         font-rubik" [disabled]="loginform.invalid">Continuar</button>
+                     <!--Boton Continuar-->
                 </form>
 
                 <div class="mt-6 text-center text-sm text-slate-600 font-rubik">
-                    No tienes una cuenta?
-                    <a href="" class="font-medium text-[#4285f4] font-rubik">Registrate!</a>
+                    No tienes cuenta?
+                    <a href="/register" class="font-medium text-[#4285f4] font-rubik">Registrate!</a>
                 </div>
+
             </div>
         </div>
     </div>
