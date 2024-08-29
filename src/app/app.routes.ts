@@ -19,8 +19,8 @@ export const routes: Routes = [
     loadComponent: () => import('./auth/pages/register-page/register-page.component')
   },
   {
-    path: 'header',
-    loadComponent: () => import('./shared/pages/header/header.component')
+    path: 'navbar',
+    loadComponent: () => import('./shared/pages/navbar/navbar.component')
   },
   {
     path:'dashboard',

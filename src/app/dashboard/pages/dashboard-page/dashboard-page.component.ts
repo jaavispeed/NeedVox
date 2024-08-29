@@ -1,10 +1,10 @@
 import { Component } from '@angular/core';
-import HeaderComponent from "../../../shared/pages/header/header.component";
+import NavbarComponent from '../../../shared/pages/navbar/navbar.component';
 
 @Component({
   selector: 'app-dashboard-page',
   standalone: true,
-  imports: [HeaderComponent],
+  imports: [NavbarComponent],
   templateUrl: './dashboard-page.component.html',
   styleUrl: './dashboard-page.component.css'
 })
