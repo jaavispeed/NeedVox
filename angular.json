@@ -3,7 +3,7 @@
   "version": 1,
   "newProjectRoot": "projects",
   "projects": {
-    "Needvox": {
+    "needvox": {
       "projectType": "application",
       "schematics": {},
       "root": "",
