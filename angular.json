@@ -59,10 +59,10 @@
           "builder": "@angular-devkit/build-angular:dev-server",
           "configurations": {
             "production": {
-              "buildTarget": "Needvox:build:production"
+              "buildTarget": "needvox:build:production"
             },
             "development": {
-              "buildTarget": "Needvox:build:development"
+              "buildTarget": "needvox:build:development"
             }
           },
           "defaultConfiguration": "development"
