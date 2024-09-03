@@ -43,7 +43,7 @@
           <div class="h-px w-full bg-slate-200"></div>
         </div>
 
-        <form class="w-full" [formGroup]="registerform">
+        <form class="w-full" [formGroup]="registerform" (ngSubmit)="onSubmit()">
           <!-- Correo electrónico -->
           <label for="email" class="sr-only">Correo</label>
           <input
@@ -68,6 +68,30 @@
             </p>
           </div>
           <!-- Correo electrónico -->
+
+          <!-- Correo electrónico -->
+          <label for="username" class="sr-only">Username</label>
+          <input
+            name="username"
+            type="username"
+            autocomplete="username"
+            required=""
+            formControlName="username"
+            class="mt-2 block w-full rounded-md border-0 py-2 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-500 focus:ring-2 focus:ring-inset focus:ring-gray-100 sm:text-sm sm:leading-6 px-2 font-rubik font-light"
+            placeholder="Nombre"
+            value=""
+          />
+          <div
+            *ngIf="registerform.get('username')?.invalid && registerform.get('username')?.touched"
+            class="font-rubik text-red-500 sm:text-sm sm:leading-5 px-2"
+          >
+            <p *ngIf="registerform.get('username')?.errors?.['required']">
+              Ingrese su nombre.
+            </p>
+            <p *ngIf="registerform.get('username')?.errors?.['minlength']">
+              Ingrese 3 Caracteres minimo.
+            </p>
+          </div>
 
           <!-- Contraseña -->
           <label for="password" class="sr-only">Contraseña</label>
