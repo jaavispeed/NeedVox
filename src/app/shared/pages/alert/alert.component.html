@@ -1,0 +1,44 @@
+<div *ngIf="isVisible"
+     class="fixed top-0 left-0 right-0 flex items-center justify-center z-50">
+  <div
+    [ngClass]="{
+      'relative flex items-center p-2 rounded-lg border-l-4 transition duration-300 ease-in-out transform hover:scale-105': true,
+      'bg-green-100 border-green-500 text-green-900': type === 'success',
+      'bg-red-100 border-red-500 text-red-900': type === 'error',
+      'alert-show': alertClass === 'alert-show',
+      'alert-hide': alertClass === 'alert-hide'
+    }"
+    role="alert">
+    <svg
+      *ngIf="type === 'success'"
+      stroke="currentColor"
+      viewBox="0 0 24 24"
+      fill="none"
+      class="h-5 w-5 flex-shrink-0 mr-2 text-green-600"
+      xmlns="http://www.w3.org/2000/svg"
+    >
+      <path
+        d="M13 16h-1v-4h1m0-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"
+        stroke-width="2"
+        stroke-linejoin="round"
+        stroke-linecap="round"
+      ></path>
+    </svg>
+    <svg
+      *ngIf="type === 'error'"
+      stroke="currentColor"
+      viewBox="0 0 24 24"
+      fill="none"
+      class="h-5 w-5 flex-shrink-0 mr-2 text-red-600"
+      xmlns="http://www.w3.org/2000/svg"
+    >
+      <path
+        d="M13 16h-1v-4h1m0-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"
+        stroke-width="2"
+        stroke-linejoin="round"
+        stroke-linecap="round"
+      ></path>
+    </svg>
+    <p class="text-xs font-semibold flex-1">{{ message }}</p>
+  </div>
+</div>

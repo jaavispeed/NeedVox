@@ -4,6 +4,8 @@ import { FormControl, FormGroup, ReactiveFormsModule, Validators } from '@angula
 import { passwordMatch } from '../../models/passwordMatch';
 import { AuthService } from '../../services/auth.service';
 import { Router } from '@angular/router';
+import { catchError } from 'rxjs/operators';
+import { of } from 'rxjs';
 
 @Component({
   selector: 'app-register-page',
@@ -16,7 +18,7 @@ export default class RegisterPageComponent {
 
   router = inject(Router);
   registerform: FormGroup;
-  AuthService = inject(AuthService)
+  AuthService = inject(AuthService);
 
   constructor() {
     this.registerform = new FormGroup({
@@ -27,10 +29,22 @@ export default class RegisterPageComponent {
     }, [passwordMatch('password', 'confirmpassword')]);
   }
 
-  onSubmit(): void{
-    const rawForm = this.registerform.getRawValue()
-    this.AuthService.register(rawForm.email, rawForm.username, rawForm.password).subscribe(()=> {
-      this.router.navigateByUrl('/dashboard')
-    })
+  onSubmit(): void {
+    const rawForm = this.registerform.getRawValue();
+    this.AuthService.register(rawForm.email, rawForm.username, rawForm.password)
+      .pipe(
+        catchError(error => {
+          console.error("Error during registration:", error);
+          // Mostrar mensaje de error al usuario
+          alert("Ha ocurrido un error durante el registro. Por favor, inténtelo de nuevo.");
+          return of();
+        })
+      )
+      .subscribe(() => {
+        // Informar al usuario que revise su correo para verificar su cuenta
+        alert("Se ha enviado un correo electrónico de verificación. Por favor, verifica tu correo antes de iniciar sesión.");
+        // Redirigir a la página de inicio de sesión o confirmación
+        this.router.navigateByUrl('/login');
+      });
   }
 }
