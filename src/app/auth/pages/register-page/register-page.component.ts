@@ -30,8 +30,8 @@ export default class RegisterPageComponent {
   }
 
   onSubmit(): void {
-    const rawForm = this.registerform.getRawValue();
-    this.AuthService.register(rawForm.email, rawForm.username, rawForm.password)
+    const Form = this.registerform.getRawValue();
+    this.AuthService.register(Form.email, Form.username, Form.password)
       .pipe(
         catchError(error => {
           console.error("Error during registration:", error);
