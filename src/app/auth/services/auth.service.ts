@@ -10,7 +10,8 @@ import {
   updateProfile
 } from "@angular/fire/auth";
 import { from, Observable } from "rxjs";
-import { UserInterface } from "../models/user.model";
+import { User } from "../models/user.model";
+import { doc, getDoc, getFirestore, setDoc } from "@angular/fire/firestore";
 
 @Injectable({
   providedIn: 'root'
@@ -36,25 +37,43 @@ export class AuthService {
         throw error;
       });
   }
-  signIn(user:UserInterface){
+  signIn(user:User){
     return signInWithEmailAndPassword(getAuth(),user.email, user.password, );
   }
 
   register(email: string, username: string, password: string): Observable<void> {
-    const promise = createUserWithEmailAndPassword(this.firebaseAuth, email, password)
-      .then(response => {
-        return updateProfile(response.user, { displayName: username })
-          .then(() => sendEmailVerification(response.user))
-          .catch(error => {
-            console.error("Error updating profile or sending email verification:", error);
-            throw error;
-          });
-      })
-      .catch(error => {
-        console.error("Error en el registro:", error);
-        throw error;
-      });
+  const promise = createUserWithEmailAndPassword(this.firebaseAuth, email, password)
+    .then(response => {
+      return updateProfile(response.user, { displayName: username })
+        .then(() => sendEmailVerification(response.user))
+        .then(() => {
+          // Crear o actualizar el documento del usuario en la colección 'users'
+          const userDocPath = `users/${response.user.uid}`;
+          const userData = {
+            email: email,
+            username: username,
+            uid: response.user.uid
+          };
+          return this.setDocument(userDocPath, userData);
+        })
+        .catch(error => {
+          console.error("Error updating profile or sending email verification:", error);
+          throw error;
+        });
+    })
+    .catch(error => {
+      console.error("Error en el registro:", error);
+      throw error;
+    });
 
-    return from(promise);
+  return from(promise);
+}
+
+
+  setDocument(path: any, data:any){
+    return setDoc(doc(getFirestore(),path),data)
+  }
+  async getDocument(path:any){
+    return (await getDoc(doc(getFirestore(),path))).data()
   }
 }

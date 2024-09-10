@@ -20,24 +20,7 @@ loginform = new FormGroup({
   password: new FormControl('',[Validators.required, Validators.minLength(6)])
 })
 
-onSubmit(){
-  if(this.loginform.valid){
-    console.log(this.loginform.value)
-    this.router.navigateByUrl('/dashboard')
-  }else{
-    console.log('No se envia')
-  }
-}
 
-async signInWithGoogle() {
-  try {
-    const user = await this.authservice.signInWithGoogle();
-    this.router.navigateByUrl('/dashboard')
-    localStorage.setItem('user', JSON.stringify(user));
-  } catch (error) {
-    console.error('Error durante el inicio de sesión con Google:', error);
-  } finally {
 
-  }
-}
+
 }
