@@ -32,7 +32,7 @@ export default class LoginPageComponent {
           next: (response) => {
             console.log('Login correcto', response);
             // Redirige al usuario a una página protegida o maneja el login exitoso
-            this.router.navigate(['/dashboard']);
+            this.router.navigate(['/index']);
           },
           error: (err) => {
             console.error('Login fallido', err);
