@@ -1,10 +1,7 @@
-<body class="bg-gray-100 text-gray-800 min-h-screen flex flex-col">
-
+<body class="bg-gray-50 text-black-800 min-h-screen flex flex-col">
 
   <!-- Navbar -->
-
-
-  <nav class="bg-slate-950 p-6 relative">
+  <nav class="bg-slate-950 p-7 md:p-7 relative">
     <div class="container mx-auto flex justify-between items-center">
       <a href="#" class="text-white text-2xl font-bold absolute left-1/2 transform -translate-x-1/2" style="font-family: 'Rubik', sans-serif; font-size: 3rem; padding: 1rem 2rem; width: auto; display: inline-block;">
         NeedVox
@@ -12,31 +9,29 @@
     </div>
   </nav>
 
-
- <!-- Header -->
-
+  <!-- Header -->
   <head>
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Rubik:ital,wght@0,300..900;1,300..900&display=swap" rel="stylesheet">
+
   </head>
 
-  <header class="py-16 bg-white shadow-md">
+  <header class="py-16 md:py-44 bg-white shadow-md">
+    <div class="relative flex flex-col md:flex-row justify-between items-center">
+      <img src="file.png" alt="Descripción de la imagen" class="absolute inset-4 w-full h-[350%] object-contain opacity-65" style="top: -360px;">
 
-    <div class="flex justify-between items-center pr-32 pl-52">
-      <!-- Texto original a la izquierda -->
-      <div class="text-left">
-        <h1 class="text-5xl font-extrabold text-black leading-normal tracking-wide" style="font-family: 'Rubik', sans-serif;">
+      <div class="text-left relative z-10 p-12">
+        <h1 class="text-4xl md:text-5xl font-extrabold text-black leading-normal tracking-wide" style="font-family: 'Rubik', sans-serif;">
           ¿Quienes somos?
         </h1>
-        <p class="mt-4 text-lg text-gray-500 max-w-xl" style="font-family: 'Rubik', sans-serif;">
+        <p class="mt-4 text-base md:text-lg text-gray-500 max-w-xl" style="font-family: 'Rubik', sans-serif;">
           Somos una plataforma tecnológica que moderniza la gestión de los almacenes de barrio. Con soluciones fáciles de usar y una experiencia intuitiva, ayudamos a los pequeños
           comerciantes a optimizar su inventario y ventas, enfocándose en sus clientes y comunidad.
         </p>
       </div>
 
-      <!-- Botones "Ingresar" y "Registrarse" alineados a la derecha -->
-      <div class="flex space-x-8 ml-auto">
+      <div class="flex flex-col space-y-4 ml-auto relative z-10 p-4">
         <a href="login" class="text-black hover:bg-blue-400 transition duration-300 ease-in-out transform hover:scale-105 hover:shadow-lg hover:shadow-pink-500/50 px-4 py-2 rounded" style="font-family: 'Rubik', sans-serif;">
           Ingresar
         </a>
@@ -45,46 +40,37 @@
         </a>
       </div>
     </div>
-
-
-
-
   </header>
 
-
-
-
-
   <!-- Contenido principal -->
-
-  <main class="flex-grow container mx-auto px-4 py-16">
+  <main class="flex-grow container mx-auto px-4 py-16 md:py-32">
     <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
 
       <!-- Misión -->
-      <div class="bg-blue-100 shadow-lg rounded-lg p-8 text-center transform hover:scale-105 transition duration-300 ease-in-out" style="font-family: 'Rubik', sans-serif;">
+      <div class="bg-blue-100 shadow-lg rounded-lg p-6 text-center transform hover:scale-105 transition duration-300 ease-in-out" style="font-family: 'Rubik', sans-serif;">
         <i class="fas fa-rocket text-5xl text-blue-500 mb-4 animate-bounce"></i>
-        <h2 class="text-2xl font-bold text-gray-800 mb-2 custom-shadow">Misión</h2>
-        <p class="text-gray-600">
+        <h2 class="text-xl md:text-2xl font-bold text-gray-800 mb-2 custom-shadow">Misión</h2>
+        <p class="text-gray-600 text-sm md:text-base">
           Modernizar los almacenes de barrio mediante soluciones tecnológicas accesibles y fáciles de usar, optimizando la gestión de su inventario y ventas, mientras ofrecemos una
           experiencia agradable para el usuario que promueva la eficiencia y el crecimiento.
         </p>
       </div>
 
       <!-- Visión -->
-      <div class="bg-purple-100 shadow-lg rounded-lg p-8 text-center transform hover:scale-105 transition duration-300 ease-in-out" style="font-family: 'Rubik', sans-serif;">
+      <div class="bg-purple-100 shadow-lg rounded-lg p-6 text-center transform hover:scale-105 transition duration-300 ease-in-out" style="font-family: 'Rubik', sans-serif;">
         <i class="fas fa-lightbulb text-5xl text-purple-500 mb-4 animate-bounce"></i>
-        <h2 class="text-2xl font-bold text-gray-800 mb-2 custom-shadow">Visión</h2>
-        <p class="text-gray-600">
+        <h2 class="text-xl md:text-2xl font-bold text-gray-800 mb-2 custom-shadow">Visión</h2>
+        <p class="text-gray-600 text-sm md:text-base">
           Ser la plataforma líder en Latinoamérica para la digitalización de pequeños comercios, transformando la gestión de los almacenes de barrio con herramientas innovadoras que
           faciliten su operación y contribuyan a su desarrollo y éxito en el mercado.
         </p>
       </div>
 
       <!-- Propósito -->
-      <div class="bg-yellow-100 shadow-lg rounded-lg p-8 text-center transform hover:scale-105 transition duration-300 ease-in-out" style="font-family: 'Rubik', sans-serif;">
+      <div class="bg-yellow-100 shadow-lg rounded-lg p-6 text-center transform hover:scale-105 transition duration-300 ease-in-out" style="font-family: 'Rubik', sans-serif;">
         <i class="fas fa-atom text-5xl text-yellow-500 mb-4 animate-bounce"></i>
-        <h2 class="text-2xl font-bold text-gray-800 mb-2 custom-shadow">Propósito</h2>
-        <p class="text-gray-600">
+        <h2 class="text-xl md:text-2xl font-bold text-gray-800 mb-2 custom-shadow">Propósito</h2>
+        <p class="text-gray-600 text-sm md:text-base">
           Revolucionar la gestión diaria de los almacenes de barrio, proporcionando soluciones intuitivas y modernas que simplifican sus procesos y ofrecen una experiencia de usuario
           agradable, permitiendo a los comerciantes centrarse en su comunidad y clientes.
         </p>
@@ -92,4 +78,4 @@
 
     </div>
   </main>
-  </body>
+</body>
