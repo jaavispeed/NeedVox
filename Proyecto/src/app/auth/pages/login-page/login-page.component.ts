@@ -9,7 +9,7 @@ import { AuthService } from '../../services/auth-service.service';
   standalone: true,
   imports: [ReactiveFormsModule, CommonModule],
   templateUrl: './login-page.component.html',
-  styleUrls: ['./login-page.component.css']  // Asegúrate de que sea 'style**s**Url' con una "s"
+  styleUrls: ['./login-page.component.css']
 })
 export default class LoginPageComponent {
   router = inject(Router);
@@ -22,16 +22,14 @@ export default class LoginPageComponent {
 
   onSubmit() {
     if (this.loginform.valid) {
-      // Destructura de manera segura con el operador de nullish coalescing (?.)
       const email = this.loginform.get('email')?.value;
       const password = this.loginform.get('password')?.value;
 
       if (email && password) {
-        // Llama al servicio de autenticación
+        // Llamar al servicio de autenticación
         this.authService.login({ email, password }).subscribe({
           next: (response) => {
             console.log('Login correcto', response);
-            // Redirige al usuario a una página protegida o maneja el login exitoso
             this.router.navigate(['/index']);
           },
           error: (err) => {

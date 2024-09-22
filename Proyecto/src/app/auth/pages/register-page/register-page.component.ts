@@ -31,8 +31,11 @@ export default class RegisterPageComponent {
     if(this.registerform.valid){
       const { username, email, password } = this.registerform.value;
       this.authService.register({email, username, password}).subscribe({
-        next: (response) => console.log('Usuario Registrado', response),
-        error: (error) => console.error('Error al registrar el usuario', error.error.message)
+        next: (response) => {
+          console.log('Usuario Registrado', response);
+          this.router.navigate(['/home']);
+        },
+        error: (error) => console.error('Error al registrar el usuario', error)
       });
     }
 
