@@ -9,7 +9,7 @@ import { AuthService } from '../../services/auth-service.service';
   standalone: true,
   imports: [ReactiveFormsModule, CommonModule],
   templateUrl: './login-page.component.html',
-  styleUrls: ['./login-page.component.css']
+  styleUrls: ['./login-page.component.css']  // Asegúrate de que sea 'style**s**Url' con una "s"
 })
 export default class LoginPageComponent {
   router = inject(Router);
@@ -30,6 +30,7 @@ export default class LoginPageComponent {
         this.authService.login({ email, password }).subscribe({
           next: (response) => {
             console.log('Login correcto', response);
+            localStorage.setItem('userData', JSON.stringify(response));
             this.router.navigate(['/index']);
           },
           error: (err) => {
