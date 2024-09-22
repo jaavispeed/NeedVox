@@ -2,6 +2,7 @@ import { Routes } from '@angular/router';
 import IndexComponent from './index/pages/index/index.component';
 import DashboardPageComponent from './dashboard/pages/dashboard-page/dashboard-page.component';
 import ProductComponent from './products/pages/product/product.component';
+import { CrudProductComponent } from './products/pages/crud-product/crud-product.component';
 
 export const routes: Routes = [
   {
@@ -33,6 +34,10 @@ export const routes: Routes = [
       {
         path: 'productos',
         component: ProductComponent,
+      },
+      {
+        path: 'crud-productos',
+        component: CrudProductComponent
       }
     ]
   },

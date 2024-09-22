@@ -3,6 +3,7 @@ import { Component, inject } from '@angular/core';
 import { FormControl, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { Router } from '@angular/router';
 import { AuthService } from '../../services/auth-service.service';
+import { User } from '../../models/user.model';
 
 @Component({
   selector: 'app-login-page',
@@ -26,11 +27,11 @@ export default class LoginPageComponent {
       const password = this.loginform.get('password')?.value;
 
       if (email && password) {
-        // Llamar al servicio de autenticación
         this.authService.login({ email, password }).subscribe({
-          next: (response) => {
+          next: (response: User) => {
             console.log('Login correcto', response);
             localStorage.setItem('userData', JSON.stringify(response));
+            localStorage.setItem('token', response.token || ''); // Asegúrate de manejar el caso en que token sea undefined
             this.router.navigate(['/index']);
           },
           error: (err) => {
@@ -41,5 +42,4 @@ export default class LoginPageComponent {
     } else {
       console.error('Formulario inválido');
     }
-  }
-}
+  }}

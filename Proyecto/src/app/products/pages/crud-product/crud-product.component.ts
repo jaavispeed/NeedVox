@@ -33,12 +33,25 @@ export class CrudProductComponent implements OnInit {
     if (this.isEditing) {
       this.productService.updateProduct(this.product.id, this.product).subscribe({
         next: () => this.onSuccess(),
-        error: (error) => console.error('Error al actualizar el producto', error)
+        error: (error) => {
+          console.error('Error al actualizar el producto', error);
+          console.error('Detalles del error', error.error); // Muestra detalles del error
+        }
       });
     } else {
-      this.productService.createProduct(this.product).subscribe({
+      const productToSend = {
+        title: this.product.title,
+        price: this.product.price,
+        stock: this.product.stock,
+        slug: this.product.slug // Asegúrate de que el slug se envíe
+      };
+
+      this.productService.createProduct(productToSend).subscribe({
         next: () => this.onSuccess(),
-        error: (error) => console.error('Error creando el producto', error)
+        error: (error) => {
+          console.error('Error creando el producto', error);
+          console.error('Detalles del error', error.error); // Muestra detalles del error
+        }
       });
     }
   }
@@ -48,7 +61,7 @@ export class CrudProductComponent implements OnInit {
     this.isEditing = true;
   }
 
-  deleteProduct(id: string): void {  // Asegúrate de que el ID es de tipo string
+  deleteProduct(id: string): void {
     this.productService.deleteProduct(id).subscribe({
       next: () => this.getProducts(),  // Refrescar la lista después de eliminar
       error: (error) => console.error('Error al eliminar el producto', error)
