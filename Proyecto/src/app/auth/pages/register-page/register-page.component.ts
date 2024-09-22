@@ -3,8 +3,7 @@ import { Component, inject } from '@angular/core';
 import { FormControl, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { passwordMatch } from '../../models/passwordMatch';
 import { Router } from '@angular/router';
-import { catchError } from 'rxjs/operators';
-import { of } from 'rxjs';
+import { AuthService } from '../../services/auth-service.service';
 
 @Component({
   selector: 'app-register-page',
@@ -17,6 +16,7 @@ export default class RegisterPageComponent {
 
   router = inject(Router);
   registerform: FormGroup;
+  authService = inject(AuthService);
 
   constructor() {
     this.registerform = new FormGroup({
@@ -28,6 +28,12 @@ export default class RegisterPageComponent {
   }
 
   onSubmit(): void {
-    const Form = this.registerform.getRawValue();
+    if(this.registerform.valid){
+      const { username, email, password } = this.registerform.value;
+      this.authService.register({email, username, password}).subscribe({
+        next: (response) => console.log('Usuario Registrado', response),
+        error: (error) => console.error('Error al registrar el usuario', error.error.message)
+      });
+    }
 
 }}
