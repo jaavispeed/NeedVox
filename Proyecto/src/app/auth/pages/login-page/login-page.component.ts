@@ -30,8 +30,7 @@ export default class LoginPageComponent {
         this.authService.login({ email, password }).subscribe({
           next: (response: User) => {
             console.log('Login correcto', response);
-            localStorage.setItem('userData', JSON.stringify(response));
-            localStorage.setItem('token', response.token || ''); // Asegúrate de manejar el caso en que token sea undefined
+            localStorage.setItem('token', response.token);
             this.router.navigate(['/index']);
           },
           error: (err) => {
