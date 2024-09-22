@@ -6,11 +6,11 @@
   </div>
   <div class="mb-4">
     <label class="block text-sm font-medium text-gray-700">Precio:</label>
-    <input type="number" [(ngModel)]="product.price" name="price" required class="mt-1 block w-full p-2 border border-gray-300 rounded-md focus:ring-blue-500 focus:border-blue-500" />
+    <input type="number" [(ngModel)]="product.price" name="price" required min="0" class="mt-1 block w-full p-2 border border-gray-300 rounded-md focus:ring-blue-500 focus:border-blue-500" />
   </div>
   <div class="mb-4">
     <label class="block text-sm font-medium text-gray-700">Stock:</label>
-    <input type="number" [(ngModel)]="product.stock" name="stock" required class="mt-1 block w-full p-2 border border-gray-300 rounded-md focus:ring-blue-500 focus:border-blue-500" />
+    <input type="number" [(ngModel)]="product.stock" name="stock" required min="0" class="mt-1 block w-full p-2 border border-gray-300 rounded-md focus:ring-blue-500 focus:border-blue-500" />
   </div>
   <button type="submit" class="mr-2 inline-flex items-center px-4 py-2 bg-blue-600 text-white font-semibold rounded-md shadow hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-500">
     {{ isEditing ? 'Actualizar' : 'Crear' }}
