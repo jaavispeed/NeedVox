@@ -3,18 +3,21 @@ import { ProductService } from '../../services/product.service';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { Product } from '../../models/product.model';
+import { NgxPaginationModule } from 'ngx-pagination';
 
 
 @Component({
   selector: 'app-crud-product',
   standalone: true,
-  imports: [CommonModule, FormsModule],
+  imports: [CommonModule, FormsModule, NgxPaginationModule],
   templateUrl: './crud-product.component.html',
   styleUrls: ['./crud-product.component.css']
 })
 export class CrudProductComponent implements OnInit {
 
   products: Product[] = [];  // Usa el tipo Product
+  currentPage = 1;
+  itemsPerPage = 5;
   product: Product = { title: '', price: 0, stock: 0, slug: '', user: { id: '' } };
   isEditing: boolean = false;
 
@@ -79,4 +82,25 @@ export class CrudProductComponent implements OnInit {
     this.product = { title: '', price: 0, stock: 0, slug: '', user: { id: '' } };
     this.isEditing = false;
   }
+
+  get paginatedProducts() {
+    const startIndex = (this.currentPage - 1) * this.itemsPerPage;
+    const endIndex = startIndex + this.itemsPerPage;
+
+    // Obtiene los productos que deben ser mostrados en la página actual
+    const productsToDisplay = this.products.slice(startIndex, endIndex);
+
+    // Si hay más de 5 productos en la página actual
+    if (productsToDisplay.length > 5) {
+      // Mover el sexto producto al inicio
+      const sixthProduct = productsToDisplay[5];
+      productsToDisplay.splice(5, 1); // Eliminar el sexto producto
+      productsToDisplay.unshift(sixthProduct); // Agregarlo al inicio
+    }
+
+    return productsToDisplay;
+  }
+
+
+
 }
