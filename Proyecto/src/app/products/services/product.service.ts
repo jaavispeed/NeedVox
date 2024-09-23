@@ -13,9 +13,9 @@ export class ProductService {
 
   // Obtener todos los productos
   getProducts(): Observable<any[]> {
-    const token = localStorage.getItem('token'); // Asegúrate de que el token esté almacenado correctamente
+    const token = localStorage.getItem('token');
     const headers = new HttpHeaders({
-      'Authorization': `Bearer ${token}` // Agrega el token en los encabezados
+      'Authorization': `Bearer ${token}`
     });
     return this.httpClient.get<any[]>(this.apiUrl, { headers });
   }
@@ -39,12 +39,20 @@ export class ProductService {
   }
 
   // Actualizar un producto
-  updateProduct(id: string, productData: any): Observable<any> {
+  updateProduct(id: string, productData: { title: string; price: number; stock: number }): Observable<any> {
     const token = localStorage.getItem('token');
     const headers = new HttpHeaders({
       'Authorization': `Bearer ${token}`
     });
-    return this.httpClient.put<any>(`${this.apiUrl}/${id}`, productData, { headers });
+
+    // Crea un objeto de producto para actualizar
+    const updatedProductData = {
+      title: productData.title,
+      price: productData.price,
+      stock: productData.stock,
+    };
+
+    return this.httpClient.patch<any>(`${this.apiUrl}/${id}`, updatedProductData, { headers });
   }
 
   // Eliminar un producto

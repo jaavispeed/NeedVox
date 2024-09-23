@@ -2,6 +2,8 @@ import { Component, OnInit } from '@angular/core';
 import { ProductService } from '../../services/product.service';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
+import { Product } from '../../models/product.model';
+
 
 @Component({
   selector: 'app-crud-product',
@@ -12,8 +14,8 @@ import { FormsModule } from '@angular/forms';
 })
 export class CrudProductComponent implements OnInit {
 
-  products: any[] = [];
-  product: any = { id: '', title: '', price: 0, stock: 0, slug: '' };
+  products: Product[] = [];  // Usa el tipo Product
+  product: Product = { title: '', price: 0, stock: 0, slug: '', user: { id: '' } };
   isEditing: boolean = false;
 
   constructor(private productService: ProductService) { }
@@ -30,8 +32,15 @@ export class CrudProductComponent implements OnInit {
   }
 
   createOrUpdateProduct(): void {
+    const productToSend = {
+      title: this.product.title,
+      price: Number(this.product.price), // Asegúrate de que price sea un número
+      stock: Number(this.product.stock), // Asegúrate de que stock sea un número
+      slug: this.product.slug
+    };
+
     if (this.isEditing) {
-      this.productService.updateProduct(this.product.id, this.product).subscribe({
+      this.productService.updateProduct(this.product.id!, productToSend).subscribe({
         next: () => this.onSuccess(),
         error: (error) => {
           console.error('Error al actualizar el producto', error);
@@ -39,13 +48,6 @@ export class CrudProductComponent implements OnInit {
         }
       });
     } else {
-      const productToSend = {
-        title: this.product.title,
-        price: this.product.price,
-        stock: this.product.stock,
-        slug: this.product.slug // Asegúrate de que el slug se envíe
-      };
-
       this.productService.createProduct(productToSend).subscribe({
         next: () => this.onSuccess(),
         error: (error) => {
@@ -56,7 +58,7 @@ export class CrudProductComponent implements OnInit {
     }
   }
 
-  editProduct(product: any): void {
+  editProduct(product: Product): void {
     this.product = { ...product };  // Crea una copia del producto para editar
     this.isEditing = true;
   }
@@ -74,7 +76,7 @@ export class CrudProductComponent implements OnInit {
   }
 
   resetForm(): void {
-    this.product = { id: '', title: '', price: 0, stock: 0, slug: '' };
+    this.product = { title: '', price: 0, stock: 0, slug: '', user: { id: '' } };
     this.isEditing = false;
   }
 }
