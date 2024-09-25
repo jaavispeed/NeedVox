@@ -15,10 +15,6 @@ export const routes: Routes = [
     loadComponent: () => import('./home/pages/landing-page/landing-page.component')
   },
   {
-    path: 'login',
-    loadComponent: () => import('./auth/pages/login-page/login-page.component')
-  },
-  {
     path: 'index',
     component: IndexComponent,
     children: [
@@ -40,10 +36,6 @@ export const routes: Routes = [
         component: CrudProductComponent
       }
     ]
-  },
-  {
-    path: 'register',
-    loadComponent: () => import('./auth/pages/register-page/register-page.component')
   },
   {
     path: 'navbar',
