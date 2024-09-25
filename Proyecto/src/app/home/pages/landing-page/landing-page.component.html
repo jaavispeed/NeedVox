@@ -1,50 +1,33 @@
-<svg viewBox="0 0 1440 320" xmlns="http://www.w3.org/2000/svg">
+<!-- SVG -->
+<svg viewBox="0 0 1440 320" xmlns="http://www.w3.org/2000/svg" class="w-full h-auto">
   <path fill="#232933" fill-opacity="1" d="M0,10 C480,400 960,40 1440,10 L1440,0 L0,0 Z"></path>
 </svg>
 
+
 <body class="bg-white flex flex-col justify-center items-center max-h-screen text-center font-light">
-    <!-- Contenedor principal -->
-    <div class="container mx-auto px-4 flex flex-col items-center">
+  <!-- Contenedor principal -->
+  <div class="container mx-auto px-4 flex flex-col items-center">
 
-        <!-- Título y descripción -->
-        <div class="mt-8 text-left w-full max-w-md">
-            <h1 class="text-3xl font-light text-[#31363F] ml-28 font-rubik">Needvox</h1>
-            <p class="text-[#31363F] mt-2 ml-28 font-light font-rubik">Diseñada para empresas <br> de todos los tamaños.</p>
-        </div>
+      <!-- Título y descripción -->
+      <div class="mt-8 text-left w-full max-w-md">
+          <h1 class="text-3xl font-light text-[#31363F] ml-16 md:ml-28 font-rubik">Needvox</h1>
+          <p class="text-[#31363F] mt-2 ml-16 md:ml-28 font-light font-rubik">Diseñada para empresas <br> de todos los tamaños.</p>
+      </div>
 
-        <!-- Botones -->
-        <div class="mt-10 flex space-x-4">
-            <a href="#blank-page" class="bg-[#EEEEEE] hover:bg-gray-300 text-[#31363F] py-2 px-6 rounded-md font-light font-rubik
-                shadow-md transition duration-300 transform hover:scale-105">Entrar</a>
-            <a href="#blank-page" class="bg-[#EEEEEE] hover:bg-gray-300 text-[#31363F] py-2 px-6 rounded-md font-light font-rubik
-                shadow-md transition duration-300 transform hover:scale-105">Registrarme</a>
-        </div>
+      <!-- Botones -->
+      <div class="mt-10 flex space-x-4 flex-wrap justify-center">
+          <a href="#blank-page" class="bg-[#EEEEEE] hover:bg-gray-300 text-[#31363F] py-2 px-6 rounded-md font-light font-rubik shadow-md transition duration-300 transform hover:scale-105">Entrar</a>
+          <a href="#blank-page" class="bg-[#EEEEEE] hover:bg-gray-300 text-[#31363F] py-2 px-6 rounded-md font-light font-rubik shadow-md transition duration-300 transform hover:scale-105">Registrarme</a>
+      </div>
 
-        <!-- Flecha hacia abajo -->
-        <div class="mt-12 text-2xl text-gray-600">
-            <span class="block text-4xl animate-bounce">↓</span>
-        </div>
+      <!-- Flecha hacia abajo -->
+      <div class="mt-12 text-2xl text-gray-600">
+          <span class="block text-4xl animate-bounce">↓</span>
+      </div>
 
-        <!-- Footer -->
-        <footer class="mt-16 text-sm text-gray-500">
-            <p class="font-light font-rubik">Copyright © Needvox</p>
-        </footer>
-    </div>
-
-    <!-- Sección en blanco -->
-    <div id="blank-page" class="h-screen bg-white flex justify-center items-center">
-        <h2 class="text-2xl font-light text-[#31363F] font-rubik">¡Bienvenido a la nueva página!</h2>
-    </div>
-
-    <script>
-        // Desplazamiento suave
-        document.querySelectorAll('a[href^="#"]').forEach(anchor => {
-            anchor.addEventListener('click', function (e) {
-                e.preventDefault();
-                document.querySelector(this.getAttribute('href')).scrollIntoView({
-                    behavior: 'smooth'
-                });
-            });
-        });
-    </script>
+      <!-- Footer -->
+      <footer class="mt-16 text-sm text-gray-500">
+          <p class="font-light font-rubik">Copyright © Needvox</p>
+      </footer>
+  </div>
 </body>
