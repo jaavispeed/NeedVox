@@ -1,90 +1,71 @@
-<body class="bg-gray-100 text-gray-800 min-h-screen flex flex-col">
+<body class="bg-gray-50 text-black-800 min-h-screen flex flex-col">
+  <head>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Rubik:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
+  </head>
 
+  <!-- Header -->
 
-  <!-- Navbar -->
+    <!-- SVG como fondo -->
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1440 330" preserveAspectRatio="none" class="absolute top-0 left-0 w-full h-full">
+      <path fill="#000" fill-opacity="1" d="M0,128L48,149.3C96,171,192,213,288,197.3C384,181,480,107,576,90.7C672,75,768,117,864,144C960,171,1056,181,1152,165.3C1248,149,1344,107,1392,85.3L1440,64L1440,0L1392,0C1344,0,1248,0,1152,0C1056,0,960,0,864,0C768,0,672,0,576,0C480,0,384,0,288,0C192,0,96,0,48,0L0,0Z"></path>
+    </svg>
 
-  <nav class="bg-slate-950 p-4 relative">
-    <div class="container mx-auto flex justify-between items-center">
-      <a href="#" class="text-white text-2xl font-bold absolute left-1/2 transform -translate-x-1/2" style="font-family: 'Rubik', sans-serif;">
-        NeedVox
-      </a>
-      <div class="space-x-4 ml-auto">
-        <a href="login" class="text-white hover:bg-gray-400 transition duration-300 ease-in-out transform hover:scale-105 hover:shadow-lg hover:shadow-blue-500/50 px-4 py-2 rounded" style="font-family: 'Rubik', sans-serif;">
+    <div class="relative flex flex-col md:flex-row justify-between items-center z-10">
+      <div class="text-left p-36">
+        <h1 class="text-4xl md:text-5xl font-extrabold text-white leading-normal tracking-wide" style="font-family: 'Rubik', sans-serif;">
+          ¿Quienes somos?
+        </h1>
+        <p class="mt-4 text-base md:text-lg text-white max-w-xl" style="font-family: 'Rubik', sans-serif;">
+          Somos una plataforma tecnológica que moderniza la gestión de los almacenes de barrio. Con soluciones fáciles de usar y una  experiencia intuitiva, ayudamos a los pequeños
+          comerciantes a optimizar su inventario y ventas, enfocándose en sus clientes y comunidad.
+        </p>
+      </div>
+
+      <div class="flex flex-col space-y-6 ml-auto p-48">
+        <a href="login" class="text-white bg-black transition duration-300 ease-in-out transform hover:scale-125 hover:shadow-lg px-16 py-2 rounded" style="font-family: 'Rubik', sans-serif;">
           Ingresar
         </a>
-        <a href="register" class="text-white hover:bg-gray-400 transition duration-300 ease-in-out transform hover:scale-105 hover:shadow-lg hover:shadow-pink-500/50 px-4 py-2 rounded" style="font-family: 'Rubik', sans-serif;">
+        <a href="register" class="text-white bg-black transition duration-300 ease-in-out transform hover:scale-125 hover:shadow-lg px-16 py-2 rounded" style="font-family: 'Rubik', sans-serif;">
           Registrarse
         </a>
       </div>
     </div>
-  </nav>
-
- <!-- Header -->
-
-  <head>
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Rubik:ital,wght@0,300..900;1,300..900&display=swap" rel="stylesheet">
-  </head>
-
-  <header class="py-16 bg-white shadow-md">
-    <div class="container mx-auto flex justify-between items-center">
-      <!-- Texto original a la izquierda -->
-      <div class="text-left">
-        <h1 class="text-5xl font-extrabold text-black leading-normal tracking-wide" style="font-family: 'Rubik', sans-serif;">
-          ¿Quienes somos?
-        </h1>
-        <p class="mt-4 text-lg text-gray-500 max-w-xl" style="font-family: 'Rubik', sans-serif;">
-          Somos una plataforma tecnológica que moderniza la gestión de los almacenes de barrio. Con soluciones fáciles de usar y una experiencia intuitiva, ayudamos a los pequeños
-          comerciantes a optimizar su inventario y ventas, enfocándose en sus clientes y comunidad.
-        </p>
-      </div>
-    </div>
-
-      <!-- Nuevo texto a la derecha -->
-
-
-  </header>
-
-
-
 
 
   <!-- Contenido principal -->
-
-  <main class="flex-grow container mx-auto px-4 py-16">
+  <main class="flex-grow container mx-auto px-4 py-16 md:py-40">
     <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
-
       <!-- Misión -->
-      <div class="bg-blue-100 shadow-lg rounded-lg p-8 text-center transform hover:scale-105 transition duration-300 ease-in-out" style="font-family: 'Rubik', sans-serif;">
+      <div class="bg-blue-100 shadow-lg rounded-lg p-6 text-center transform hover:scale-105 transition duration-300 ease-in-out" style="font-family: 'Rubik', sans-serif;">
         <i class="fas fa-rocket text-5xl text-blue-500 mb-4 animate-bounce"></i>
-        <h2 class="text-2xl font-bold text-gray-800 mb-2 custom-shadow">Misión</h2>
-        <p class="text-gray-600">
+        <h2 class="text-xl md:text-2xl font-bold text-gray-800 mb-2 custom-shadow">Misión</h2>
+        <p class="text-gray-600 text-sm md:text-base">
           Modernizar los almacenes de barrio mediante soluciones tecnológicas accesibles y fáciles de usar, optimizando la gestión de su inventario y ventas, mientras ofrecemos una
           experiencia agradable para el usuario que promueva la eficiencia y el crecimiento.
         </p>
       </div>
 
       <!-- Visión -->
-      <div class="bg-purple-100 shadow-lg rounded-lg p-8 text-center transform hover:scale-105 transition duration-300 ease-in-out" style="font-family: 'Rubik', sans-serif;">
+      <div class="bg-purple-100 shadow-lg rounded-lg p-6 text-center transform hover:scale-105 transition duration-300 ease-in-out" style="font-family: 'Rubik', sans-serif;">
         <i class="fas fa-lightbulb text-5xl text-purple-500 mb-4 animate-bounce"></i>
-        <h2 class="text-2xl font-bold text-gray-800 mb-2 custom-shadow">Visión</h2>
-        <p class="text-gray-600">
+        <h2 class="text-xl md:text-2xl font-bold text-gray-800 mb-2 custom-shadow">Visión</h2>
+        <p class="text-gray-600 text-sm md:text-base">
           Ser la plataforma líder en Latinoamérica para la digitalización de pequeños comercios, transformando la gestión de los almacenes de barrio con herramientas innovadoras que
           faciliten su operación y contribuyan a su desarrollo y éxito en el mercado.
         </p>
       </div>
 
       <!-- Propósito -->
-      <div class="bg-yellow-100 shadow-lg rounded-lg p-8 text-center transform hover:scale-105 transition duration-300 ease-in-out" style="font-family: 'Rubik', sans-serif;">
+      <div class="bg-yellow-100 shadow-lg rounded-lg p-6 text-center transform hover:scale-105 transition duration-300 ease-in-out" style="font-family: 'Rubik', sans-serif;">
         <i class="fas fa-atom text-5xl text-yellow-500 mb-4 animate-bounce"></i>
-        <h2 class="text-2xl font-bold text-gray-800 mb-2 custom-shadow">Propósito</h2>
-        <p class="text-gray-600">
+        <h2 class="text-xl md:text-2xl font-bold text-gray-800 mb-2 custom-shadow">Propósito</h2>
+        <p class="text-gray-600 text-sm md:text-base">
           Revolucionar la gestión diaria de los almacenes de barrio, proporcionando soluciones intuitivas y modernas que simplifican sus procesos y ofrecen una experiencia de usuario
           agradable, permitiendo a los comerciantes centrarse en su comunidad y clientes.
         </p>
       </div>
-
     </div>
   </main>
-  </body>
+</body>
