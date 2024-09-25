@@ -1,5 +1,5 @@
 import { CommonModule } from '@angular/common';
-import { Component, inject } from '@angular/core';
+import { Component, EventEmitter, inject, Output } from '@angular/core';
 import { FormControl, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { passwordMatch } from '../../models/passwordMatch';
 import { Router } from '@angular/router';
@@ -13,7 +13,7 @@ import { AuthService } from '../../services/auth-service.service';
   styleUrls: ['./register-page.component.css']
 })
 export default class RegisterPageComponent {
-
+  @Output() closeModal = new EventEmitter<void>();
   router = inject(Router);
   registerform: FormGroup;
   authService = inject(AuthService);
@@ -39,4 +39,10 @@ export default class RegisterPageComponent {
       });
     }
 
-}}
+}
+
+close() {
+  this.closeModal.emit();
+}
+
+}
