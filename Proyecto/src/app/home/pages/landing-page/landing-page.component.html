@@ -14,8 +14,10 @@
 
         <!-- Botones -->
         <div class="mt-10 flex space-x-4">
-            <button class="bg-[#EEEEEE] hover:bg-gray-300 text-[#31363F] py-2 px-6 rounded-md font-light font-rubik">Entrar</button>
-            <button class="bg-[#EEEEEE] hover:bg-gray-300 text-[#31363F] py-2 px-6 rounded-md font-light font-rubik">Registrarme</button>
+            <a href="#blank-page" class="bg-[#EEEEEE] hover:bg-gray-300 text-[#31363F] py-2 px-6 rounded-md font-light font-rubik
+                shadow-md transition duration-300 transform hover:scale-105">Entrar</a>
+            <a href="#blank-page" class="bg-[#EEEEEE] hover:bg-gray-300 text-[#31363F] py-2 px-6 rounded-md font-light font-rubik
+                shadow-md transition duration-300 transform hover:scale-105">Registrarme</a>
         </div>
 
         <!-- Flecha hacia abajo -->
@@ -28,4 +30,21 @@
             <p class="font-light font-rubik">Copyright © Needvox</p>
         </footer>
     </div>
+
+    <!-- Sección en blanco -->
+    <div id="blank-page" class="h-screen bg-white flex justify-center items-center">
+        <h2 class="text-2xl font-light text-[#31363F] font-rubik">¡Bienvenido a la nueva página!</h2>
+    </div>
+
+    <script>
+        // Desplazamiento suave
+        document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+            anchor.addEventListener('click', function (e) {
+                e.preventDefault();
+                document.querySelector(this.getAttribute('href')).scrollIntoView({
+                    behavior: 'smooth'
+                });
+            });
+        });
+    </script>
 </body>
