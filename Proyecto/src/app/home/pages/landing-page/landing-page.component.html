@@ -2,9 +2,8 @@
   <div class="container mx-auto px-4 flex flex-col justify-center items-center h-full">
     <!-- Contenedor principal -->
     <div class="py-16 w-full">
-      <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-2 lg:grid-cols-4 gap-10"> <!-- Ajustado a grid-cols-3 y gap-10 -->
+      <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-2 lg:grid-cols-4 gap-10">
         <div class="flex flex-col items-start">
-          <!-- Título y descripción -->
           <div class="mt-8 w-full max-w-md text-left">
             <h1 class="text-2xl sm:text-3xl font-light text-[#31363F] font-rubik">Needvox</h1>
             <p class="text-[#31363F] mt-2 font-light font-rubik">Diseñada para empresas <br> de todos los tamaños.</p>
@@ -12,13 +11,13 @@
 
           <!-- Botones -->
           <div class="mt-10 flex space-x-4">
-            <a href="/login" class="bg-[#EEEEEE] hover:bg-gray-300 text-[#31363F] py-2 px-4 md:px-6 rounded-md font-light font-rubik shadow-md transition duration-300 transform hover:scale-105">Entrar</a>
-            <a href="/register" class="bg-[#EEEEEE] hover:bg-gray-300 text-[#31363F] py-2 px-4 md:px-6 rounded-md font-light font-rubik shadow-md transition duration-300 transform hover:scale-105 ml-4">Registrarme</a>
+            <button (click)="openModal('login')" class="bg-[#EEEEEE] hover:bg-gray-300 text-[#31363F] py-2 px-4 md:px-6 rounded-md font-light font-rubik shadow-md transition duration-300 transform hover:scale-105">Entrar</button>
+            <button (click)="openModal('register')" class="bg-[#EEEEEE] hover:bg-gray-300 text-[#31363F] py-2 px-4 md:px-6 rounded-md font-light font-rubik shadow-md transition duration-300 transform hover:scale-105 ml-4">Registrarme</button>
           </div>
         </div>
 
         <!-- Misión -->
-        <div class="bg-[#31363F] shadow-lg rounded-lg p-6 text-left transform hover:scale-105 transition duration-300 ease-in-out h-full"> <!-- Añadido h-full -->
+        <div class="bg-[#31363F] shadow-lg rounded-lg p-6 text-left transform hover:scale-105 transition duration-300 ease-in-out h-full">
           <i class="fas fa-rocket text-5xl text-blue-500 mb-4 animate-bounce"></i>
           <h2 class="text-lg sm:text-xl md:text-2xl font-bold text-[#EEEEEE] mb-2">Misión</h2>
           <p class="text-[#EEEEEE] text-sm md:text-base">
@@ -54,8 +53,23 @@
       </footer>
     </div>
   </div>
-  <div class="absolute bottom-0 left-0 w-full z-0"> <!-- Añadir clases para posición absoluta y z-index -->
+
+  <div class="absolute bottom-0 left-0 w-full z-0">
     <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1440 320"><path fill="#222831" fill-opacity="1" d="M0,160L1440,288L1440,320L0,320Z"></path></svg>
   </div>
 
+  <!-- Modal para Login/Registro -->
+  <div *ngIf="isModalOpen" class="modal fixed inset-0 flex items-center justify-center bg-black bg-opacity-50 z-50">
+    <div class="modal-content bg-white p-5 rounded shadow-lg">
+      <button (click)="closeModal()" class="close-btn text-red-500">Cerrar</button>
+      <ng-container [ngSwitch]="modalType">
+        <ng-container *ngSwitchCase="'login'">
+          <app-login-page></app-login-page> <!-- Carga el componente de Login -->
+        </ng-container>
+        <ng-container *ngSwitchCase="'register'">
+          <app-register-page></app-register-page> <!-- Carga el componente de Registro -->
+        </ng-container>
+      </ng-container>
+    </div>
+  </div>
 </body>
