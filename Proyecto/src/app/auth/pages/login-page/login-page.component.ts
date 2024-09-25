@@ -1,5 +1,5 @@
 import { CommonModule } from '@angular/common';
-import { Component, inject } from '@angular/core';
+import { Component, EventEmitter, inject, Output } from '@angular/core';
 import { FormControl, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { Router } from '@angular/router';
 import { AuthService } from '../../services/auth-service.service';
@@ -15,6 +15,7 @@ import { User } from '../../models/user.model';
 export default class LoginPageComponent {
   router = inject(Router);
   authService = inject(AuthService);
+  @Output() closeModal = new EventEmitter<void>();
 
   loginform = new FormGroup({
     email: new FormControl('', [Validators.required, Validators.email]),
@@ -41,4 +42,10 @@ export default class LoginPageComponent {
     } else {
       console.error('Formulario inválido');
     }
-  }}
+  }
+
+  close() {
+    this.closeModal.emit();
+  }
+
+}

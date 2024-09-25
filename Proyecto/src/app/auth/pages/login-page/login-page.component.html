@@ -3,7 +3,7 @@
     <div class="relative p-4 w-full max-w-md h-full md:h-auto">
 
         <div class="relative bg-white rounded-lg shadow-lg">
-            <button type="button"
+            <button type="button" (click)="close()"
                 class="absolute top-3 right-2.5 text-gray-400 bg-transparent hover:bg-gray-200 hover:text-gray-900 rounded-lg text-sm p-1.5 ml-auto inline-flex items-center popup-close">
                 <svg aria-hidden="true" class="w-5 h-5" fill="#c6c7c7" viewBox="0 0 20 20"
                     xmlns="http://www.w3.org/2000/svg">
@@ -11,7 +11,7 @@
                         d="M4.293 4.293a1 1 0 011.414 0L10 8.586l4.293-4.293a1 1 0 111.414 1.414L11.414 10l4.293 4.293a1 1 0 01-1.414 1.414L10 11.414l-4.293 4.293a1 1 0 01-1.414-1.414L8.586 10 4.293 5.707a1 1 0 010-1.414z"
                         clip-rule="evenodd"></path>
                 </svg>
-                <span class="sr-only">Close popup</span>
+                <span class="sr-only">Cerrar popup</span>
             </button>
 
             <div class="p-5">
@@ -43,7 +43,6 @@
                 </div>
 
                 <form class="w-full" [formGroup]="loginform" (ngSubmit)="onSubmit()">
-                    <!--Correo electronico-->
                     <label for="email" class="sr-only">Correo</label>
                     <input name="email" type="email" autocomplete="email" required="" formControlName="email"
                         class="block w-full rounded-md border-0 py-2 text-gray-900 shadow-sm ring-1 ring-inset
@@ -56,9 +55,7 @@
                         <p *ngIf="loginform.get('email')?.errors?.['email']">Ingrese un correo valido.</p>
                         <p *ngIf="loginform.get('email')?.errors?.['required']">Ingrese un correo.</p>
                     </div>
-                    <!--Correo electronico-->
 
-                    <!--Contraseña -->
                     <div>
                         <div class="flex items-center justify-between">
                             <label for="password" class="block text-sm font-light text-gray-900"></label>
@@ -77,16 +74,11 @@
                             <p *ngIf="loginform.get('password')?.errors?.['minlength']">Mínimo 6 caracteres.</p>
                         </div>
                     </div>
-                    <!--Contraseña -->
 
-                    <!--Olvidaste tu contraseña-->
-
-                    <!--Boton Continuar-->
                     <button type="submit"
                         class="inline-flex w-full items-center justify-center rounded-lg bg-black p-2 py-3 text-sm font-medium
                             text-white outline-none focus:ring-2 focus:ring-black focus:ring-offset-1 mt-4
                             disabled:bg-gray-400 font-rubik" [disabled]="loginform.invalid">Continuar</button>
-                    <!--Boton Continuar-->
                 </form>
 
                 <div class="mt-6 text-center text-sm text-slate-600 font-rubik">

@@ -61,18 +61,16 @@
     </svg>
   </div>
 
+
   <!-- Modal para Login/Registro -->
-  <div *ngIf="isModalOpen" class="modal fixed inset-0 flex items-center justify-center bg-black bg-opacity-50 z-50">
-    <div class="modal-content bg-white p-5 rounded shadow-lg">
-      <button (click)="closeModal()" class="close-btn text-red-500">Cerrar</button>
-      <ng-container [ngSwitch]="modalType">
-        <ng-container *ngSwitchCase="'login'">
-          <app-login-page></app-login-page> <!-- Carga el componente de Login -->
-        </ng-container>
-        <ng-container *ngSwitchCase="'register'">
-          <app-register-page></app-register-page> <!-- Carga el componente de Registro -->
-        </ng-container>
+  <div *ngIf="isModalOpen">
+    <ng-container [ngSwitch]="modalType">
+      <ng-container *ngSwitchCase="'login'">
+        <app-login-page (closeModal)="closeModal()"></app-login-page> <!-- Carga el componente de Login -->
       </ng-container>
-    </div>
+      <ng-container *ngSwitchCase="'register'">
+        <app-register-page (closeModal)="closeModal()"></app-register-page> <!-- Carga el componente de Registro -->
+      </ng-container>
+    </ng-container>
   </div>
 </body>

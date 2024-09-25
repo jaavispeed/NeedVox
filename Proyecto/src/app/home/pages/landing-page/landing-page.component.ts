@@ -11,18 +11,17 @@ import RegisterPageComponent from '../../../auth/pages/register-page/register-pa
   imports: [CommonModule, LoginPageComponent, RegisterPageComponent]
 })
 export default class LandingPageComponent {
-  isModalOpen: boolean = false; // Controla si el modal está abierto o cerrado
-  modalType: string | undefined; // Controla qué tipo de modal mostrar (puede ser undefined)
+  isModalOpen = false; // Controla si el modal está abierto o cerrado
+  modalType: string = ''; // Almacena el tipo de modal (login o registro)
 
   // Método para abrir el modal y establecer el tipo
   openModal(type: string) {
-    this.modalType = type;
-    this.isModalOpen = true;
+    this.modalType = type; // Establece el tipo de modal
+    this.isModalOpen = true; // Abre el modal
   }
 
   // Método para cerrar el modal
   closeModal() {
     this.isModalOpen = false;
-    this.modalType = undefined; // Reiniciar modalType al cerrar el modal
   }
 }

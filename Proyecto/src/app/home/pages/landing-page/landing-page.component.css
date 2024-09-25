@@ -12,3 +12,8 @@
     font-size: 0.875rem; /* Ajusta el tamaño de la descripción */
   }
 }
+
+.modal {
+  transition: opacity 0.3s ease;
+}
+
