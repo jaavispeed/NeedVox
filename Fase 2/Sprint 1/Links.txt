@@ -1,0 +1,5 @@
+Netlify: needvox.netlify.app
+Figma: https://www.figma.com/design/FFdD9OKq4HmktXJrMXCdtE/NeedVox?node-id=337-2&node-type=canvas&t=pKnkjLg93mEDLLJ9-0
+Trello: https://trello.com/b/o8PiSCBx/capstone-sprint-12-09-26-09
+Github Front: https://github.com/jaavispeed/Needvox
+Github Back: https://github.com/jaavispeed/NeedvoxBackend
