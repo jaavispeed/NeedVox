@@ -42,7 +42,7 @@
                     <div class="h-px w-full bg-slate-200"></div>
                 </div>
 
-                <form class="w-full" [formGroup]="loginform" >
+                <form class="w-full" [formGroup]="loginform" (ngSubmit)="onSubmit()">
                     <!--Correo electronico-->
                     <label for="email" class="sr-only">Correo</label>
                     <input name="email" type="email" autocomplete="email" required="" formControlName="email"

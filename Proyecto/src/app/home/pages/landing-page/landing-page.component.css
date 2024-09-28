@@ -1,3 +1,14 @@
 .custom-shadow {
   text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.3);
 }
+
+@media (max-width: 640px) {
+  h1 {
+    font-size: 2rem; /* Ajusta el tamaño del texto para móviles */
+    margin-left: 0; /* Ajusta el margen para evitar corte */
+  }
+
+  p {
+    font-size: 0.875rem; /* Ajusta el tamaño de la descripción */
+  }
+}
