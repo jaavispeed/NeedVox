@@ -1,71 +1,76 @@
-<body class="bg-gray-50 text-black-800 min-h-screen flex flex-col">
-  <head>
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Rubik:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
-  </head>
+<body class="bg-white flex flex-col justify-center items-center min-h-screen font-light">
+  <div class="container mx-auto px-4 flex flex-col justify-center items-center h-full">
+    <!-- Contenedor principal -->
+    <div class="py-16 w-full">
+      <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-2 lg:grid-cols-4 gap-10">
+        <div class="flex flex-col items-start">
+          <div class="mt-8 w-full max-w-md text-left">
+            <h1 class="text-2xl sm:text-3xl font-light text-[#31363F] font-rubik">Needvox</h1>
+            <p class="text-[#31363F] mt-2 font-light font-rubik">Diseñada para empresas <br> de todos los tamaños.</p>
+          </div>
 
-  <!-- Header -->
+          <!-- Botones -->
+          <div class="mt-10 flex space-x-4">
+            <button (click)="openModal('login')" class="bg-[#EEEEEE] hover:bg-gray-300 text-[#31363F] py-2 px-4 md:px-6 rounded-md font-light font-rubik shadow-md transition duration-300 transform hover:scale-105">Entrar</button>
+            <button (click)="openModal('register')" class="bg-[#EEEEEE] hover:bg-gray-300 text-[#31363F] py-2 px-4 md:px-6 rounded-md font-light font-rubik shadow-md transition duration-300 transform hover:scale-105 ml-4">Registrarme</button>
+          </div>
+        </div>
 
-    <!-- SVG como fondo -->
-    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1440 330" preserveAspectRatio="none" class="absolute top-0 left-0 w-full h-full">
-      <path fill="#000" fill-opacity="1" d="M0,128L48,149.3C96,171,192,213,288,197.3C384,181,480,107,576,90.7C672,75,768,117,864,144C960,171,1056,181,1152,165.3C1248,149,1344,107,1392,85.3L1440,64L1440,0L1392,0C1344,0,1248,0,1152,0C1056,0,960,0,864,0C768,0,672,0,576,0C480,0,384,0,288,0C192,0,96,0,48,0L0,0Z"></path>
+        <!-- Misión -->
+        <div class="bg-[#31363F] shadow-lg rounded-lg p-6 text-left transform hover:scale-105 transition duration-300 ease-in-out h-full">
+          <i class="fas fa-rocket text-5xl text-blue-500 mb-4 animate-bounce"></i>
+          <h2 class="text-lg sm:text-xl md:text-2xl font-bold text-[#EEEEEE] mb-2">Misión</h2>
+          <p class="text-[#EEEEEE] text-sm md:text-base">
+            Modernizar los almacenes de barrio mediante soluciones tecnológicas accesibles y fáciles de usar, optimizando la gestión de su inventario y ventas, mientras ofrecemos una
+            experiencia agradable para el usuario que promueva la eficiencia y el crecimiento.
+          </p>
+        </div>
+
+        <!-- Visión -->
+        <div class="bg-[#76ABAE] shadow-lg rounded-lg p-6 text-left transform hover:scale-105 transition duration-300 ease-in-out">
+          <i class="fas fa-lightbulb text-5xl text-purple-500 mb-4 animate-bounce"></i>
+          <h2 class="text-lg sm:text-xl md:text-2xl font-bold text-[#31363F] mb-2">Visión</h2>
+          <p class="text-[#31363F] text-sm md:text-base">
+            Ser la plataforma líder en Latinoamérica para la digitalización de pequeños comercios, transformando la gestión de los almacenes de barrio con herramientas innovadoras que
+            faciliten su operación y contribuyan a su desarrollo y éxito en el mercado.
+          </p>
+        </div>
+
+        <!-- Propósito -->
+        <div class="bg-[#EEEEEE] shadow-lg rounded-lg p-6 text-left transform hover:scale-105 transition duration-300 ease-in-out">
+          <i class="fas fa-atom text-5xl text-yellow-500 mb-4 animate-bounce"></i>
+          <h2 class="text-lg sm:text-xl md:text-2xl font-bold text-[#31363F] mb-2">Propósito</h2>
+          <p class="text-[#31363F] text-sm md:text-base">
+            Revolucionar la gestión diaria de los almacenes de barrio, proporcionando soluciones intuitivas y modernas que simplifican sus procesos y ofrecen una experiencia de usuario
+            agradable, permitiendo a los comerciantes centrarse en su comunidad y clientes.
+          </p>
+        </div>
+      </div>
+
+      <!-- Footer -->
+      <footer class="mt-16 text-sm text-gray-500 text-center">
+        <p class="font-light font-rubik">Copyright © Needvox</p>
+      </footer>
+    </div>
+  </div>
+
+  <!-- SVG de la forma de onda -->
+  <div class="fixed bottom-0 left-0 w-full z-0">
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1440 320">
+      <path fill="#222831" fill-opacity="1" d="M0,160L1440,288L1440,320L0,320Z"></path>
     </svg>
-
-    <div class="relative flex flex-col md:flex-row justify-between items-center z-10">
-      <div class="text-left p-36">
-        <h1 class="text-4xl md:text-5xl font-extrabold text-white leading-normal tracking-wide" style="font-family: 'Rubik', sans-serif;">
-          ¿Quienes somos?
-        </h1>
-        <p class="mt-4 text-base md:text-lg text-white max-w-xl" style="font-family: 'Rubik', sans-serif;">
-          Somos una plataforma tecnológica que moderniza la gestión de los almacenes de barrio. Con soluciones fáciles de usar y una  experiencia intuitiva, ayudamos a los pequeños
-          comerciantes a optimizar su inventario y ventas, enfocándose en sus clientes y comunidad.
-        </p>
-      </div>
-
-      <div class="flex flex-col space-y-6 ml-auto p-48">
-        <a href="login" class="text-white bg-black transition duration-300 ease-in-out transform hover:scale-125 hover:shadow-lg px-16 py-2 rounded" style="font-family: 'Rubik', sans-serif;">
-          Ingresar
-        </a>
-        <a href="register" class="text-white bg-black transition duration-300 ease-in-out transform hover:scale-125 hover:shadow-lg px-16 py-2 rounded" style="font-family: 'Rubik', sans-serif;">
-          Registrarse
-        </a>
-      </div>
-    </div>
+  </div>
 
 
-  <!-- Contenido principal -->
-  <main class="flex-grow container mx-auto px-4 py-16 md:py-40">
-    <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
-      <!-- Misión -->
-      <div class="bg-blue-100 shadow-lg rounded-lg p-6 text-center transform hover:scale-105 transition duration-300 ease-in-out" style="font-family: 'Rubik', sans-serif;">
-        <i class="fas fa-rocket text-5xl text-blue-500 mb-4 animate-bounce"></i>
-        <h2 class="text-xl md:text-2xl font-bold text-gray-800 mb-2 custom-shadow">Misión</h2>
-        <p class="text-gray-600 text-sm md:text-base">
-          Modernizar los almacenes de barrio mediante soluciones tecnológicas accesibles y fáciles de usar, optimizando la gestión de su inventario y ventas, mientras ofrecemos una
-          experiencia agradable para el usuario que promueva la eficiencia y el crecimiento.
-        </p>
-      </div>
-
-      <!-- Visión -->
-      <div class="bg-purple-100 shadow-lg rounded-lg p-6 text-center transform hover:scale-105 transition duration-300 ease-in-out" style="font-family: 'Rubik', sans-serif;">
-        <i class="fas fa-lightbulb text-5xl text-purple-500 mb-4 animate-bounce"></i>
-        <h2 class="text-xl md:text-2xl font-bold text-gray-800 mb-2 custom-shadow">Visión</h2>
-        <p class="text-gray-600 text-sm md:text-base">
-          Ser la plataforma líder en Latinoamérica para la digitalización de pequeños comercios, transformando la gestión de los almacenes de barrio con herramientas innovadoras que
-          faciliten su operación y contribuyan a su desarrollo y éxito en el mercado.
-        </p>
-      </div>
-
-      <!-- Propósito -->
-      <div class="bg-yellow-100 shadow-lg rounded-lg p-6 text-center transform hover:scale-105 transition duration-300 ease-in-out" style="font-family: 'Rubik', sans-serif;">
-        <i class="fas fa-atom text-5xl text-yellow-500 mb-4 animate-bounce"></i>
-        <h2 class="text-xl md:text-2xl font-bold text-gray-800 mb-2 custom-shadow">Propósito</h2>
-        <p class="text-gray-600 text-sm md:text-base">
-          Revolucionar la gestión diaria de los almacenes de barrio, proporcionando soluciones intuitivas y modernas que simplifican sus procesos y ofrecen una experiencia de usuario
-          agradable, permitiendo a los comerciantes centrarse en su comunidad y clientes.
-        </p>
-      </div>
-    </div>
-  </main>
+  <!-- Modal para Login/Registro -->
+  <div *ngIf="isModalOpen">
+    <ng-container [ngSwitch]="modalType">
+      <ng-container *ngSwitchCase="'login'">
+        <app-login-page (closeModal)="closeModal()"></app-login-page> <!-- Carga el componente de Login -->
+      </ng-container>
+      <ng-container *ngSwitchCase="'register'">
+        <app-register-page (closeModal)="closeModal()"></app-register-page> <!-- Carga el componente de Registro -->
+      </ng-container>
+    </ng-container>
+  </div>
 </body>
