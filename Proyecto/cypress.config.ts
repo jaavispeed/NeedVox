@@ -6,4 +6,12 @@ export default defineConfig({
       // implement node event listeners here
     },
   },
+
+  component: {
+    devServer: {
+      framework: "angular",
+      bundler: "webpack",
+    },
+    specPattern: "cypress/component/**/*.spec.ts", // Cambia la extensión a .spec.ts para que coincida con tu archivo
+  },
 });
