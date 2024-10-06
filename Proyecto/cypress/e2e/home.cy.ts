@@ -14,6 +14,9 @@ describe('Página de inicio', () => {
     cy.contains('Ingresar').should('exist');
     cy.contains('Registrarme').should('exist');
 
+
+    // Boton Ingresar
+
     // Hacer clic en el botón "Ingresar" para abrir el pop-up
     cy.contains('Ingresar').click();
 
