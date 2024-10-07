@@ -54,8 +54,22 @@
   </div>
 
   <!-- Controles de paginación -->
-  <div *ngIf="products.length >= 5" class="flex justify-between mt-4 w-full">
-    <pagination-controls (pageChange)="currentPage = $event"></pagination-controls>
+  <div *ngIf="filteredProducts.length > itemsPerPage" class="flex justify-center mt-4 w-full">
+    <button
+      (click)="currentPage = currentPage - 1"
+      [disabled]="currentPage === 1"
+      class="mx-2 px-4 py-2 bg-[#76ABAE] text-white rounded-md disabled:opacity-50"
+    >
+      Anterior
+    </button>
+    <span>Página {{ currentPage }}</span>
+    <button
+      (click)="currentPage = currentPage + 1"
+      [disabled]="currentPage * itemsPerPage >= filteredProducts.length"
+      class="mx-2 px-4 py-2 bg-[#76ABAE] text-white rounded-md disabled:opacity-50"
+    >
+      Siguiente
+    </button>
   </div>
 
   <!-- Botón de agregar producto -->
