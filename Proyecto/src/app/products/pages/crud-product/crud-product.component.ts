@@ -5,7 +5,6 @@ import { FormsModule } from '@angular/forms';
 import { Product } from '../../models/product.model';
 import { NgxPaginationModule } from 'ngx-pagination';
 
-
 @Component({
   selector: 'app-crud-product',
   standalone: true,
@@ -14,12 +13,22 @@ import { NgxPaginationModule } from 'ngx-pagination';
   styleUrls: ['./crud-product.component.css']
 })
 export class CrudProductComponent implements OnInit {
-
-  products: Product[] = [];  // Usa el tipo Product
+  products: Product[] = [];  // Lista original de productos
+  filteredProducts: Product[] = [];  // Productos filtrados
   currentPage = 1;
   itemsPerPage = 5;
-  product: Product = { title: '', price: 0, stock: 0, slug: '', user: { id: '' } };
+  product: Product = {
+    title: '',
+    compraPrice: 0,
+    ventaPrice: 0,
+    stock: 0,
+    slug: '',
+    user: { id: '' },
+    expiryDate: undefined // Añadido expiryDate
+  };
   isEditing: boolean = false;
+  isModalOpen: boolean = false;  // Estado del modal
+  searchTerm: string = '';  // Término de búsqueda
 
   constructor(private productService: ProductService) { }
 
@@ -29,17 +38,22 @@ export class CrudProductComponent implements OnInit {
 
   getProducts(): void {
     this.productService.getProducts().subscribe({
-      next: (data) => this.products = data,
+      next: (data) => {
+        this.products = data;
+        this.filteredProducts = data;  // Inicializa los productos filtrados
+      },
       error: (error) => console.error('Error al obtener los productos', error)
     });
   }
 
   createOrUpdateProduct(): void {
     const productToSend = {
-      title: this.product.title,
-      price: Number(this.product.price), // Asegúrate de que price sea un número
-      stock: Number(this.product.stock), // Asegúrate de que stock sea un número
-      slug: this.product.slug
+      title: this.product.title, // Obligatorio
+      compraPrice: Number(this.product.compraPrice) || 0, // No obligatorio
+      ventaPrice: Number(this.product.ventaPrice) || 0,   // No obligatorio
+      stock: Number(this.product.stock) || 0, // No obligatorio
+      slug: this.product.slug || '', // No obligatorio
+      expiryDate: this.product.expiryDate // No obligatorio
     };
 
     if (this.isEditing) {
@@ -64,6 +78,7 @@ export class CrudProductComponent implements OnInit {
   editProduct(product: Product): void {
     this.product = { ...product };  // Crea una copia del producto para editar
     this.isEditing = true;
+    this.openModal();  // Abre el modal al editar
   }
 
   deleteProduct(id: string): void {
@@ -76,31 +91,40 @@ export class CrudProductComponent implements OnInit {
   onSuccess(): void {
     this.getProducts();  // Refrescar la lista
     this.resetForm();    // Limpiar el formulario
+    this.closeModal();   // Cerrar el modal después de agregar/editar
   }
 
   resetForm(): void {
-    this.product = { title: '', price: 0, stock: 0, slug: '', user: { id: '' } };
+    this.product = {
+      title: '',
+      compraPrice: 0,
+      ventaPrice: 0,
+      stock: 0,
+      slug: '',  // Reinicia slug a una cadena vacía
+      user: { id: '' },
+      expiryDate: undefined // Reinicia expiryDate
+    };
     this.isEditing = false;
+  }
+
+  openModal(): void {
+    this.isModalOpen = true;  // Cambia el estado del modal a abierto
+  }
+
+  closeModal(): void {
+    this.isModalOpen = false;  // Cambia el estado del modal a cerrado
+    this.resetForm();          // Reinicia el formulario al cerrar el modal
+  }
+
+  filterProducts(): void {
+    this.filteredProducts = this.products.filter(product =>
+      product.title.toLowerCase().includes(this.searchTerm.toLowerCase())
+    );
   }
 
   get paginatedProducts() {
     const startIndex = (this.currentPage - 1) * this.itemsPerPage;
     const endIndex = startIndex + this.itemsPerPage;
-
-    // Obtiene los productos que deben ser mostrados en la página actual
-    const productsToDisplay = this.products.slice(startIndex, endIndex);
-
-    // Si hay más de 5 productos en la página actual
-    if (productsToDisplay.length > 5) {
-      // Mover el sexto producto al inicio
-      const sixthProduct = productsToDisplay[5];
-      productsToDisplay.splice(5, 1); // Eliminar el sexto producto
-      productsToDisplay.unshift(sixthProduct); // Agregarlo al inicio
-    }
-
-    return productsToDisplay;
+    return this.filteredProducts.slice(startIndex, endIndex);
   }
-
-
-
 }
