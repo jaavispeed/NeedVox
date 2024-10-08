@@ -30,6 +30,9 @@ export class CrudProductComponent implements OnInit {
   isModalOpen: boolean = false;  // Estado del modal
   searchTerm: string = '';  // Término de búsqueda
 
+  alertVisible: boolean = false;  // Estado de la alerta
+  alertMessage: string = ''; // Mensaje de alerta
+
   constructor(private productService: ProductService) { }
 
   ngOnInit(): void {
@@ -58,7 +61,7 @@ export class CrudProductComponent implements OnInit {
 
     if (this.isEditing) {
       this.productService.updateProduct(this.product.id!, productToSend).subscribe({
-        next: () => this.onSuccess(),
+        next: () => this.onSuccess('Producto actualizado con éxito.'),
         error: (error) => {
           console.error('Error al actualizar el producto', error);
           console.error('Detalles del error', error.error); // Muestra detalles del error
@@ -66,7 +69,7 @@ export class CrudProductComponent implements OnInit {
       });
     } else {
       this.productService.createProduct(productToSend).subscribe({
-        next: () => this.onSuccess(),
+        next: () => this.onSuccess('Producto creado con éxito.'),
         error: (error) => {
           console.error('Error creando el producto', error);
           console.error('Detalles del error', error.error); // Muestra detalles del error
@@ -83,15 +86,22 @@ export class CrudProductComponent implements OnInit {
 
   deleteProduct(id: string): void {
     this.productService.deleteProduct(id).subscribe({
-      next: () => this.getProducts(),  // Refrescar la lista después de eliminar
+      next: () => this.onSuccess('Producto Eliminado.'),  // Refrescar la lista después de eliminar
       error: (error) => console.error('Error al eliminar el producto', error)
     });
   }
 
-  onSuccess(): void {
+  onSuccess(message: string): void {
     this.getProducts();  // Refrescar la lista
     this.resetForm();    // Limpiar el formulario
     this.closeModal();   // Cerrar el modal después de agregar/editar
+
+    // Mostrar la alerta personalizada
+    this.alertMessage = message;
+    this.alertVisible = true;
+
+    // Ocultar la alerta después de 3 segundos
+    setTimeout(() => this.alertVisible = false, 3000);
   }
 
   resetForm(): void {
