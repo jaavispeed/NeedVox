@@ -1,66 +1,63 @@
-<body class="bg-white flex flex-col justify-center items-center min-h-screen font-light">
-  <div class="container mx-auto px-4 flex flex-col justify-center items-center h-full">
+<body class="bg-white flex flex-col min-h-screen font-light">
+  <!-- SVG de la forma de onda (Parte superior) -->
+  <footer class="bg-[#222831] text-sm text-[#EEEEEE] text-center py-4 shadow-lg">
+    <p class="font-light font-rubik">Needvox</p>
+  </footer>
+
+  <div class="container mx-auto px-4 flex-grow flex flex-col justify-center items-center z-10">
     <!-- Contenedor principal -->
     <div class="py-16 w-full">
-      <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-2 lg:grid-cols-4 gap-10">
-        <div class="flex flex-col items-start">
-          <div class="mt-8 w-full max-w-md text-left">
-            <h1 class="text-2xl sm:text-3xl font-light text-[#31363F] font-rubik">Needvox</h1>
-            <p class="text-[#31363F] mt-2 font-light font-rubik">Diseñada para empresas <br> de todos los tamaños.</p>
-          </div>
+      <!-- Nueva sección con imagen y texto sin tarjeta -->
+      <div class="flex flex-col md:flex-row items-center justify-center">
+        <img ngOptimizedImage src="ilustrativa.png" alt="Modernización de Almacenes" class="w-full md:max-w-[300px] h-auto rounded-lg mr-4">
+        <div class="text-center md:text-left"> <!-- Añadir text-center para centrar en dispositivos pequeños -->
+          <h2 class="text-lg sm:text-xl md:text-2xl font-bold font-rubik text-[#31363F] mb-2">Modernización de Almacenes</h2>
+          <p class="font-light font-rubik text-[#31363F] text-sm md:text-base">
+            Potencia tu negocio con soluciones tecnológicas accesibles que optimizan<br>
+            la gestión de inventario y ventas, permitiéndote enfocarte en tu comunidad y clientes.
+          </p>
 
           <!-- Botones -->
-          <div class="mt-10 flex space-x-4">
-            <button (click)="openModal('login')" class="bg-[#EEEEEE] hover:bg-gray-300 text-[#31363F] py-2 px-4 md:px-6 rounded-md font-light font-rubik shadow-md transition duration-300 transform hover:scale-105">Entrar</button>
-            <button (click)="openModal('register')" class="bg-[#EEEEEE] hover:bg-gray-300 text-[#31363F] py-2 px-4 md:px-6 rounded-md font-light font-rubik shadow-md transition duration-300 transform hover:scale-105 ml-4">Registrarme</button>
+          <div class="mt-10 flex flex-col md:flex-row md:space-x-4">
+            <button (click)="openModal('login')" class="bg-[#31363F] hover:bg-gray-500 text-[#EEEEEE] py-2 px-4 md:px-6 rounded-md font-light font-rubik shadow-md transition duration-300 transform hover:scale-105">Ingresar</button>
+            <button (click)="openModal('register')" class="bg-[#31363F] hover:bg-gray-500 text-[#EEEEEE] py-2 px-4 md:px-6 rounded-md font-light font-rubik shadow-md transition duration-300 transform hover:scale-105 mt-4 md:mt-0">Registrarme</button>
           </div>
-        </div>
-
-        <!-- Misión -->
-        <div class="bg-[#31363F] shadow-lg rounded-lg p-6 text-left transform hover:scale-105 transition duration-300 ease-in-out h-full">
-          <i class="fas fa-rocket text-5xl text-blue-500 mb-4 animate-bounce"></i>
-          <h2 class="text-lg sm:text-xl md:text-2xl font-bold text-[#EEEEEE] mb-2">Misión</h2>
-          <p class="text-[#EEEEEE] text-sm md:text-base">
-            Modernizar los almacenes de barrio mediante soluciones tecnológicas accesibles y fáciles de usar, optimizando la gestión de su inventario y ventas, mientras ofrecemos una
-            experiencia agradable para el usuario que promueva la eficiencia y el crecimiento.
-          </p>
-        </div>
-
-        <!-- Visión -->
-        <div class="bg-[#76ABAE] shadow-lg rounded-lg p-6 text-left transform hover:scale-105 transition duration-300 ease-in-out">
-          <i class="fas fa-lightbulb text-5xl text-purple-500 mb-4 animate-bounce"></i>
-          <h2 class="text-lg sm:text-xl md:text-2xl font-bold text-[#31363F] mb-2">Visión</h2>
-          <p class="text-[#31363F] text-sm md:text-base">
-            Ser la plataforma líder en Latinoamérica para la digitalización de pequeños comercios, transformando la gestión de los almacenes de barrio con herramientas innovadoras que
-            faciliten su operación y contribuyan a su desarrollo y éxito en el mercado.
-          </p>
-        </div>
-
-        <!-- Propósito -->
-        <div class="bg-[#EEEEEE] shadow-lg rounded-lg p-6 text-left transform hover:scale-105 transition duration-300 ease-in-out">
-          <i class="fas fa-atom text-5xl text-yellow-500 mb-4 animate-bounce"></i>
-          <h2 class="text-lg sm:text-xl md:text-2xl font-bold text-[#31363F] mb-2">Propósito</h2>
-          <p class="text-[#31363F] text-sm md:text-base">
-            Revolucionar la gestión diaria de los almacenes de barrio, proporcionando soluciones intuitivas y modernas que simplifican sus procesos y ofrecen una experiencia de usuario
-            agradable, permitiendo a los comerciantes centrarse en su comunidad y clientes.
-          </p>
         </div>
       </div>
 
-      <!-- Footer -->
-      <footer class="mt-16 text-sm text-gray-500 text-center">
-        <p class="font-light font-rubik">Copyright © Needvox</p>
-      </footer>
+      <!-- Línea divisoria -->
+      <hr class="my-8 border-t border-[#EEEEEE]">
+
+      <!-- Sección de beneficios -->
+      <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-8 mt-16">
+        <div class="text-center transition-transform transform hover:scale-110">
+          <i class="fas fa-box text-4xl text-green-500 mb-4 animate-bounce"></i>
+          <h3 class="text-lg font-bold font-rubik text-[#31363F]">Gestión simplificada del inventario</h3>
+          <p class="font-light font-rubik text-[#555555]">Administra tu inventario en tiempo real desde cualquier lugar, de manera fácil y rápida.</p>
+        </div>
+        <div class="text-center transition-transform transform hover:scale-110">
+          <i class="fas fa-chart-line text-4xl text-purple-500 mb-4 animate-bounce"></i>
+          <h3 class="text-lg font-bold font-rubik text-[#31363F]">Reportes de ventas en tiempo real</h3>
+          <p class="font-light font-rubik text-[#555555]">Accede a reportes detallados y toma decisiones informadas sobre tu negocio.</p>
+        </div>
+        <div class="text-center transition-transform transform hover:scale-110">
+          <i class="fas fa-mobile-alt text-4xl text-blue-500 mb-4 animate-bounce"></i>
+          <h3 class="text-lg font-bold font-rubik text-[#31363F]">Fácil de usar desde cualquier dispositivo</h3>
+          <p class="font-light font-rubik text-[#555555]">Controla todo desde tu móvil, tablet o computadora sin complicaciones.</p>
+        </div>
+        <div class="text-center transition-transform transform hover:scale-110">
+          <i class="fas fa-headset text-4xl text-yellow-500 mb-4 animate-bounce"></i>
+          <h3 class="text-lg font-bold font-rubik text-[#31363F]">Soporte en todo momento</h3>
+          <p class="font-light font-rubik text-[#555555]">Nuestro equipo está siempre disponible para ayudarte en lo que necesites.</p>
+        </div>
+      </div>
     </div>
   </div>
 
-  <!-- SVG de la forma de onda -->
-  <div class="fixed bottom-0 left-0 w-full z-0">
-    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1440 320">
-      <path fill="#222831" fill-opacity="1" d="M0,160L1440,288L1440,320L0,320Z"></path>
-    </svg>
-  </div>
-
+  <!-- Footer -->
+  <footer class="bg-[#222831] text-sm text-[#EEEEEE] text-center py-4 shadow-lg">
+    <p class="font-light font-rubik">Copyright © Needvox</p>
+  </footer>
 
   <!-- Modal para Login/Registro -->
   <div *ngIf="isModalOpen">

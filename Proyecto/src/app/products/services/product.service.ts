@@ -21,7 +21,14 @@ export class ProductService {
   }
 
   // Crear un producto
-  createProduct(productData: any): Observable<any> {
+  createProduct(productData: {
+    title: string;
+    compraPrice: number;
+    ventaPrice: number;
+    stock: number;
+    slug: string;
+    expiryDate?: string
+  }): Observable<any> {
     const token = localStorage.getItem('token');
     const headers = new HttpHeaders({
       'Authorization': `Bearer ${token}`
@@ -39,7 +46,14 @@ export class ProductService {
   }
 
   // Actualizar un producto
-  updateProduct(id: string, productData: { title: string; price: number; stock: number }): Observable<any> {
+  updateProduct(id: string, productData: {
+    title: string;
+    compraPrice: number;
+    ventaPrice: number;
+    stock: number;
+    slug: string;
+    expiryDate?: string
+  }): Observable<any> {
     const token = localStorage.getItem('token');
     const headers = new HttpHeaders({
       'Authorization': `Bearer ${token}`
@@ -48,8 +62,11 @@ export class ProductService {
     // Crea un objeto de producto para actualizar
     const updatedProductData = {
       title: productData.title,
-      price: productData.price,
+      compraPrice: productData.compraPrice,
+      ventaPrice: productData.ventaPrice,
       stock: productData.stock,
+      slug: productData.slug,
+      expiryDate: productData.expiryDate // Asegúrate de incluir expiryDate
     };
 
     return this.httpClient.patch<any>(`${this.apiUrl}/${id}`, updatedProductData, { headers });
