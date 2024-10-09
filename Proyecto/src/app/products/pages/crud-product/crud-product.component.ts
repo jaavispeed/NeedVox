@@ -1,14 +1,14 @@
 import { Component, OnInit } from '@angular/core';
 import { ProductService } from '../../services/product.service';
 import { CommonModule } from '@angular/common';
-import { FormsModule } from '@angular/forms';
+import { FormControl, FormGroup, FormsModule, ReactiveFormsModule, Validators } from '@angular/forms';
 import { Product } from '../../models/product.model';
 import { NgxPaginationModule } from 'ngx-pagination';
 
 @Component({
   selector: 'app-crud-product',
   standalone: true,
-  imports: [CommonModule, FormsModule, NgxPaginationModule],
+  imports: [CommonModule, FormsModule, NgxPaginationModule, ReactiveFormsModule],
   templateUrl: './crud-product.component.html',
   styleUrls: ['./crud-product.component.css']
 })
@@ -33,7 +33,17 @@ export class CrudProductComponent implements OnInit {
   alertVisible: boolean = false;  // Estado de la alerta
   alertMessage: string = ''; // Mensaje de alerta
 
-  constructor(private productService: ProductService) { }
+  crudForm: FormGroup;
+  constructor(private productService: ProductService) {
+    this.crudForm = new FormGroup({
+      title: new FormControl('', [Validators.required, Validators.minLength(3)]),
+      compraPrice: new FormControl(0, [Validators.required, Validators.min(0)]),
+      ventaPrice: new FormControl(0, [Validators.required, Validators.min(0)]),
+      stock: new FormControl(0, [Validators.required, Validators.min(0)]),
+      slug: new FormControl(''),
+      expiryDate: new FormControl(undefined),
+    });
+  }
 
   ngOnInit(): void {
     this.getProducts();  // Cargar productos al iniciar el componente
@@ -50,14 +60,12 @@ export class CrudProductComponent implements OnInit {
   }
 
   createOrUpdateProduct(): void {
-    const productToSend = {
-      title: this.product.title, // Obligatorio
-      compraPrice: Number(this.product.compraPrice) || 0, // No obligatorio
-      ventaPrice: Number(this.product.ventaPrice) || 0,   // No obligatorio
-      stock: Number(this.product.stock) || 0, // No obligatorio
-      slug: this.product.slug || '', // No obligatorio
-      expiryDate: this.product.expiryDate // No obligatorio
-    };
+
+    if(this.crudForm.invalid){
+      return;
+    }
+
+    const productToSend = this.crudForm.value; // Obtener valores del formulario
 
     if (this.isEditing) {
       this.productService.updateProduct(this.product.id!, productToSend).subscribe({
