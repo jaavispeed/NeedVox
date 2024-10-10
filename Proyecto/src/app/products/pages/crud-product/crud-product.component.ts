@@ -1,14 +1,14 @@
 import { Component, OnInit } from '@angular/core';
 import { ProductService } from '../../services/product.service';
 import { CommonModule } from '@angular/common';
-import { FormsModule } from '@angular/forms';
+import { FormControl, FormGroup, FormsModule, ReactiveFormsModule, Validators } from '@angular/forms';
 import { Product } from '../../models/product.model';
 import { NgxPaginationModule } from 'ngx-pagination';
 
 @Component({
   selector: 'app-crud-product',
   standalone: true,
-  imports: [CommonModule, FormsModule, NgxPaginationModule],
+  imports: [CommonModule, FormsModule, NgxPaginationModule, ReactiveFormsModule],
   templateUrl: './crud-product.component.html',
   styleUrls: ['./crud-product.component.css']
 })
@@ -30,7 +30,21 @@ export class CrudProductComponent implements OnInit {
   isModalOpen: boolean = false;  // Estado del modal
   searchTerm: string = '';  // Término de búsqueda
 
-  constructor(private productService: ProductService) { }
+  alertVisible: boolean = false;  // Estado de la alerta
+  alertMessage: string = ''; // Mensaje de alerta
+
+  crudForm: FormGroup;
+
+  constructor(private productService: ProductService) {
+    this.crudForm = new FormGroup({
+      title: new FormControl('', [Validators.required, Validators.minLength(3)]),
+      compraPrice: new FormControl(0, [Validators.required, Validators.min(0)]),
+      ventaPrice: new FormControl(0, [Validators.required, Validators.min(0)]),
+      stock: new FormControl(0, [Validators.required, Validators.min(0)]),
+      slug: new FormControl(''),
+      expiryDate: new FormControl(null),  // Establece null por defecto
+    });
+  }
 
   ngOnInit(): void {
     this.getProducts();  // Cargar productos al iniciar el componente
@@ -47,68 +61,97 @@ export class CrudProductComponent implements OnInit {
   }
 
   createOrUpdateProduct(): void {
+    if (this.crudForm.invalid) {
+        return;
+    }
+
     const productToSend = {
-      title: this.product.title, // Obligatorio
-      compraPrice: Number(this.product.compraPrice) || 0, // No obligatorio
-      ventaPrice: Number(this.product.ventaPrice) || 0,   // No obligatorio
-      stock: Number(this.product.stock) || 0, // No obligatorio
-      slug: this.product.slug || '', // No obligatorio
-      expiryDate: this.product.expiryDate // No obligatorio
+        ...this.crudForm.value,
+        compraPrice: Number(this.crudForm.value.compraPrice),
+        ventaPrice: Number(this.crudForm.value.ventaPrice),
     };
 
     if (this.isEditing) {
-      this.productService.updateProduct(this.product.id!, productToSend).subscribe({
-        next: () => this.onSuccess(),
-        error: (error) => {
-          console.error('Error al actualizar el producto', error);
-          console.error('Detalles del error', error.error); // Muestra detalles del error
-        }
-      });
+        this.productService.updateProduct(this.product.id!, productToSend).subscribe({
+            next: () => this.onSuccess('Producto actualizado con éxito.'),
+            error: (error) => {
+                console.error('Error al actualizar el producto', error);
+                console.error('Detalles del error', error.error); // Muestra detalles del error
+            }
+        });
     } else {
-      this.productService.createProduct(productToSend).subscribe({
-        next: () => this.onSuccess(),
-        error: (error) => {
-          console.error('Error creando el producto', error);
-          console.error('Detalles del error', error.error); // Muestra detalles del error
-        }
-      });
+        this.productService.createProduct(productToSend).subscribe({
+            next: () => this.onSuccess('Producto creado con éxito.'),
+            error: (error) => {
+                console.error('Error creando el producto', error);
+                console.error('Detalles del error', error.error); // Muestra detalles del error
+            }
+        });
     }
-  }
+}
 
   editProduct(product: Product): void {
     this.product = { ...product };  // Crea una copia del producto para editar
     this.isEditing = true;
     this.openModal();  // Abre el modal al editar
+
+    // Establece los valores en el formulario
+    this.crudForm.setValue({
+      title: product.title,
+      compraPrice: product.compraPrice,
+      ventaPrice: product.ventaPrice,
+      stock: product.stock,
+      slug: product.slug,
+      expiryDate: product.expiryDate || null,  // Establece null si no hay fecha
+    });
   }
 
   deleteProduct(id: string): void {
     this.productService.deleteProduct(id).subscribe({
-      next: () => this.getProducts(),  // Refrescar la lista después de eliminar
+      next: () => this.onSuccess('Producto Eliminado.'),  // Refrescar la lista después de eliminar
       error: (error) => console.error('Error al eliminar el producto', error)
     });
   }
 
-  onSuccess(): void {
+  onSuccess(message: string): void {
     this.getProducts();  // Refrescar la lista
     this.resetForm();    // Limpiar el formulario
     this.closeModal();   // Cerrar el modal después de agregar/editar
+
+    // Mostrar la alerta personalizada
+    this.alertMessage = message;
+    this.alertVisible = true;
+
+    // Ocultar la alerta después de 3 segundos
+    setTimeout(() => this.alertVisible = false, 3000);
   }
 
   resetForm(): void {
+    this.crudForm.reset({
+      title: '',
+      compraPrice: 0,
+      ventaPrice: 0,
+      stock: 0,
+      slug: '',
+      expiryDate: null,  // Establece expiryDate a null
+    });
     this.product = {
       title: '',
       compraPrice: 0,
       ventaPrice: 0,
       stock: 0,
-      slug: '',  // Reinicia slug a una cadena vacía
+      slug: '',
       user: { id: '' },
       expiryDate: undefined // Reinicia expiryDate
     };
-    this.isEditing = false;
+    this.isEditing = false;  // Reinicia el estado de edición
   }
 
   openModal(): void {
     this.isModalOpen = true;  // Cambia el estado del modal a abierto
+    if (!this.isEditing) {
+      this.resetForm();  // Limpia el formulario al abrir el modal para crear
+    }
   }
 
   closeModal(): void {
