@@ -32,22 +32,22 @@
       <table class="w-full text-sm text-left text-black">
         <thead class="text-xs uppercase bg-gray-50">
           <tr>
-            <th scope="col" class="px-2 py-3 font-bold font-rubik">Título</th>
-            <th scope="col" class="px-2 py-3 font-bold font-rubik">Precio de Compra</th>
-            <th scope="col" class="px-2 py-3 font-bold font-rubik">Precio de Venta</th>
-            <th scope="col" class="px-2 py-3 font-bold font-rubik">Stock</th>
-            <th scope="col" class="px-2 py-3 font-bold font-rubik">Fecha de Vencimiento</th>
-            <th scope="col" class="px-2 py-3 font-bold font-rubik"><span class="sr-only">Acciones</span></th>
+            <th scope="col" class="px-2 py-3 font-bold font-rubik text-center">Título</th>
+            <th scope="col" class="px-2 py-3 font-bold font-rubik text-center">Precio de Compra</th>
+            <th scope="col" class="px-2 py-3 font-bold font-rubik text-center">Precio de Venta</th>
+            <th scope="col" class="px-2 py-3 font-bold font-rubik text-center">Stock</th>
+            <th scope="col" class="px-2 py-3 font-bold font-rubik text-center">Fecha de Vencimiento</th>
+            <th scope="col" class="px-2 py-3 font-bold font-rubik text-center"><span class="sr-only">Acciones</span></th>
           </tr>
         </thead>
         <tbody>
           <tr *ngFor="let product of paginatedProducts" class="bg-white border-b">
-            <td class="px-4 py-3 font-medium text-black font-rubik">{{ product.title }}</td>
-            <td class="px-4 py-3 text-black font-rubik">{{ product.compraPrice | currency }}</td>
-            <td class="px-4 py-3 text-black font-rubik">{{ product.ventaPrice | currency }}</td>
-            <td class="px-4 py-3 text-black font-rubik">{{ product.stock }}</td>
-            <td class="px-4 py-3 text-black font-rubik">{{ product.expiryDate || 'Sin fecha de vencimiento' }}</td>
-            <td class="px-4 py-3 text-right flex justify-end space-x-2">
+            <td class="px-4 py-3 text-center font-medium text-black font-rubik">{{ product.title }}</td>
+            <td class="px-4 py-3 text-center text-black font-rubik">{{ product.compraPrice | currency }}</td>
+            <td class="px-4 py-3 text-center text-black font-rubik">{{ product.ventaPrice | currency }}</td>
+            <td class="px-4 py-3 text-center text-black font-rubik">{{ product.stock }}</td>
+            <td class="px-4 py-3 text-center text-black font-rubik">{{ product.expiryDate || 'Sin fecha de vencimiento' }}</td>
+            <td class="px-4 py-3 text-center flex justify-center space-x-2">
               <button (click)="editProduct(product)" class="inline-flex items-center px-4 py-2 bg-[#76ABAE] text-white font-semibold rounded-md shadow hover:bg-[#5b9892] focus:outline-none focus:ring-2 focus:ring-gray-500">
                 <i class="fas fa-edit mr-1"></i>
                 Editar
@@ -154,7 +154,7 @@
             />
           </div>
           <div class="flex justify-end">
-            <button type="submit" [disabled]="crudForm.invalid" class="px-4 py-2 bg-blue-500 text-white rounded-md hover:bg-blue-600 focus:outline-none focus:ring-2  disabled:bg-gray-400 focus:ring-blue-300">
+            <button type="submit" [disabled]="crudForm.invalid" class="px-4 py-2 bg-blue-500 text-white rounded-md hover:bg-blue-600 focus:outline-none focus:ring-2 disabled:bg-gray-400 focus:ring-blue-300">
               {{ isEditing ? 'Actualizar' : 'Agregar' }}
             </button>
             <button type="button" (click)="closeModal()" class="ml-2 px-4 py-2 bg-gray-300 text-black rounded-md hover:bg-gray-400 focus:outline-none focus:ring-2 focus:ring-gray-400">
