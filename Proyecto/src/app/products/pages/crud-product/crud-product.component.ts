@@ -34,6 +34,7 @@ export class CrudProductComponent implements OnInit {
   alertMessage: string = ''; // Mensaje de alerta
 
   crudForm: FormGroup;
+
   constructor(private productService: ProductService) {
     this.crudForm = new FormGroup({
       title: new FormControl('', [Validators.required, Validators.minLength(3)]),
@@ -41,7 +42,7 @@ export class CrudProductComponent implements OnInit {
       ventaPrice: new FormControl(0, [Validators.required, Validators.min(0)]),
       stock: new FormControl(0, [Validators.required, Validators.min(0)]),
       slug: new FormControl(''),
-      expiryDate: new FormControl(undefined),
+      expiryDate: new FormControl(null),  // Establece null por defecto
     });
   }
 
@@ -60,36 +61,49 @@ export class CrudProductComponent implements OnInit {
   }
 
   createOrUpdateProduct(): void {
-
-    if(this.crudForm.invalid){
-      return;
+    if (this.crudForm.invalid) {
+        return;
     }
 
-    const productToSend = this.crudForm.value; // Obtener valores del formulario
+    const productToSend = {
+        ...this.crudForm.value,
+        compraPrice: Number(this.crudForm.value.compraPrice),
+        ventaPrice: Number(this.crudForm.value.ventaPrice),
+    };
 
     if (this.isEditing) {
-      this.productService.updateProduct(this.product.id!, productToSend).subscribe({
-        next: () => this.onSuccess('Producto actualizado con éxito.'),
-        error: (error) => {
-          console.error('Error al actualizar el producto', error);
-          console.error('Detalles del error', error.error); // Muestra detalles del error
-        }
-      });
+        this.productService.updateProduct(this.product.id!, productToSend).subscribe({
+            next: () => this.onSuccess('Producto actualizado con éxito.'),
+            error: (error) => {
+                console.error('Error al actualizar el producto', error);
+                console.error('Detalles del error', error.error); // Muestra detalles del error
+            }
+        });
     } else {
-      this.productService.createProduct(productToSend).subscribe({
-        next: () => this.onSuccess('Producto creado con éxito.'),
-        error: (error) => {
-          console.error('Error creando el producto', error);
-          console.error('Detalles del error', error.error); // Muestra detalles del error
-        }
-      });
+        this.productService.createProduct(productToSend).subscribe({
+            next: () => this.onSuccess('Producto creado con éxito.'),
+            error: (error) => {
+                console.error('Error creando el producto', error);
+                console.error('Detalles del error', error.error); // Muestra detalles del error
+            }
+        });
     }
-  }
+}
 
   editProduct(product: Product): void {
     this.product = { ...product };  // Crea una copia del producto para editar
     this.isEditing = true;
     this.openModal();  // Abre el modal al editar
+
+    // Establece los valores en el formulario
+    this.crudForm.setValue({
+      title: product.title,
+      compraPrice: product.compraPrice,
+      ventaPrice: product.ventaPrice,
+      stock: product.stock,
+      slug: product.slug,
+      expiryDate: product.expiryDate || null,  // Establece null si no hay fecha
+    });
   }
 
   deleteProduct(id: string): void {
@@ -113,20 +127,31 @@ export class CrudProductComponent implements OnInit {
   }
 
   resetForm(): void {
+    this.crudForm.reset({
+      title: '',
+      compraPrice: 0,
+      ventaPrice: 0,
+      stock: 0,
+      slug: '',
+      expiryDate: null,  // Establece expiryDate a null
+    });
     this.product = {
       title: '',
       compraPrice: 0,
       ventaPrice: 0,
       stock: 0,
-      slug: '',  // Reinicia slug a una cadena vacía
+      slug: '',
       user: { id: '' },
       expiryDate: undefined // Reinicia expiryDate
     };
-    this.isEditing = false;
+    this.isEditing = false;  // Reinicia el estado de edición
   }
 
   openModal(): void {
     this.isModalOpen = true;  // Cambia el estado del modal a abierto
+    if (!this.isEditing) {
+      this.resetForm();  // Limpia el formulario al abrir el modal para crear
+    }
   }
 
   closeModal(): void {
