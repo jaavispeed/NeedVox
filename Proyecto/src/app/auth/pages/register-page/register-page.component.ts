@@ -33,7 +33,7 @@ export default class RegisterPageComponent {
       this.authService.register({email, username, password}).subscribe({
         next: (response) => {
           console.log('Usuario Registrado', response);
-          this.router.navigate(['/home']);
+          this.close()
         },
         error: (error) => console.error('Error al registrar el usuario', error)
       });
