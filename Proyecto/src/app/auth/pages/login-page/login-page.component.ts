@@ -16,6 +16,8 @@ export default class LoginPageComponent {
   router = inject(Router);
   authService = inject(AuthService);
   @Output() closeModal = new EventEmitter<void>();
+  @Output() onSuccess = new EventEmitter<void>(); // Evento de éxito
+  @Output() onError = new EventEmitter<string>(); // Evento de error
 
   loginform = new FormGroup({
     email: new FormControl('', [Validators.required, Validators.email]),
@@ -32,10 +34,12 @@ export default class LoginPageComponent {
           next: (response: User) => {
             console.log('Login correcto', response);
             localStorage.setItem('token', response.token);
+            this.onSuccess.emit(); // Emitir evento de éxito
             this.router.navigate(['/index']);
           },
           error: (err) => {
             console.error('Login fallido', err);
+            this.onError.emit('Error al iniciar sesión. Verifica tus credenciales.'); // Emitir evento de error
           }
         });
       }
@@ -47,5 +51,4 @@ export default class LoginPageComponent {
   close() {
     this.closeModal.emit();
   }
-
 }

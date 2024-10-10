@@ -14,6 +14,8 @@ import { AuthService } from '../../services/auth-service.service';
 })
 export default class RegisterPageComponent {
   @Output() closeModal = new EventEmitter<void>();
+  @Output() onSuccess = new EventEmitter<void>(); // Evento para éxito
+  @Output() onError = new EventEmitter<void>();   // Evento para error
   router = inject(Router);
   registerform: FormGroup;
   authService = inject(AuthService);
@@ -28,21 +30,23 @@ export default class RegisterPageComponent {
   }
 
   onSubmit(): void {
-    if(this.registerform.valid){
+    if (this.registerform.valid) {
       const { username, email, password } = this.registerform.value;
-      this.authService.register({email, username, password}).subscribe({
+      this.authService.register({ email, username, password }).subscribe({
         next: (response) => {
           console.log('Usuario Registrado', response);
-          this.close()
+          this.onSuccess.emit(); // Emitir evento de éxito
+          this.close();          // Cerrar el modal
         },
-        error: (error) => console.error('Error al registrar el usuario', error)
+        error: (error) => {
+          console.error('Error al registrar el usuario', error);
+          this.onError.emit();  // Emitir evento de error
+        }
       });
     }
+  }
 
-}
-
-close() {
-  this.closeModal.emit();
-}
-
+  close() {
+    this.closeModal.emit();
+  }
 }

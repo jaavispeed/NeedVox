@@ -1,16 +1,18 @@
-<body class="bg-white flex flex-col min-h-screen font-light">
-  <!-- SVG de la forma de onda (Parte superior) -->
-  <footer class="bg-[#222831] text-sm text-[#EEEEEE] text-center py-4 shadow-lg">
-    <p class="font-light font-rubik">Needvox</p>
-  </footer>
+<body class="bg-white flex flex-col min-h-screen font-light relative">
+  <!-- Componente de alerta -->
+  <app-alert
+    [message]="alertMessage"
+    [isVisible]="alertVisible"
+    [type]="alertType"
+    class="absolute bottom-4 right-4 z-50"></app-alert> <!-- Posiciona la alerta en la esquina inferior derecha -->
 
+  <!-- Contenedor principal -->
   <div class="container mx-auto px-4 flex-grow flex flex-col justify-center items-center z-10">
-    <!-- Contenedor principal -->
     <div class="py-16 w-full">
       <!-- Nueva sección con imagen y texto sin tarjeta -->
       <div class="flex flex-col md:flex-row items-center justify-center">
         <img ngOptimizedImage src="ilustrativa.png" alt="Modernización de Almacenes" class="w-full md:max-w-[300px] h-auto rounded-lg mr-4">
-        <div class="text-center md:text-left"> <!-- Añadir text-center para centrar en dispositivos pequeños -->
+        <div class="text-center md:text-left">
           <h2 class="text-lg sm:text-xl md:text-2xl font-bold font-rubik text-[#31363F] mb-2">Modernización de Almacenes</h2>
           <p class="font-light font-rubik text-[#31363F] text-sm md:text-base">
             Potencia tu negocio con soluciones tecnológicas accesibles que optimizan<br>
@@ -63,10 +65,16 @@
   <div *ngIf="isModalOpen">
     <ng-container [ngSwitch]="modalType">
       <ng-container *ngSwitchCase="'login'">
-        <app-login-page (closeModal)="closeModal()"></app-login-page> <!-- Carga el componente de Login -->
+        <app-login-page
+          (closeModal)="closeModal()"
+          (onSuccess)="showAlert('Ingreso exitoso', 'success')"
+          (onError)="showAlert('Error al iniciar sesión. Verifica tus credenciales.', 'error')"></app-login-page> <!-- Carga el componente de Login -->
       </ng-container>
       <ng-container *ngSwitchCase="'register'">
-        <app-register-page (closeModal)="closeModal()"></app-register-page> <!-- Carga el componente de Registro -->
+        <app-register-page
+          (closeModal)="closeModal()"
+          (onSuccess)="showAlert('Registro exitoso, por favor ingresa con tus credenciales', 'success')"
+          (onError)="showAlert('Error en el registro', 'error')"></app-register-page> <!-- Carga el componente de Registro -->
       </ng-container>
     </ng-container>
   </div>
