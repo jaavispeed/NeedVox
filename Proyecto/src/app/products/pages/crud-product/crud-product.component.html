@@ -1,171 +1,168 @@
-<div class="container mx-auto p-10 bg-white flex flex-col items-center">
+<div class="container mx-auto p-10 bg-white flex flex-col items-center relative mt-8">
+  <!-- Mensaje de alerta en la esquina inferior derecha -->
   <div class="fixed bottom-0 right-0 m-4">
     <app-alert [message]="alertMessage" [isVisible]="alertVisible" [type]="alertType"></app-alert>
   </div>
 
+  <!-- Contenedor para la barra de búsqueda y la tabla -->
+  <div class="w-full max-w-6xl flex flex-col items-start mb-2">
+    <!-- Barra de búsqueda -->
+    <div class="mb-2 w-full flex justify-between">
+      <div class="relative w-full max-w-md">
+        <input
+          type="text"
+          [(ngModel)]="searchTerm"
+          (input)="filterProducts()"
+          placeholder="Buscar producto..."
+          class="block w-full p-2 border border-gray-300 rounded-md focus:ring-blue-500 focus:border-blue-500 font-rubik text-black"
+        />
+        <i class="fas fa-search absolute right-3 top-3 text-gray-500"></i>
+      </div>
 
-
-  <!-- Barra de búsqueda -->
-  <div class="mb-4 w-full max-w-md">
-    <div class="relative">
-      <input
-        type="text"
-        [(ngModel)]="searchTerm"
-        (input)="filterProducts()"
-        placeholder="Buscar producto..."
-        class="mt-1 block w-full p-2 border border-gray-300 rounded-md focus:ring-blue-500 focus:border-blue-500"
-      />
-      <i class="fas fa-search absolute right-3 top-3 text-gray-500"></i>
+      <!-- Botón de agregar producto -->
+      <div class="ml-2">
+        <button (click)="openModal()" class="inline-flex items-center px-4 py-2 bg-[#31363F] text-[#EEEEEE] text-sm font-semibold rounded-md shadow hover:bg-gray-700 focus:outline-none focus:ring-2 focus:ring-gray-500">
+          Agregar Producto
+        </button>
+      </div>
     </div>
-  </div>
 
-  <!-- Contenedor para la tabla de productos -->
-  <div class="relative overflow-x-auto shadow-md sm:rounded-lg max-w-full">
-    <table class="w-full text-sm text-left rtl:text-right text-gray-500">
-      <thead class="text-xs text-gray-700 uppercase bg-gray-50">
-        <tr>
-          <th scope="col" class="px-2 py-3 font-rubik-bold">Título</th>
-          <th scope="col" class="px-2 py-3 font-rubik-bold">Precio de Compra</th>
-          <th scope="col" class="px-2 py-3 font-rubik-bold">Precio de Venta</th>
-          <th scope="col" class="px-2 py-3 font-rubik-bold">Stock</th>
-          <th scope="col" class="px-2 py-3 font-rubik-bold">Fecha de Vencimiento</th>
-          <th scope="col" class="px-2 py-3 font-rubik-bold"><span class="sr-only">Acciones</span></th>
-        </tr>
-      </thead>
-      <tbody>
-        <tr *ngFor="let product of paginatedProducts" class="bg-white border-b">
-          <td class="px-4 py-3 font-medium text-gray-900">{{ product.title }}</td>
-          <td class="px-4 py-3">{{ product.compraPrice | currency }}</td>
-          <td class="px-4 py-3">{{ product.ventaPrice | currency }}</td>
-          <td class="px-4 py-3">{{ product.stock }}</td>
-          <td class="px-4 py-3">{{ product.expiryDate || 'Sin fecha de vencimiento' }}</td>
-          <td class="px-4 py-3 text-right flex justify-end space-x-2">
-            <button (click)="editProduct(product)" class="inline-flex items-center px-4 py-2 bg-[#76ABAE] text-white font-semibold rounded-md shadow hover:bg-[#5b9892] focus:outline-none focus:ring-2 focus:ring-gray-500">
-              <i class="fas fa-edit mr-1"></i>
-              Editar
-            </button>
-            <button (click)="deleteProduct(product.id ?? '')" class="inline-flex items-center px-4 py-2 bg-red-600 text-white font-semibold rounded-md shadow hover:bg-red-700 focus:outline-none focus:ring-2 focus:ring-gray-500">
-              <i class="fas fa-trash-alt mr-1"></i>
-              Eliminar
-            </button>
-          </td>
-        </tr>
-      </tbody>
-    </table>
+    <!-- Contenedor para la tabla de productos -->
+    <div class="relative overflow-x-auto shadow-md sm:rounded-lg w-full mt-2">
+      <table class="w-full text-sm text-left text-black">
+        <thead class="text-xs text-gray-700 uppercase bg-gray-50">
+          <tr>
+            <th scope="col" class="px-2 py-3 font-bold font-rubik">Título</th>
+            <th scope="col" class="px-2 py-3 font-bold font-rubik">Precio de Compra</th>
+            <th scope="col" class="px-2 py-3 font-bold font-rubik">Precio de Venta</th>
+            <th scope="col" class="px-2 py-3 font-bold font-rubik">Stock</th>
+            <th scope="col" class="px-2 py-3 font-bold font-rubik">Fecha de Vencimiento</th>
+            <th scope="col" class="px-2 py-3 font-bold font-rubik"><span class="sr-only">Acciones</span></th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr *ngFor="let product of paginatedProducts" class="bg-white border-b">
+            <td class="px-4 py-3 font-medium text-black font-rubik">{{ product.title }}</td>
+            <td class="px-4 py-3 text-black font-rubik">{{ product.compraPrice | currency }}</td>
+            <td class="px-4 py-3 text-black font-rubik">{{ product.ventaPrice | currency }}</td>
+            <td class="px-4 py-3 text-black font-rubik">{{ product.stock }}</td>
+            <td class="px-4 py-3 text-black font-rubik">{{ product.expiryDate || 'Sin fecha de vencimiento' }}</td>
+            <td class="px-4 py-3 text-right flex justify-end space-x-2">
+              <button (click)="editProduct(product)" class="inline-flex items-center px-4 py-2 bg-[#76ABAE] text-white font-semibold rounded-md shadow hover:bg-[#5b9892] focus:outline-none focus:ring-2 focus:ring-gray-500">
+                <i class="fas fa-edit mr-1"></i>
+                Editar
+              </button>
+              <button (click)="deleteProduct(product.id ?? '')" class="inline-flex items-center px-4 py-2 bg-red-600 text-white font-semibold rounded-md shadow hover:bg-red-700 focus:outline-none focus:ring-2 focus:ring-gray-500">
+                <i class="fas fa-trash-alt mr-1"></i>
+                Eliminar
+              </button>
+            </td>
+          </tr>
+        </tbody>
+      </table>
 
-    <!-- Mensaje cuando no hay productos -->
-    <div *ngIf="products.length === 0" class="mt-4 flex items-center justify-center p-2">
-      <p class="text-base font-light text-gray-500 font-rubik-light">No hay productos agregados aún.</p>
+      <!-- Mensaje cuando no hay productos -->
+      <div *ngIf="products.length === 0" class="mt-4 flex items-center justify-center p-2">
+        <p class="text-base font-light text-black font-rubik">No hay productos agregados aún.</p>
+      </div>
     </div>
-  </div>
 
-  <!-- Controles de paginación -->
-  <div *ngIf="filteredProducts.length > itemsPerPage" class="flex justify-center mt-4 w-full">
-    <button
-      (click)="currentPage = currentPage - 1"
-      [disabled]="currentPage === 1"
-      class="mx-2 px-4 py-2 bg-[#76ABAE] text-white rounded-md disabled:opacity-50"
-    >
-      Anterior
-    </button>
-    <span>Página {{ currentPage }}</span>
-    <button
-      (click)="currentPage = currentPage + 1"
-      [disabled]="currentPage * itemsPerPage >= filteredProducts.length"
-      class="mx-2 px-4 py-2 bg-[#76ABAE] text-white rounded-md disabled:opacity-50"
-    >
-      Siguiente
-    </button>
-  </div>
+    <!-- Controles de paginación -->
+    <div *ngIf="filteredProducts.length > itemsPerPage" class="flex justify-center mt-4 w-full max-w-6xl">
+      <button
+        (click)="currentPage = currentPage - 1"
+        [disabled]="currentPage === 1"
+        class="mx-2 px-4 py-2 bg-[#76ABAE] text-white rounded-md disabled:opacity-50"
+      >
+        Anterior
+      </button>
+      <span>Página {{ currentPage }}</span>
+      <button
+        (click)="currentPage = currentPage + 1"
+        [disabled]="currentPage * itemsPerPage >= filteredProducts.length"
+        class="mx-2 px-4 py-2 bg-[#76ABAE] text-white rounded-md disabled:opacity-50"
+      >
+        Siguiente
+      </button>
+    </div>
 
-  <!-- Botón de agregar producto -->
-  <button (click)="openModal()" class="inline-flex items-center px-4 py-2 bg-[#31363F] text-[#EEEEEE] text-sm font-semibold rounded-md shadow hover:bg-gray-700 focus:outline-none focus:ring-2 focus:ring-gray-500 mt-4">
-    Agregar Producto
-  </button>
-
-  <!-- Modal para crear o editar producto -->
-  <div *ngIf="isModalOpen" class="fixed inset-0 z-50 flex items-center justify-center bg-black bg-opacity-50">
-    <div class="bg-white p-6 rounded-md shadow-md w-full max-w-2xl">
-      <h2 class="text-xl font-bold mb-4">{{ isEditing ? 'Editar Producto' : 'Crear Producto' }}</h2>
-      <form [formGroup]="crudForm" (ngSubmit)="createOrUpdateProduct()" class="mb-6">
-        <div class="mb-4">
-          <label class="block text-sm font-medium text-gray-700">Título:</label>
-          <input
-            formControlName="title"
-            placeholder="Nombre del producto"
-            class="mt-1 block w-full p-2 border border-gray-300 rounded-md focus:ring-blue-500 focus:border-blue-500 font-rubik-light"
-          />
-          <div *ngIf="crudForm.get('title')?.invalid && (crudForm.get('title')?.touched || crudForm.get('title')?.dirty)">
-            <div *ngIf="crudForm.get('title')?.errors?.['required']" class="text-red-600">El título es obligatorio.</div>
-            <div *ngIf="crudForm.get('title')?.errors?.['minlength']" class="text-red-600">El título debe tener al menos 3 caracteres.</div>
+    <!-- Modal para crear o editar producto -->
+    <div *ngIf="isModalOpen" class="fixed inset-0 z-50 flex items-center justify-center bg-black bg-opacity-50">
+      <div class="bg-white p-6 rounded-md shadow-md w-full max-w-2xl">
+        <h2 class="text-xl font-bold mb-4">{{ isEditing ? 'Editar Producto' : 'Crear Producto' }}</h2>
+        <form [formGroup]="crudForm" (ngSubmit)="createOrUpdateProduct()" class="mb-6">
+          <div class="mb-4">
+            <label class="block text-sm font-medium text-gray-700">Título:</label>
+            <input
+              formControlName="title"
+              placeholder="Nombre del producto"
+              class="mt-1 block w-full p-2 border border-gray-300 rounded-md focus:ring-blue-500 focus:border-blue-500 font-rubik text-black"
+            />
+            <div *ngIf="crudForm.get('title')?.invalid && (crudForm.get('title')?.touched || crudForm.get('title')?.dirty)">
+              <div *ngIf="crudForm.get('title')?.errors?.['required']" class="text-red-600">El título es obligatorio.</div>
+              <div *ngIf="crudForm.get('title')?.errors?.['minlength']" class="text-red-600">El título debe tener al menos 3 caracteres.</div>
+            </div>
           </div>
-        </div>
-        <div class="mb-4">
-          <label class="block text-sm font-medium text-gray-700">Precio de Compra:</label>
-          <input
-            type="number"
-            formControlName="compraPrice"
-            required
-            min="0"
-            class="mt-1 block w-full p-2 border border-gray-300 rounded-md focus:ring-blue-500 focus:border-blue-500 font-rubik-light"
-          />
-          <div *ngIf="crudForm.get('compraPrice')?.invalid && (crudForm.get('compraPrice')?.touched || crudForm.get('compraPrice')?.dirty)">
-            <div *ngIf="crudForm.get('compraPrice')?.errors?.['required']" class="text-red-600">El precio de compra es obligatorio.</div>
-            <div *ngIf="crudForm.get('compraPrice')?.errors?.['min']" class="text-red-600">El precio de compra no puede ser negativo.</div>
+          <div class="mb-4">
+            <label class="block text-sm font-medium text-gray-700">Precio de Compra:</label>
+            <input
+              type="number"
+              formControlName="compraPrice"
+              required
+              min="0"
+              class="mt-1 block w-full p-2 border border-gray-300 rounded-md focus:ring-blue-500 focus:border-blue-500 font-rubik text-black"
+            />
+            <div *ngIf="crudForm.get('compraPrice')?.invalid && (crudForm.get('compraPrice')?.touched || crudForm.get('compraPrice')?.dirty)">
+              <div *ngIf="crudForm.get('compraPrice')?.errors?.['required']" class="text-red-600">El precio de compra es obligatorio.</div>
+              <div *ngIf="crudForm.get('compraPrice')?.errors?.['min']" class="text-red-600">El precio de compra no puede ser negativo.</div>
+            </div>
           </div>
-        </div>
-        <div class="mb-4">
-          <label class="block text-sm font-medium text-gray-700">Precio de Venta:</label>
-          <input
-            type="number"
-            formControlName="ventaPrice"
-            required
-            min="0"
-            class="mt-1 block w-full p-2 border border-gray-300 rounded-md focus:ring-blue-500 focus:border-blue-500 font-rubik-light"
-          />
-          <div *ngIf="crudForm.get('ventaPrice')?.invalid && (crudForm.get('ventaPrice')?.touched || crudForm.get('ventaPrice')?.dirty)">
-            <div *ngIf="crudForm.get('ventaPrice')?.errors?.['required']" class="text-red-600">El precio de venta es obligatorio.</div>
-            <div *ngIf="crudForm.get('ventaPrice')?.errors?.['min']" class="text-red-600">El precio de venta no puede ser negativo.</div>
+          <div class="mb-4">
+            <label class="block text-sm font-medium text-gray-700">Precio de Venta:</label>
+            <input
+              type="number"
+              formControlName="ventaPrice"
+              required
+              min="0"
+              class="mt-1 block w-full p-2 border border-gray-300 rounded-md focus:ring-blue-500 focus:border-blue-500 font-rubik text-black"
+            />
+            <div *ngIf="crudForm.get('ventaPrice')?.invalid && (crudForm.get('ventaPrice')?.touched || crudForm.get('ventaPrice')?.dirty)">
+              <div *ngIf="crudForm.get('ventaPrice')?.errors?.['required']" class="text-red-600">El precio de venta es obligatorio.</div>
+              <div *ngIf="crudForm.get('ventaPrice')?.errors?.['min']" class="text-red-600">El precio de venta no puede ser negativo.</div>
+            </div>
           </div>
-        </div>
-        <div class="mb-4">
-          <label class="block text-sm font-medium text-gray-700">Stock:</label>
-          <input
-            type="number"
-            formControlName="stock"
-            required
-            min="0"
-            class="mt-1 block w-full p-2 border border-gray-300 rounded-md focus:ring-blue-500 focus:border-blue-500 font-rubik-light"
-          />
-          <div *ngIf="crudForm.get('stock')?.invalid && (crudForm.get('stock')?.touched || crudForm.get('stock')?.dirty)">
-            <div *ngIf="crudForm.get('stock')?.errors?.['required']" class="text-red-600">El stock es obligatorio.</div>
-            <div *ngIf="crudForm.get('stock')?.errors?.['min']" class="text-red-600">El stock no puede ser negativo.</div>
+          <div class="mb-4">
+            <label class="block text-sm font-medium text-gray-700">Stock:</label>
+            <input
+              type="number"
+              formControlName="stock"
+              required
+              min="0"
+              class="mt-1 block w-full p-2 border border-gray-300 rounded-md focus:ring-blue-500 focus:border-blue-500 font-rubik text-black"
+            />
+            <div *ngIf="crudForm.get('stock')?.invalid && (crudForm.get('stock')?.touched || crudForm.get('stock')?.dirty)">
+              <div *ngIf="crudForm.get('stock')?.errors?.['required']" class="text-red-600">El stock es obligatorio.</div>
+              <div *ngIf="crudForm.get('stock')?.errors?.['min']" class="text-red-600">El stock no puede ser negativo.</div>
+            </div>
           </div>
-        </div>
-        <div class="mb-4">
-          <label class="block text-sm font-medium text-gray-700">Fecha de Vencimiento:</label>
-          <input
-            type="date"
-            formControlName="expiryDate"
-            class="mt-1 block w-full p-2 border border-gray-300 rounded-md focus:ring-blue-500 focus:border-blue-500 font-rubik-light"
-          />
-        </div>
-        <div class="flex justify-end">
-          <button
-            type="button"
-            (click)="closeModal()"
-            class="mr-2 inline-flex items-center px-4 py-2 bg-gray-300 text-gray-700 font-semibold rounded-md shadow hover:bg-gray-400 focus:outline-none focus:ring-2 focus:ring-gray-500">
-            Cancelar
-          </button>
-          <button
-            type="submit"
-            [disabled]="crudForm.invalid"
-            class="inline-flex items-center px-4 py-2 bg-[#31363F] text-white font-semibold rounded-md shadow hover:bg-black focus:outline-none focus:ring-2 focus:ring-black focus:ring-offset-1 mt-4 disabled:bg-gray-400">
-            {{ isEditing ? 'Actualizar' : 'Crear' }}
-          </button>
-        </div>
-      </form>
+          <div class="mb-4">
+            <label class="block text-sm font-medium text-gray-700">Fecha de Vencimiento:</label>
+            <input
+              type="date"
+              formControlName="expiryDate"
+              class="mt-1 block w-full p-2 border border-gray-300 rounded-md focus:ring-blue-500 focus:border-blue-500 font-rubik text-black"
+            />
+          </div>
+          <div class="flex justify-end">
+            <button type="submit" class="px-4 py-2 bg-blue-500 text-white rounded-md hover:bg-blue-600 focus:outline-none focus:ring-2 focus:ring-blue-300">
+              {{ isEditing ? 'Actualizar' : 'Agregar' }}
+            </button>
+            <button type="button" (click)="closeModal()" class="ml-2 px-4 py-2 bg-gray-300 text-black rounded-md hover:bg-gray-400 focus:outline-none focus:ring-2 focus:ring-gray-400">
+              Cancelar
+            </button>
+          </div>
+        </form>
+      </div>
     </div>
   </div>
 </div>
-
