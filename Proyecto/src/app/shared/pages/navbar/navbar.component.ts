@@ -1,5 +1,5 @@
-import { Component } from '@angular/core';
-import { RouterOutlet } from '@angular/router';
+import { Component, inject } from '@angular/core';
+import { Router, RouterOutlet } from '@angular/router';
 
 @Component({
   selector: 'app-navbar',
@@ -9,6 +9,14 @@ import { RouterOutlet } from '@angular/router';
   styleUrl: './navbar.component.css'
 })
 export default class NavbarComponent {
+  router=inject(Router)
 
+  logout(): void {
+    // Eliminar el token del localStorage
+    console.log("entro aca")
+    localStorage.removeItem('token');
+    this.router.navigate(['/home'])
 
+    // Opcional: Redirigir a la página de inicio o login
+  }
 }
