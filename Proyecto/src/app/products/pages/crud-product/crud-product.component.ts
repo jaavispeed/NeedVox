@@ -4,34 +4,28 @@ import { CommonModule } from '@angular/common';
 import { FormControl, FormGroup, FormsModule, ReactiveFormsModule, Validators } from '@angular/forms';
 import { Product } from '../../models/product.model';
 import { NgxPaginationModule } from 'ngx-pagination';
+import { AlertComponent } from '../../../shared/pages/alert/alert.component';
 
 @Component({
   selector: 'app-crud-product',
   standalone: true,
-  imports: [CommonModule, FormsModule, NgxPaginationModule, ReactiveFormsModule],
+  imports: [CommonModule, FormsModule, NgxPaginationModule, ReactiveFormsModule, AlertComponent],
   templateUrl: './crud-product.component.html',
   styleUrls: ['./crud-product.component.css']
 })
 export class CrudProductComponent implements OnInit {
-  products: Product[] = [];  // Lista original de productos
-  filteredProducts: Product[] = [];  // Productos filtrados
+  products: Product[] = [];
+  filteredProducts: Product[] = [];
   currentPage = 1;
   itemsPerPage = 5;
-  product: Product = {
-    title: '',
-    compraPrice: 0,
-    ventaPrice: 0,
-    stock: 0,
-    slug: '',
-    user: { id: '' },
-    expiryDate: undefined // Añadido expiryDate
-  };
+  product: Product = { title: '', compraPrice: 0, ventaPrice: 0, stock: 0, slug: '', user: { id: '' }, expiryDate: undefined };
   isEditing: boolean = false;
-  isModalOpen: boolean = false;  // Estado del modal
-  searchTerm: string = '';  // Término de búsqueda
+  isModalOpen: boolean = false;
+  searchTerm: string = '';
 
-  alertVisible: boolean = false;  // Estado de la alerta
-  alertMessage: string = ''; // Mensaje de alerta
+  alertVisible: boolean = false;
+  alertMessage: string = '';
+  alertType: 'success' | 'error' = 'success';
 
   crudForm: FormGroup;
 
@@ -42,84 +36,82 @@ export class CrudProductComponent implements OnInit {
       ventaPrice: new FormControl(0, [Validators.required, Validators.min(0)]),
       stock: new FormControl(0, [Validators.required, Validators.min(0)]),
       slug: new FormControl(''),
-      expiryDate: new FormControl(null),  // Establece null por defecto
+      expiryDate: new FormControl(null),
     });
   }
 
   ngOnInit(): void {
-    this.getProducts();  // Cargar productos al iniciar el componente
+    this.getProducts();
   }
 
   getProducts(): void {
     this.productService.getProducts().subscribe({
       next: (data) => {
         this.products = data;
-        this.filteredProducts = data;  // Inicializa los productos filtrados
+        this.filteredProducts = data;
       },
-      error: (error) => console.error('Error al obtener los productos', error)
+      error: (error) => this.showAlert('Error al obtener los productos.', 'error')
     });
   }
 
   createOrUpdateProduct(): void {
     if (this.crudForm.invalid) {
-        return;
+      this.showAlert('Por favor completa todos los campos correctamente.', 'error');
+      return;
     }
 
     const productToSend = {
-        ...this.crudForm.value,
-        compraPrice: Number(this.crudForm.value.compraPrice),
-        ventaPrice: Number(this.crudForm.value.ventaPrice),
+      ...this.crudForm.value,
+      compraPrice: Number(this.crudForm.value.compraPrice),
+      ventaPrice: Number(this.crudForm.value.ventaPrice),
     };
 
     if (this.isEditing) {
-        this.productService.updateProduct(this.product.id!, productToSend).subscribe({
-            next: () => this.onSuccess('Producto actualizado con éxito.'),
-            error: (error) => {
-                console.error('Error al actualizar el producto', error);
-                console.error('Detalles del error', error.error); // Muestra detalles del error
-            }
-        });
+      this.productService.updateProduct(this.product.id!, productToSend).subscribe({
+        next: () => this.onSuccess('Producto actualizado con éxito.', 'success'),
+        error: () => this.showAlert('Error al actualizar el producto.', 'error')
+      });
     } else {
-        this.productService.createProduct(productToSend).subscribe({
-            next: () => this.onSuccess('Producto creado con éxito.'),
-            error: (error) => {
-                console.error('Error creando el producto', error);
-                console.error('Detalles del error', error.error); // Muestra detalles del error
-            }
-        });
+      this.productService.createProduct(productToSend).subscribe({
+        next: () => this.onSuccess('Producto creado con éxito.', 'success'),
+        error: () => this.showAlert('Error al crear el producto.', 'error')
+      });
     }
-}
+  }
 
   editProduct(product: Product): void {
-    this.product = { ...product };  // Crea una copia del producto para editar
+    this.product = { ...product };
     this.isEditing = true;
-    this.openModal();  // Abre el modal al editar
+    this.openModal();
 
-    // Establece los valores en el formulario
     this.crudForm.setValue({
       title: product.title,
       compraPrice: product.compraPrice,
       ventaPrice: product.ventaPrice,
       stock: product.stock,
       slug: product.slug,
-      expiryDate: product.expiryDate || null,  // Establece null si no hay fecha
+      expiryDate: product.expiryDate || null,
     });
   }
 
   deleteProduct(id: string): void {
     this.productService.deleteProduct(id).subscribe({
-      next: () => this.onSuccess('Producto Eliminado.'),  // Refrescar la lista después de eliminar
-      error: (error) => console.error('Error al eliminar el producto', error)
+      next: () => this.onSuccess('Producto eliminado con éxito.', 'success'),
+      error: () => this.showAlert('Error al eliminar el producto.', 'error')
     });
   }
 
-  onSuccess(message: string): void {
-    this.getProducts();  // Refrescar la lista
-    this.resetForm();    // Limpiar el formulario
-    this.closeModal();   // Cerrar el modal después de agregar/editar
+  onSuccess(message: string, type: 'success' | 'error'): void {
+    this.getProducts();
+    this.resetForm();
+    this.closeModal();
 
-    // Mostrar la alerta personalizada
+    this.showAlert(message, type);
+  }
+
+  showAlert(message: string, type: 'success' | 'error'): void {
     this.alertMessage = message;
+    this.alertType = type;
     this.alertVisible = true;
 
     // Ocultar la alerta después de 3 segundos
@@ -133,30 +125,22 @@ export class CrudProductComponent implements OnInit {
       ventaPrice: 0,
       stock: 0,
       slug: '',
-      expiryDate: null,  // Establece expiryDate a null
+      expiryDate: null,
     });
-    this.product = {
-      title: '',
-      compraPrice: 0,
-      ventaPrice: 0,
-      stock: 0,
-      slug: '',
-      user: { id: '' },
-      expiryDate: undefined // Reinicia expiryDate
-    };
-    this.isEditing = false;  // Reinicia el estado de edición
+    this.product = { title: '', compraPrice: 0, ventaPrice: 0, stock: 0, slug: '', user: { id: '' }, expiryDate: undefined };
+    this.isEditing = false;
   }
 
   openModal(): void {
-    this.isModalOpen = true;  // Cambia el estado del modal a abierto
+    this.isModalOpen = true;
     if (!this.isEditing) {
-      this.resetForm();  // Limpia el formulario al abrir el modal para crear
+      this.resetForm();
     }
   }
 
   closeModal(): void {
-    this.isModalOpen = false;  // Cambia el estado del modal a cerrado
-    this.resetForm();          // Reinicia el formulario al cerrar el modal
+    this.isModalOpen = false;
+    this.resetForm();
   }
 
   filterProducts(): void {

@@ -1,8 +1,9 @@
 <div class="container mx-auto p-10 bg-white flex flex-col items-center">
-  <!-- Alerta de éxito -->
-  <div *ngIf="alertVisible" class="mb-4 p-4 bg-green-100 border border-green-400 text-green-700 rounded-md">
-    {{ alertMessage }}
+  <div class="fixed bottom-0 right-0 m-4">
+    <app-alert [message]="alertMessage" [isVisible]="alertVisible" [type]="alertType"></app-alert>
   </div>
+
+
 
   <!-- Barra de búsqueda -->
   <div class="mb-4 w-full max-w-md">
@@ -163,8 +164,8 @@
             {{ isEditing ? 'Actualizar' : 'Crear' }}
           </button>
         </div>
-
       </form>
     </div>
   </div>
 </div>
+
