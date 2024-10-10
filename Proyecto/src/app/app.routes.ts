@@ -60,6 +60,68 @@
 //   }
 // ];
 
+// import { Routes } from '@angular/router';
+// import IndexComponent from './index/pages/index/index.component';
+// import DashboardPageComponent from './dashboard/pages/dashboard-page/dashboard-page.component';
+// import ProductComponent from './products/pages/product/product.component';
+// import { CrudProductComponent } from './products/pages/crud-product/crud-product.component';
+// import LoginPageComponent from './auth/pages/login-page/login-page.component';
+// import { AuthGuard } from './auth/guards/auth.guard';
+
+// export const routes: Routes = [
+//   {
+//     path: '',
+//     redirectTo: '/home',
+//     pathMatch: 'full'
+//   },
+//   {
+//     path: 'home',
+//     loadComponent: () => import('./home/pages/landing-page/landing-page.component')
+//   },
+//   {
+//     path: 'login',
+//     component: LoginPageComponent
+//   },
+//   {
+//     path: 'index',
+//     component: IndexComponent,
+//     children: [
+//       {
+//         path: '',
+//         redirectTo: 'dashboard',
+//         pathMatch: 'full'
+//       },
+//       {
+//         path: 'dashboard',
+//         component: DashboardPageComponent,
+//         canActivate: [AuthGuard] // Protegido por AuthGuard
+//       },
+//       {
+//         path: 'productos',
+//         component: ProductComponent,
+//         canActivate: [AuthGuard] // Protegido por AuthGuard
+//       },
+//       {
+//         path: 'crud-productos',
+//         component: CrudProductComponent,
+//         canActivate: [AuthGuard] // Protegido por AuthGuard
+//       }
+//     ]
+//   },
+//   {
+//     path: 'navbar',
+//     loadComponent: () => import('./shared/pages/navbar/navbar.component')
+//   },
+//   {
+//     path: '404',
+//     loadComponent: () => import('./shared/pages/error404/error404.component')
+//   },
+//   {
+//     path: '**',
+//     redirectTo: '404'
+//   }
+// ];
+
 import { Routes } from '@angular/router';
 import IndexComponent from './index/pages/index/index.component';
 import DashboardPageComponent from './dashboard/pages/dashboard-page/dashboard-page.component';
@@ -67,6 +129,7 @@ import ProductComponent from './products/pages/product/product.component';
 import { CrudProductComponent } from './products/pages/crud-product/crud-product.component';
 import LoginPageComponent from './auth/pages/login-page/login-page.component';
 import { AuthGuard } from './auth/guards/auth.guard';
+import { NoAuthGuard } from './auth/guards/noAuth.guard';
 
 export const routes: Routes = [
   {
@@ -76,11 +139,13 @@ export const routes: Routes = [
   },
   {
     path: 'home',
-    loadComponent: () => import('./home/pages/landing-page/landing-page.component')
+    loadComponent: () => import('./home/pages/landing-page/landing-page.component'),
+    canActivate: [NoAuthGuard]  // Protege la página de inicio con NoAuthGuard
   },
   {
     path: 'login',
-    component: LoginPageComponent
+    component: LoginPageComponent,
+    canActivate: [NoAuthGuard]
   },
   {
     path: 'index',
@@ -89,22 +154,22 @@ export const routes: Routes = [
       {
         path: '',
         redirectTo: 'dashboard',
-        pathMatch: 'full'
+        pathMatch: 'full',
       },
       {
         path: 'dashboard',
         component: DashboardPageComponent,
-        canActivate: [AuthGuard] // Protegido por AuthGuard
+        canActivate: [AuthGuard]
       },
       {
         path: 'productos',
         component: ProductComponent,
-        canActivate: [AuthGuard] // Protegido por AuthGuard
+        canActivate: [AuthGuard]
       },
       {
         path: 'crud-productos',
         component: CrudProductComponent,
-        canActivate: [AuthGuard] // Protegido por AuthGuard
+        canActivate: [AuthGuard]
       }
     ]
   },
