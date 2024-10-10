@@ -154,7 +154,7 @@
             />
           </div>
           <div class="flex justify-end">
-            <button type="submit" class="px-4 py-2 bg-blue-500 text-white rounded-md hover:bg-blue-600 focus:outline-none focus:ring-2 focus:ring-blue-300">
+            <button type="submit" [disabled]="crudForm.invalid" class="px-4 py-2 bg-blue-500 text-white rounded-md hover:bg-blue-600 focus:outline-none focus:ring-2  disabled:bg-gray-400 focus:ring-blue-300">
               {{ isEditing ? 'Actualizar' : 'Agregar' }}
             </button>
             <button type="button" (click)="closeModal()" class="ml-2 px-4 py-2 bg-gray-300 text-black rounded-md hover:bg-gray-400 focus:outline-none focus:ring-2 focus:ring-gray-400">
