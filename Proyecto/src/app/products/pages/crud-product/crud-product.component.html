@@ -32,7 +32,7 @@
       <table class="w-full text-sm text-left text-black">
         <thead class="text-xs uppercase bg-gray-50">
           <tr>
-            <th scope="col" class="px-2 py-3 font-bold font-rubik text-center">Título</th>
+            <th scope="col" class="px-2 py-3 font-bold font-rubik text-center">Producto</th>
             <th scope="col" class="px-2 py-3 font-bold font-rubik text-center">Precio de Compra</th>
             <th scope="col" class="px-2 py-3 font-bold font-rubik text-center">Precio de Venta</th>
             <th scope="col" class="px-2 py-3 font-bold font-rubik text-center">Stock</th>
@@ -92,15 +92,15 @@
         <h2 class="text-xl font-bold mb-4">{{ isEditing ? 'Editar Producto' : 'Crear Producto' }}</h2>
         <form [formGroup]="crudForm" (ngSubmit)="createOrUpdateProduct()" class="mb-6">
           <div class="mb-4">
-            <label class="block text-sm font-medium text-gray-700">Título:</label>
+            <label class="block text-sm font-medium text-gray-700">Producto:</label>
             <input
               formControlName="title"
               placeholder="Nombre del producto"
               class="mt-1 block w-full p-2 border border-gray-300 rounded-md focus:ring-blue-500 focus:border-blue-500 font-rubik text-black"
             />
             <div *ngIf="crudForm.get('title')?.invalid && (crudForm.get('title')?.touched || crudForm.get('title')?.dirty)">
-              <div *ngIf="crudForm.get('title')?.errors?.['required']" class="text-red-600">El título es obligatorio.</div>
-              <div *ngIf="crudForm.get('title')?.errors?.['minlength']" class="text-red-600">El título debe tener al menos 3 caracteres.</div>
+              <div *ngIf="crudForm.get('title')?.errors?.['required']" class="text-red-600">El nombre es obligatorio.</div>
+              <div *ngIf="crudForm.get('title')?.errors?.['minlength']" class="text-red-600">El nombre debe tener al menos 3 caracteres.</div>
             </div>
           </div>
           <div class="mb-4">
