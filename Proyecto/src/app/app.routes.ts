@@ -6,6 +6,7 @@ import { CrudProductComponent } from './products/pages/crud-product/crud-product
 import LoginPageComponent from './auth/pages/login-page/login-page.component';
 import { AuthGuard } from './auth/guards/auth.guard';
 import { NoAuthGuard } from './auth/guards/noAuth.guard';
+import { VentaComponent } from './venta/pages/venta/venta.component';
 
 export const routes: Routes = [
   {
@@ -40,6 +41,11 @@ export const routes: Routes = [
       {
         path: 'crud-productos',
         component: CrudProductComponent,
+        canActivate: [AuthGuard]
+      },
+      {
+        path:'venta',
+        component: VentaComponent,
         canActivate: [AuthGuard]
       }
     ]
