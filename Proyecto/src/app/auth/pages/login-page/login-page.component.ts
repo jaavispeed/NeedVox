@@ -18,6 +18,8 @@ export default class LoginPageComponent {
   @Output() closeModal = new EventEmitter<void>();
   @Output() onSuccess = new EventEmitter<void>(); // Evento de éxito
   @Output() onError = new EventEmitter<string>(); // Evento de error
+  @Output() startLoading = new EventEmitter<void>();
+  @Output() stopLoading = new EventEmitter<void>();
 
   loginform = new FormGroup({
     email: new FormControl('', [Validators.required, Validators.email]),
@@ -29,22 +31,30 @@ export default class LoginPageComponent {
       const email = this.loginform.get('email')?.value;
       const password = this.loginform.get('password')?.value;
 
+      this.startLoading.emit(); // Emitir el evento para iniciar el spinner
       if (email && password) {
+        this.close(); // Cerrar el modal
         this.authService.login({ email, password }).subscribe({
           next: (response: User) => {
             console.log('Login correcto', response);
             localStorage.setItem('token', response.token);
             this.onSuccess.emit(); // Emitir evento de éxito
-            this.router.navigate(['/index']);
+
+            setTimeout(()=> {
+              this.router.navigate(['/index']);
+              this.stopLoading.emit(); // Detener el spinner después de redirigir
+            }, 1000);
           },
           error: (err) => {
             console.error('Login fallido', err);
+            this.stopLoading.emit(); // Detener el spinner en caso de error
             this.onError.emit('Error al iniciar sesión. Verifica tus credenciales.'); // Emitir evento de error
           }
         });
       }
     } else {
       console.error('Formulario inválido');
+      this.stopLoading.emit(); // Detener el spinner si el formulario es inválido
     }
   }
 

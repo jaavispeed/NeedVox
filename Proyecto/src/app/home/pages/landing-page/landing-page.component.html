@@ -56,19 +56,26 @@
     </div>
   </div>
 
+  <!-- Spinner -->
+  <div *ngIf="isLoading" class="fixed inset-0 flex items-center justify-center z-50 bg-white bg-opacity-50">
+    <app-spinner></app-spinner>
+  </div>
+
   <!-- Footer -->
   <footer class="bg-[#222831] text-sm text-[#EEEEEE] text-center py-4 shadow-lg">
     <p class="font-light font-rubik">Copyright © Needvox</p>
   </footer>
 
   <!-- Modal para Login/Registro -->
-  <div *ngIf="isModalOpen">
+  <div *ngIf="isModalOpen" class="fixed inset-0 flex items-center justify-center z-50">
     <ng-container [ngSwitch]="modalType">
       <ng-container *ngSwitchCase="'login'">
         <app-login-page
           (closeModal)="closeModal()"
           (onSuccess)="showAlert('Ingreso exitoso', 'success')"
-          (onError)="showAlert('Error al iniciar sesión. Verifica tus credenciales.', 'error')"></app-login-page> <!-- Carga el componente de Login -->
+          (onError)="showAlert('Error al iniciar sesión. Verifica tus credenciales.', 'error')"
+          (startLoading)="startLoading()"
+          (stopLoading)="stopLoading()"></app-login-page> <!-- Carga el componente de Login -->
       </ng-container>
       <ng-container *ngSwitchCase="'register'">
         <app-register-page
