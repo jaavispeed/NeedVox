@@ -64,6 +64,7 @@ export class CrudProductComponent implements OnInit {
       ...this.crudForm.value,
       compraPrice: Number(this.crudForm.value.compraPrice),
       ventaPrice: Number(this.crudForm.value.ventaPrice),
+      expiryDate: this.crudForm.value.expiryDate === '' ? null : this.crudForm.value.expiryDate // Conviértelo a null si está vacío
     };
 
     if (this.isEditing) {
