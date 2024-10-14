@@ -18,7 +18,7 @@ export class CrudProductComponent implements OnInit {
   filteredProducts: Product[] = [];
   currentPage = 1;
   itemsPerPage = 5;
-  product: Product = { title: '', compraPrice: 0, ventaPrice: 0, stock: 0, slug: '', user: { id: '' }, expiryDate: undefined };
+  product: Product = { title: '', compraPrice: 0, ventaPrice: 0, stock: 0, slug: '', user: { id: '' }, expiryDate: undefined, barcode: '' };
   isEditing: boolean = false;
   isModalOpen: boolean = false;
   searchTerm: string = '';
@@ -37,6 +37,7 @@ export class CrudProductComponent implements OnInit {
       stock: new FormControl(0, [Validators.required, Validators.min(0)]),
       slug: new FormControl(''),
       expiryDate: new FormControl(null),
+      barcode: new FormControl('', [Validators.required])  // Campo agregado
     });
   }
 
@@ -92,6 +93,7 @@ export class CrudProductComponent implements OnInit {
       stock: product.stock,
       slug: product.slug,
       expiryDate: product.expiryDate || null,
+      barcode: product.barcode || ''  // Campo agregado
     });
   }
 
@@ -127,8 +129,9 @@ export class CrudProductComponent implements OnInit {
       stock: 0,
       slug: '',
       expiryDate: null,
+      barcode: ''  // Campo agregado
     });
-    this.product = { title: '', compraPrice: 0, ventaPrice: 0, stock: 0, slug: '', user: { id: '' }, expiryDate: undefined };
+    this.product = { title: '', compraPrice: 0, ventaPrice: 0, stock: 0, slug: '', user: { id: '' }, expiryDate: undefined, barcode: '' };  // Campo agregado
     this.isEditing = false;
   }
 

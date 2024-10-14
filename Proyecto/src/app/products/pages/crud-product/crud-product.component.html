@@ -37,6 +37,7 @@
             <th scope="col" class="px-2 py-3 font-bold font-rubik text-center">Precio de Venta</th>
             <th scope="col" class="px-2 py-3 font-bold font-rubik text-center">Stock</th>
             <th scope="col" class="px-2 py-3 font-bold font-rubik text-center">Fecha de Vencimiento</th>
+            <th scope="col" class="px-2 py-3 font-bold font-rubik text-center">Código de Barras</th>
             <th scope="col" class="px-2 py-3 font-bold font-rubik text-center"><span class="sr-only">Acciones</span></th>
           </tr>
         </thead>
@@ -47,6 +48,7 @@
             <td class="px-4 py-3 text-center text-black font-rubik">{{ product.ventaPrice | currency }}</td>
             <td class="px-4 py-3 text-center text-black font-rubik">{{ product.stock }}</td>
             <td class="px-4 py-3 text-center text-black font-rubik">{{ product.expiryDate || 'Sin fecha de vencimiento' }}</td>
+            <td class="px-4 py-3 text-center text-black font-rubik">{{ product.barcode || 'Sin código de barras' }}</td>
             <td class="px-4 py-3 text-center flex justify-center space-x-2">
               <button (click)="editProduct(product)" class="inline-flex items-center px-4 py-2 bg-[#76ABAE] text-white font-semibold rounded-md shadow hover:bg-[#5b9892] focus:outline-none focus:ring-2 focus:ring-gray-500">
                 <i class="fas fa-edit mr-1"></i>
@@ -153,13 +155,21 @@
               class="mt-1 block w-full p-2 border border-gray-300 rounded-md focus:ring-blue-500 focus:border-blue-500 font-rubik text-black"
             />
           </div>
+          <!-- Campo para el barcode -->
+          <div class="mb-4">
+            <label class="block text-sm font-medium text-gray-700">Código de Barras:</label>
+            <input
+              formControlName="barcode"
+              placeholder="Código de barras"
+              class="mt-1 block w-full p-2 border border-gray-300 rounded-md focus:ring-blue-500 focus:border-blue-500 font-rubik text-black"
+            />
+            <div *ngIf="crudForm.get('barcode')?.invalid && (crudForm.get('barcode')?.touched || crudForm.get('barcode')?.dirty)">
+              <div *ngIf="crudForm.get('barcode')?.errors?.['required']" class="text-red-600">El código de barras es obligatorio.</div>
+            </div>
+          </div>
           <div class="flex justify-end">
-            <button type="submit" [disabled]="crudForm.invalid" class="px-4 py-2 bg-blue-500 text-white rounded-md hover:bg-blue-600 focus:outline-none focus:ring-2 disabled:bg-gray-400 focus:ring-blue-300">
-              {{ isEditing ? 'Actualizar' : 'Agregar' }}
-            </button>
-            <button type="button" (click)="closeModal()" class="ml-2 px-4 py-2 bg-gray-300 text-black rounded-md hover:bg-gray-400 focus:outline-none focus:ring-2 focus:ring-gray-400">
-              Cancelar
-            </button>
+            <button type="button" (click)="closeModal()" class="mr-2 px-4 py-2 bg-gray-300 rounded-md">Cancelar</button>
+            <button type="submit" class="px-4 py-2 bg-[#76ABAE] text-white rounded-md">{{ isEditing ? 'Actualizar' : 'Crear' }}</button>
           </div>
         </form>
       </div>
