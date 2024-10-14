@@ -6,7 +6,6 @@ import { Observable } from 'rxjs';
   providedIn: 'root'
 })
 export class ProductService {
-
   private apiUrl = 'http://localhost:3000/api/products';
 
   constructor(private httpClient: HttpClient) {}
@@ -27,7 +26,8 @@ export class ProductService {
     ventaPrice: number;
     stock: number;
     slug: string;
-    expiryDate?: string
+    expiryDate?: string;
+    barcode?: string | null // Hacer opcional el código de barras
   }): Observable<any> {
     const token = localStorage.getItem('token');
     const headers = new HttpHeaders({
@@ -52,24 +52,15 @@ export class ProductService {
     ventaPrice: number;
     stock: number;
     slug: string;
-    expiryDate?: string
+    expiryDate?: string;
+    barcode?: string | null // Hacer opcional el código de barras
   }): Observable<any> {
     const token = localStorage.getItem('token');
     const headers = new HttpHeaders({
       'Authorization': `Bearer ${token}`
     });
 
-    // Crea un objeto de producto para actualizar
-    const updatedProductData = {
-      title: productData.title,
-      compraPrice: productData.compraPrice,
-      ventaPrice: productData.ventaPrice,
-      stock: productData.stock,
-      slug: productData.slug,
-      expiryDate: productData.expiryDate // Asegúrate de incluir expiryDate
-    };
-
-    return this.httpClient.patch<any>(`${this.apiUrl}/${id}`, updatedProductData, { headers });
+    return this.httpClient.patch<any>(`${this.apiUrl}/${id}`, productData, { headers });
   }
 
   // Eliminar un producto
@@ -80,4 +71,6 @@ export class ProductService {
     });
     return this.httpClient.delete<any>(`${this.apiUrl}/${id}`, { headers });
   }
+
+
 }

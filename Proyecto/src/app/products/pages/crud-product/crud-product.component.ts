@@ -18,7 +18,7 @@ export class CrudProductComponent implements OnInit {
   filteredProducts: Product[] = [];
   currentPage = 1;
   itemsPerPage = 5;
-  product: Product = { title: '', compraPrice: 0, ventaPrice: 0, stock: 0, slug: '', user: { id: '' }, expiryDate: undefined, barcode: '' };
+  product: Product = { title: '', compraPrice: 0, ventaPrice: 0, stock: 0, slug: '', user: { id: '' }, expiryDate: undefined, barcode: null };
   isEditing: boolean = false;
   isModalOpen: boolean = false;
   searchTerm: string = '';
@@ -37,7 +37,7 @@ export class CrudProductComponent implements OnInit {
       stock: new FormControl(0, [Validators.required, Validators.min(0)]),
       slug: new FormControl(''),
       expiryDate: new FormControl(null),
-      barcode: new FormControl('', [Validators.required])  // Campo agregado
+      barcode: new FormControl(null) // Hacer que el código de barras sea opcional
     });
   }
 
@@ -65,21 +65,56 @@ export class CrudProductComponent implements OnInit {
       ...this.crudForm.value,
       compraPrice: Number(this.crudForm.value.compraPrice),
       ventaPrice: Number(this.crudForm.value.ventaPrice),
-      expiryDate: this.crudForm.value.expiryDate === '' ? null : this.crudForm.value.expiryDate // Conviértelo a null si está vacío
+      expiryDate: this.crudForm.value.expiryDate === '' ? null : this.crudForm.value.expiryDate,
+      barcode: this.crudForm.value.barcode === '' ? null : this.crudForm.value.barcode // Asegurarse de que barcode sea null si está vacío
     };
 
     if (this.isEditing) {
       this.productService.updateProduct(this.product.id!, productToSend).subscribe({
         next: () => this.onSuccess('Producto actualizado con éxito.', 'success'),
-        error: () => this.showAlert('Error al actualizar el producto.', 'error')
+        error: (error) => {
+          this.handleError(error, 'actualizar'); // Manejo de errores para la actualización
+        }
       });
     } else {
       this.productService.createProduct(productToSend).subscribe({
         next: () => this.onSuccess('Producto creado con éxito.', 'success'),
-        error: () => this.showAlert('Error al crear el producto.', 'error')
+        error: (error) => {
+          this.handleError(error, 'crear'); // Manejo de errores para la creación
+        }
       });
     }
   }
+
+  // Manejo de errores específico
+  private handleError(error: any, action: 'crear' | 'actualizar'): void {
+    const errorMessage = error.error?.message || 'Error desconocido';
+
+    console.log('Error recibido:', error); // Para depurar el error
+
+    switch (error.status) {
+      case 400: // Bad Request
+        // Aquí puedes manejar errores específicos basados en el mensaje
+        if (errorMessage.includes('Nombre ya creado')) {
+          this.showAlert('El nombre del producto ya existe.', 'error');
+        } else if (errorMessage.includes('Código de barras ya creado')) {
+          this.showAlert('El código de barras ya existe.', 'error');
+        } else {
+          this.showAlert(errorMessage, 'error'); // Usar solo el mensaje específico
+        }
+        break;
+
+      case 500: // Internal Server Error
+        this.showAlert(`Por favor, inténtelo de nuevo más tarde.`, 'error');
+        break;
+
+      default:
+        this.showAlert(errorMessage, 'error'); // Usar solo el mensaje específico
+        break;
+    }
+  }
+
+
 
   editProduct(product: Product): void {
     this.product = { ...product };
@@ -93,7 +128,7 @@ export class CrudProductComponent implements OnInit {
       stock: product.stock,
       slug: product.slug,
       expiryDate: product.expiryDate || null,
-      barcode: product.barcode || ''  // Campo agregado
+      barcode: product.barcode || null // Cargar el código de barras, permitir null
     });
   }
 
@@ -108,7 +143,6 @@ export class CrudProductComponent implements OnInit {
     this.getProducts();
     this.resetForm();
     this.closeModal();
-
     this.showAlert(message, type);
   }
 
@@ -117,7 +151,6 @@ export class CrudProductComponent implements OnInit {
     this.alertType = type;
     this.alertVisible = true;
 
-    // Ocultar la alerta después de 3 segundos
     setTimeout(() => this.alertVisible = false, 3000);
   }
 
@@ -129,9 +162,9 @@ export class CrudProductComponent implements OnInit {
       stock: 0,
       slug: '',
       expiryDate: null,
-      barcode: ''  // Campo agregado
+      barcode: null // Reiniciar el código de barras como null
     });
-    this.product = { title: '', compraPrice: 0, ventaPrice: 0, stock: 0, slug: '', user: { id: '' }, expiryDate: undefined, barcode: '' };  // Campo agregado
+    this.product = { title: '', compraPrice: 0, ventaPrice: 0, stock: 0, slug: '', user: { id: '' }, expiryDate: undefined, barcode: null };
     this.isEditing = false;
   }
 
