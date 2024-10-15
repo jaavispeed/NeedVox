@@ -3,6 +3,8 @@ import { CommonModule } from '@angular/common';
 import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { Product } from '../../../products/models/product.model';
 import { FormsModule } from '@angular/forms';
+import { VentaCar } from '../../models/venta-car.model';
+
 
 @Component({
   selector: 'app-venta',
@@ -14,7 +16,7 @@ import { FormsModule } from '@angular/forms';
 export class VentaComponent implements OnInit, AfterViewInit {
   private apiUrl = 'http://localhost:3000/api/products';
   productos: Product[] = []; // Variable para almacenar los productos
-  carrito: { product: Product; cantidad: number }[] = []; // Variable para almacenar los productos en el carrito
+  carrito: VentaCar[] = []; // Variable para almacenar los productos en el carrito utilizando el modelo VentaCar
   productosFiltrados: Product[] = []; // Variable para almacenar los productos filtrados
   searchTerm: string = ''; // Variable para el término de búsqueda
 
@@ -71,14 +73,23 @@ export class VentaComponent implements OnInit, AfterViewInit {
   agregarAlCarrito(producto: Product): void {
     // Comprueba si el producto ya está en el carrito
     const itemEnCarrito = this.carrito.find(item => item.product.id === producto.id);
+    const ahora = new Date();
+    const horaLocal = ahora.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
+
     if (itemEnCarrito) {
       itemEnCarrito.cantidad++; // Incrementa la cantidad si el producto ya está en el carrito
     } else {
-      this.carrito.push({ product: producto, cantidad: 1 }); // Agrega el producto si no está en el carrito
+      // Agrega el producto con la hora actual si no está en el carrito
+      this.carrito.push({
+        product: producto,
+        cantidad: 1,
+        hora: horaLocal,
+        ventaPrice: producto.ventaPrice // Incluye el precio de venta
+      });
     }
   }
 
-  eliminarDelCarrito(item: { product: Product; cantidad: number }): void {
+  eliminarDelCarrito(item: VentaCar): void {
     if (item.cantidad > 1) {
       item.cantidad--; // Decrementa la cantidad
     } else {
@@ -102,7 +113,8 @@ export class VentaComponent implements OnInit, AfterViewInit {
     }
   }
 
-  reiniciarCarrito() {
+  // Reiniciar el carrito
+  reiniciarCarrito(): void {
     this.carrito = [];
   }
 }
