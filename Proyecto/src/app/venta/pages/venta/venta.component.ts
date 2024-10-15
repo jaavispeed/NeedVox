@@ -1,7 +1,6 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, AfterViewInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { HttpClient, HttpHeaders } from '@angular/common/http';
-import { Observable } from 'rxjs';
 import { Product } from '../../../products/models/product.model';
 import { FormsModule } from '@angular/forms';
 
@@ -12,7 +11,7 @@ import { FormsModule } from '@angular/forms';
   templateUrl: './venta.component.html',
   styleUrls: ['./venta.component.css']
 })
-export class VentaComponent implements OnInit {
+export class VentaComponent implements OnInit, AfterViewInit {
   private apiUrl = 'http://localhost:3000/api/products';
   productos: Product[] = []; // Variable para almacenar los productos
   carrito: { product: Product; cantidad: number }[] = []; // Variable para almacenar los productos en el carrito
@@ -34,8 +33,7 @@ export class VentaComponent implements OnInit {
 
     this.httpClient.get<Product[]>(this.apiUrl, { headers }).subscribe(
       (data) => {
-        // Almacena los productos obtenidos en la variable productos y en productosFiltrados
-        this.productos = data;
+        this.productos = data; // Almacena los productos obtenidos en la variable productos
         this.productosFiltrados = data; // Inicializa productos filtrados con todos los productos
       },
       (error) => {
@@ -64,7 +62,7 @@ export class VentaComponent implements OnInit {
     if (productoEncontrado) {
       this.agregarAlCarrito(productoEncontrado);
       this.searchTerm = ''; // Limpia el campo de búsqueda
-      this.productosFiltrados = this.productos; // Reinicia la lista de productos filtrados
+      this.filtrarProductos(); // Reinicia la lista de productos filtrados
     } else {
       alert('Producto no encontrado.');
     }
@@ -90,5 +88,17 @@ export class VentaComponent implements OnInit {
 
   get totalPrecio(): number {
     return this.carrito.reduce((total, item) => total + (item.product.ventaPrice * item.cantidad), 0);
+  }
+
+  ngAfterViewInit(): void {
+    this.enfocarInput(); // Enfoca el input al cargar el componente
+  }
+
+  // Método para enfocar el input
+  enfocarInput(): void {
+    const input = document.getElementById('codigo-barra-input') as HTMLInputElement;
+    if (input) {
+      input.focus(); // Focaliza el input
+    }
   }
 }

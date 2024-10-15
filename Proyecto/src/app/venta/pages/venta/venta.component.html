@@ -1,18 +1,18 @@
 <div class="flex items-start">
   <div class="flex-1 w-3/5 p-4">
-    <!-- Mensaje de instrucciones -->
-    <h2 class="text-xl font-bold mb-4 text-center">Agrega un producto con código de barra o nombre</h2>
+    <h2 class="text-xl font-bold mb-4">Agrega un producto con código de barra</h2>
 
     <input
       type="text"
+      id="codigo-barra-input"
       placeholder="Buscar producto por nombre o código de barra"
       [(ngModel)]="searchTerm"
       (input)="filtrarProductos()"
       (keydown.enter)="agregarProductoDesdeBusqueda()"
+      (focusout)="enfocarInput()"
       class="block w-full p-2 border border-gray-300 rounded-md focus:ring-blue-500 focus:border-blue-500 font-rubik text-black mb-4"
     />
 
-    <!-- Mostrar productos filtrados como tarjetas -->
     <h3 class="text-lg font-semibold mb-4">Productos Disponibles</h3>
 
     <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
@@ -28,7 +28,7 @@
         <p *ngIf="producto.expiryDate" class="text-gray-500 text-sm">
           Vence: {{ producto.expiryDate | date:'longDate' }}
         </p>
-
+        <p class="text-gray-500 text-sm">Usuario: {{ producto.user.id }}</p>
         <button
           (click)="agregarAlCarrito(producto)"
           class="mt-2 inline-flex items-center px-3 py-1 bg-blue-600 text-white font-semibold rounded-md shadow hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-gray-500">
@@ -38,10 +38,9 @@
     </div>
   </div>
 
-  <div class="w-px bg-gray-300 mx-4" style="height: 600px; margin-top: 50px;"></div> <!-- Línea vertical más larga -->
+  <div class="w-px bg-gray-300 mx-4" style="height: 600px; margin-top: 50px;"></div>
 
   <div class="flex-none w-2/5 p-4">
-    <!-- Contenido del lado derecho -->
     <h2 class="text-xl font-bold text-center mb-4">Carrito</h2>
 
     <div *ngIf="carrito.length === 0" class="text-center text-gray-500">
@@ -73,7 +72,7 @@
           </tr>
         </tbody>
       </table>
-      <h3 class="text-lg font-bold mt-4">Precio Total: {{ totalPrecio | currency:'USD' }}</h3>
+      <h3 class="text-lg font-semibold mt-4">Precio Total: {{ totalPrecio | currency:'USD' }}</h3>
     </div>
   </div>
 </div>
