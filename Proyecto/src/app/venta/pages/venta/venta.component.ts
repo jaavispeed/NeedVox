@@ -5,7 +5,6 @@ import { Product } from '../../../products/models/product.model';
 import { FormsModule } from '@angular/forms';
 import { VentaCar } from '../../models/venta-car.model';
 
-
 @Component({
   selector: 'app-venta',
   standalone: true,
@@ -15,14 +14,15 @@ import { VentaCar } from '../../models/venta-car.model';
 })
 export class VentaComponent implements OnInit, AfterViewInit {
   private apiUrl = 'http://localhost:3000/api/products';
-  productos: Product[] = []; // Variable para almacenar los productos
-  carrito: VentaCar[] = []; // Variable para almacenar los productos en el carrito utilizando el modelo VentaCar
-  productosFiltrados: Product[] = []; // Variable para almacenar los productos filtrados
-  searchTerm: string = ''; // Variable para el término de búsqueda
+  productos: Product[] = [];
+  carrito: VentaCar[] = [];
+  productosFiltrados: Product[] = [];
+  searchTerm: string = '';
 
   constructor(private httpClient: HttpClient) {}
 
   ngOnInit(): void {
+    this.cargarCarritoDesdeLocalStorage(); // Cargar el carrito al iniciar
     this.obtenerProductos();
   }
 
@@ -35,14 +35,22 @@ export class VentaComponent implements OnInit, AfterViewInit {
 
     this.httpClient.get<Product[]>(this.apiUrl, { headers }).subscribe(
       (data) => {
-        this.productos = data; // Almacena los productos obtenidos en la variable productos
-        this.productosFiltrados = data; // Inicializa productos filtrados con todos los productos
+        this.productos = data;
+        this.productosFiltrados = data;
       },
       (error) => {
         console.error('Error al obtener los productos:', error);
-        this.productos = []; // Asigna un array vacío en caso de error
+        this.productos = [];
       }
     );
+  }
+
+  // Cargar el carrito desde localStorage
+  cargarCarritoDesdeLocalStorage(): void {
+    const carritoGuardado = localStorage.getItem('carrito');
+    if (carritoGuardado) {
+      this.carrito = JSON.parse(carritoGuardado); // Convierte el JSON a un objeto
+    }
   }
 
   // Filtrar productos según el término de búsqueda
@@ -63,38 +71,45 @@ export class VentaComponent implements OnInit, AfterViewInit {
 
     if (productoEncontrado) {
       this.agregarAlCarrito(productoEncontrado);
-      this.searchTerm = ''; // Limpia el campo de búsqueda
-      this.filtrarProductos(); // Reinicia la lista de productos filtrados
+      this.searchTerm = '';
+      this.filtrarProductos();
     } else {
       alert('Producto no encontrado.');
     }
   }
 
   agregarAlCarrito(producto: Product): void {
-    // Comprueba si el producto ya está en el carrito
     const itemEnCarrito = this.carrito.find(item => item.product.id === producto.id);
     const ahora = new Date();
     const horaLocal = ahora.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
 
     if (itemEnCarrito) {
-      itemEnCarrito.cantidad++; // Incrementa la cantidad si el producto ya está en el carrito
+      itemEnCarrito.cantidad++;
     } else {
-      // Agrega el producto con la hora actual si no está en el carrito
       this.carrito.push({
         product: producto,
         cantidad: 1,
         hora: horaLocal,
-        ventaPrice: producto.ventaPrice // Incluye el precio de venta
+        ventaPrice: producto.ventaPrice
       });
     }
+
+    this.guardarCarritoEnLocalStorage(); // Guardar el carrito actualizado
   }
 
   eliminarDelCarrito(item: VentaCar): void {
     if (item.cantidad > 1) {
-      item.cantidad--; // Decrementa la cantidad
+      item.cantidad--;
     } else {
-      this.carrito = this.carrito.filter(cartItem => cartItem.product.id !== item.product.id); // Elimina el producto del carrito
+      this.carrito = this.carrito.filter(cartItem => cartItem.product.id !== item.product.id);
     }
+
+    this.guardarCarritoEnLocalStorage(); // Guardar el carrito actualizado
+  }
+
+  // Método para guardar el carrito en localStorage
+  guardarCarritoEnLocalStorage(): void {
+    localStorage.setItem('carrito', JSON.stringify(this.carrito)); // Convierte el objeto a JSON y lo guarda
   }
 
   get totalPrecio(): number {
@@ -102,19 +117,18 @@ export class VentaComponent implements OnInit, AfterViewInit {
   }
 
   ngAfterViewInit(): void {
-    this.enfocarInput(); // Enfoca el input al cargar el componente
+    this.enfocarInput();
   }
 
-  // Método para enfocar el input
   enfocarInput(): void {
     const input = document.getElementById('codigo-barra-input') as HTMLInputElement;
     if (input) {
-      input.focus(); // Focaliza el input
+      input.focus();
     }
   }
 
-  // Reiniciar el carrito
   reiniciarCarrito(): void {
     this.carrito = [];
+    this.guardarCarritoEnLocalStorage(); // Guardar el carrito vacío
   }
 }
