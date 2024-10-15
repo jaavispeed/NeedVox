@@ -1,66 +1,77 @@
 <div class="flex items-start">
   <div class="flex-1 w-3/5 p-4">
-    <!-- Contenido del lado izquierdo -->
-    <h2 class="text-xl font-bold">Lado Izquierdo</h2>
+    <h2 class="text-xl font-bold mb-4">Agrega un producto con código de barra</h2>
+
     <input
       type="text"
       placeholder="Código de barra"
       class="block w-full p-2 border border-gray-300 rounded-md focus:ring-blue-500 focus:border-blue-500 font-rubik text-black mb-4"
     />
+
+    <h3 class="text-lg font-semibold mb-4">Productos Disponibles</h3>
+
+    <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+      <div *ngFor="let producto of productos" class="p-4 bg-white rounded-lg shadow-md">
+        <h4 class="text-lg font-bold">{{ producto.title }}</h4>
+        <p class="text-gray-700">Precio: {{ producto.ventaPrice | currency:'USD' }}</p>
+        <p class="text-gray-700">Stock: {{ producto.stock }}</p>
+        <p class="text-gray-700">
+          Código de barras:
+          <span *ngIf="producto.barcode">{{ producto.barcode }}</span>
+          <span *ngIf="!producto.barcode">Sin código de barras</span>
+        </p>
+        <p *ngIf="producto.expiryDate" class="text-gray-500 text-sm">
+          Vence: {{ producto.expiryDate | date:'longDate' }}
+        </p>
+        <p *ngIf="producto.user.id" class="text-gray-500 text-sm">Usuario: {{ producto.user.id }}</p>
+        <button
+          (click)="agregarAlCarrito(producto)"
+          class="mt-2 inline-flex items-center px-3 py-1 bg-blue-600 text-white font-semibold rounded-md shadow hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-gray-500">
+          Agregar
+        </button>
+      </div>
+    </div>
   </div>
 
   <div class="w-px bg-gray-300 mx-4" style="height: 600px; margin-top: 50px;"></div> <!-- Línea vertical más larga -->
 
   <div class="flex-none w-2/5 p-4">
-    <!-- Contenido del lado derecho -->
-    <h2 class="text-xl font-bold text-center">Carrito</h2>
-    <div class="overflow-x-auto shadow-md sm:rounded-lg">
+    <h2 class="text-xl font-bold text-center mb-4">Carrito</h2>
+
+    <div *ngIf="carrito.length === 0" class="text-center text-gray-500">
+      Aún no has agregado productos para vender.
+    </div>
+
+    <div class="overflow-x-auto shadow-md sm:rounded-lg" *ngIf="carrito.length > 0">
       <table class="w-full text-sm text-left text-black">
         <thead class="text-xs uppercase bg-gray-50">
           <tr>
             <th class="px-2 py-3 font-bold text-center">Producto</th>
             <th class="px-2 py-3 font-bold text-center">Cantidad</th>
-            <th class="px-2 py-3 font-bold text-center">Precio</th>
+            <th class="px-2 py-3 font-bold text-center">Precio Unitario</th>
             <th class="px-2 py-3 font-bold text-center">Hora</th>
             <th class="px-2 py-3 font-bold text-center">Acciones</th>
           </tr>
         </thead>
         <tbody>
-          <tr class="bg-white border-b">
-            <td class="px-4 py-3 text-center">Producto 1</td>
-            <td class="px-4 py-3 text-center">2</td>
-            <td class="px-4 py-3 text-center">$20.00</td>
-            <td class="px-4 py-3 text-center">10:00 AM</td>
+          <tr class="bg-white border-b" *ngFor="let item of carrito">
+            <td class="px-4 py-3 text-center">{{ item.product.title }}</td>
+            <td class="px-4 py-3 text-center">{{ item.cantidad }}</td>
+            <td class="px-4 py-3 text-center">{{ item.product.ventaPrice | currency:'USD' }}</td>
+            <td class="px-4 py-3 text-center">{{ item.hora | date: 'shortTime' }}</td>
             <td class="px-4 py-3 text-center">
-              <button class="inline-flex items-center px-2 py-1 bg-red-600 text-white font-semibold rounded-md shadow hover:bg-red-700 focus:outline-none focus:ring-2 focus:ring-gray-500">
-                <i class="fas fa-trash-alt mr-1"></i> Eliminar
-              </button>
-            </td>
-          </tr>
-          <tr class="bg-white border-b">
-            <td class="px-4 py-3 text-center">Producto 2</td>
-            <td class="px-4 py-3 text-center">1</td>
-            <td class="px-4 py-3 text-center">$15.00</td>
-            <td class="px-4 py-3 text-center">10:30 AM</td>
-            <td class="px-4 py-3 text-center">
-              <button class="inline-flex items-center px-2 py-1 bg-red-600 text-white font-semibold rounded-md shadow hover:bg-red-700 focus:outline-none focus:ring-2 focus:ring-gray-500">
-                <i class="fas fa-trash-alt mr-1"></i> Eliminar
-              </button>
-            </td>
-          </tr>
-          <tr class="bg-white border-b">
-            <td class="px-4 py-3 text-center">Producto 3</td>
-            <td class="px-4 py-3 text-center">3</td>
-            <td class="px-4 py-3 text-center">$30.00</td>
-            <td class="px-4 py-3 text-center">11:00 AM</td>
-            <td class="px-4 py-3 text-center">
-              <button class="inline-flex items-center px-2 py-1 bg-red-600 text-white font-semibold rounded-md shadow hover:bg-red-700 focus:outline-none focus:ring-2 focus:ring-gray-500">
+              <button
+                (click)="eliminarDelCarrito(item)"
+                class="inline-flex items-center px-2 py-1 bg-red-600 text-white font-semibold rounded-md shadow hover:bg-red-700 focus:outline-none focus:ring-2 focus:ring-gray-500">
                 <i class="fas fa-trash-alt mr-1"></i> Eliminar
               </button>
             </td>
           </tr>
         </tbody>
       </table>
+      <div class="mt-4 text-xl font-bold text-right">
+        Precio Total: {{ totalPrecio | currency:'USD' }}
+      </div>
     </div>
   </div>
 </div>
