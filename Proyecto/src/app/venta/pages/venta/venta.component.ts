@@ -3,19 +3,21 @@ import { CommonModule } from '@angular/common';
 import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { Observable } from 'rxjs';
 import { Product } from '../../../products/models/product.model';
+import { FormsModule } from '@angular/forms';
 
 @Component({
   selector: 'app-venta',
   standalone: true,
-  imports: [CommonModule],
+  imports: [CommonModule, FormsModule],
   templateUrl: './venta.component.html',
   styleUrls: ['./venta.component.css']
 })
 export class VentaComponent implements OnInit {
   private apiUrl = 'http://localhost:3000/api/products';
   productos: Product[] = []; // Variable para almacenar los productos
-  carrito: { product: Product; cantidad: number; hora: Date }[] = []; // Cambiado para incluir cantidad y hora
-  totalPrecio: number = 0; // Variable para almacenar el precio total
+  carrito: { product: Product; cantidad: number }[] = []; // Variable para almacenar los productos en el carrito
+  productosFiltrados: Product[] = []; // Variable para almacenar los productos filtrados
+  searchTerm: string = ''; // Variable para el término de búsqueda
 
   constructor(private httpClient: HttpClient) {}
 
@@ -32,18 +34,9 @@ export class VentaComponent implements OnInit {
 
     this.httpClient.get<Product[]>(this.apiUrl, { headers }).subscribe(
       (data) => {
-        // Almacena los productos obtenidos en la variable productos
-        this.productos = data.map(item => ({
-          id: item.id,
-          title: item.title,
-          compraPrice: item.compraPrice,
-          ventaPrice: item.ventaPrice,
-          stock: item.stock,
-          slug: item.slug || '',
-          user: { id: item.user.id },
-          expiryDate: item.expiryDate || undefined,
-          barcode: item.barcode || null
-        }));
+        // Almacena los productos obtenidos en la variable productos y en productosFiltrados
+        this.productos = data;
+        this.productosFiltrados = data; // Inicializa productos filtrados con todos los productos
       },
       (error) => {
         console.error('Error al obtener los productos:', error);
@@ -52,30 +45,50 @@ export class VentaComponent implements OnInit {
     );
   }
 
+  // Filtrar productos según el término de búsqueda
+  filtrarProductos(): void {
+    const term = this.searchTerm.toLowerCase();
+    this.productosFiltrados = this.productos.filter(producto =>
+      producto.title.toLowerCase().includes(term) ||
+      (producto.barcode && producto.barcode.includes(term))
+    );
+  }
+
+  // Agregar producto al carrito desde la búsqueda
+  agregarProductoDesdeBusqueda(): void {
+    const productoEncontrado = this.productosFiltrados.find(producto =>
+      producto.title.toLowerCase() === this.searchTerm.toLowerCase() ||
+      (producto.barcode && producto.barcode === this.searchTerm)
+    );
+
+    if (productoEncontrado) {
+      this.agregarAlCarrito(productoEncontrado);
+      this.searchTerm = ''; // Limpia el campo de búsqueda
+      this.productosFiltrados = this.productos; // Reinicia la lista de productos filtrados
+    } else {
+      alert('Producto no encontrado.');
+    }
+  }
+
   agregarAlCarrito(producto: Product): void {
     // Comprueba si el producto ya está en el carrito
-    const existe = this.carrito.find(item => item.product.id === producto.id);
-    if (existe) {
-      existe.cantidad++; // Incrementa la cantidad si ya está en el carrito
+    const itemEnCarrito = this.carrito.find(item => item.product.id === producto.id);
+    if (itemEnCarrito) {
+      itemEnCarrito.cantidad++; // Incrementa la cantidad si el producto ya está en el carrito
     } else {
-      // Agrega el producto si no está en el carrito
-      this.carrito.push({ product: producto, cantidad: 1, hora: new Date() });
+      this.carrito.push({ product: producto, cantidad: 1 }); // Agrega el producto si no está en el carrito
     }
-    this.calcularTotal(); // Recalcula el total después de agregar
   }
 
-  eliminarDelCarrito(item: { product: Product; cantidad: number; hora: Date }): void {
-    const existe = this.carrito.find(i => i.product.id === item.product.id);
-    if (existe) {
-      existe.cantidad--; // Decrementa la cantidad
-      if (existe.cantidad <= 0) {
-        this.carrito = this.carrito.filter(i => i.product.id !== item.product.id); // Elimina el producto si la cantidad es 0
-      }
+  eliminarDelCarrito(item: { product: Product; cantidad: number }): void {
+    if (item.cantidad > 1) {
+      item.cantidad--; // Decrementa la cantidad
+    } else {
+      this.carrito = this.carrito.filter(cartItem => cartItem.product.id !== item.product.id); // Elimina el producto del carrito
     }
-    this.calcularTotal(); // Recalcula el total después de eliminar
   }
 
-  calcularTotal(): void {
-    this.totalPrecio = this.carrito.reduce((total, item) => total + (item.product.ventaPrice * item.cantidad), 0);
+  get totalPrecio(): number {
+    return this.carrito.reduce((total, item) => total + (item.product.ventaPrice * item.cantidad), 0);
   }
 }
