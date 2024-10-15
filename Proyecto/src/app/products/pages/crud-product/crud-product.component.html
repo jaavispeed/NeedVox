@@ -1,8 +1,9 @@
 <div class="container mx-auto p-10 bg-white flex flex-col items-center relative mt-8">
   <!-- Mensaje de alerta en la esquina inferior derecha -->
-  <div class="fixed bottom-0 right-0 m-4">
+  <div class="fixed top-14 left-1/2 transform -translate-x-1/2 m-4">
     <app-alert [message]="alertMessage" [isVisible]="alertVisible" [type]="alertType"></app-alert>
   </div>
+
 
   <!-- Contenedor para la barra de búsqueda y la tabla -->
   <div class="w-full max-w-6xl flex flex-col items-start mb-2">
