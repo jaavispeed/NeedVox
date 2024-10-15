@@ -1,11 +1,4 @@
 <body class="bg-white flex flex-col min-h-screen font-light relative">
-  <!-- Componente de alerta -->
-  <app-alert
-    [message]="alertMessage"
-    [isVisible]="alertVisible"
-    [type]="alertType"
-    class="absolute bottom-4 right-4 z-50"></app-alert> <!-- Posiciona la alerta en la esquina inferior derecha -->
-
   <!-- Contenedor principal -->
   <div class="container mx-auto px-4 flex-grow flex flex-col justify-center items-center z-10">
     <div class="py-16 w-full">
@@ -57,22 +50,17 @@
   </div>
 
   <!-- Spinner -->
-  <div *ngIf="isLoading" class="fixed inset-0 flex items-center justify-center z-50 bg-white bg-opacity-50">
+  <div *ngIf="isLoading" class="fixed inset-0 flex items-center justify-center z-40 bg-white bg-opacity-50">
     <app-spinner></app-spinner>
   </div>
 
-  <!-- Footer -->
-  <footer class="bg-[#222831] text-sm text-[#EEEEEE] text-center py-4 shadow-lg">
-    <p class="font-light font-rubik">Copyright © Needvox</p>
-  </footer>
-
   <!-- Modal para Login/Registro -->
-  <div *ngIf="isModalOpen" class="fixed inset-0 flex items-center justify-center z-50">
+  <div *ngIf="isModalOpen" class="fixed inset-0 flex items-center justify-center z-30">
     <ng-container [ngSwitch]="modalType">
       <ng-container *ngSwitchCase="'login'">
         <app-login-page
           (closeModal)="closeModal()"
-          (onSuccess)="showAlert('Ingreso exitoso', 'success')"
+          (onSuccess)="showAlert('Bienvenido a Needvox!', 'success')"
           (onError)="showAlert('Error al iniciar sesión. Verifica tus credenciales.', 'error')"
           (startLoading)="startLoading()"
           (stopLoading)="stopLoading()"></app-login-page> <!-- Carga el componente de Login -->
@@ -85,4 +73,16 @@
       </ng-container>
     </ng-container>
   </div>
+
+  <!-- Componente de alerta -->
+  <app-alert
+    [message]="alertMessage"
+    [isVisible]="alertVisible"
+    [type]="alertType"
+    class="absolute bottom-4 right-4 z-50"></app-alert> <!-- Posiciona la alerta en la esquina inferior derecha -->
+
+  <!-- Footer -->
+  <footer class="bg-[#222831] text-sm text-[#EEEEEE] text-center py-4 shadow-lg">
+    <p class="font-light font-rubik">Copyright © Needvox</p>
+  </footer>
 </body>
