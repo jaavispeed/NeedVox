@@ -28,7 +28,7 @@
         <p *ngIf="producto.expiryDate" class="text-gray-500 text-sm">
           Vence: {{ producto.expiryDate | date:'longDate' }}
         </p>
-        <p class="text-gray-500 text-sm">Usuario: {{ producto.user.id }}</p>
+
         <button
           (click)="agregarAlCarrito(producto)"
           class="mt-2 inline-flex items-center px-3 py-1 bg-blue-600 text-white font-semibold rounded-md shadow hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-gray-500">
