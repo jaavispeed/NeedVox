@@ -18,7 +18,7 @@ export class CrudProductComponent implements OnInit {
   filteredProducts: Product[] = [];
   currentPage = 1;
   itemsPerPage = 5;
-  product: Product = { title: '', compraPrice: 0, ventaPrice: 0, stock: 0, slug: '', user: { id: '' }, expiryDate: undefined, barcode: '' };
+  product: Product = { title: '', compraPrice: 0, ventaPrice: 0, stock: 0, slug: '', user: { id: '' }, expiryDate: undefined, barcode: null };
   isEditing: boolean = false;
   isModalOpen: boolean = false;
   searchTerm: string = '';
