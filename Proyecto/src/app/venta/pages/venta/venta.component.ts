@@ -101,4 +101,8 @@ export class VentaComponent implements OnInit, AfterViewInit {
       input.focus(); // Focaliza el input
     }
   }
+
+  reiniciarCarrito() {
+    this.carrito = [];
+  }
 }
