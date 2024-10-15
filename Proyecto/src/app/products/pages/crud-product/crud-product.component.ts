@@ -29,6 +29,9 @@ export class CrudProductComponent implements OnInit {
 
   crudForm: FormGroup;
 
+  showConfirm: boolean = false; // Variable para mostrar el cuadro de confirmación
+  productIdToDelete: string | null = null; // Almacena el id del producto que se eliminará
+
   constructor(private productService: ProductService) {
     this.crudForm = new FormGroup({
       title: new FormControl('', [Validators.required, Validators.minLength(3)]),
@@ -37,7 +40,7 @@ export class CrudProductComponent implements OnInit {
       stock: new FormControl(0, [Validators.required, Validators.min(0)]),
       slug: new FormControl(''),
       expiryDate: new FormControl(null),
-      barcode: new FormControl(null) // Hacer que el código de barras sea opcional
+      barcode: new FormControl(null) //// Campo agregado
     });
   }
 
@@ -53,6 +56,34 @@ export class CrudProductComponent implements OnInit {
       },
       error: (error) => this.showAlert('Error al obtener los productos.', 'error')
     });
+  }
+
+  // Método para activar el cuadro de confirmación de eliminación
+  promptDelete(id: string): void {
+    this.productIdToDelete = id;
+    this.showConfirm = true;  // Muestra el cuadro de confirmación
+  }
+
+  // Método que se llama cuando se confirma la eliminación
+  confirmDelete(): void {
+    if (this.productIdToDelete) {
+      this.productService.deleteProduct(this.productIdToDelete).subscribe({
+        next: () => this.onSuccess('Producto eliminado con éxito.', 'success'),
+        error: () => this.showAlert('Error al eliminar el producto.', 'error')
+      });
+      this.resetConfirmation(); // Resetea el estado de confirmación
+    }
+  }
+
+  // Método que se llama cuando se cancela la eliminación
+  cancelDelete(): void {
+    this.resetConfirmation();  // Oculta el cuadro de confirmación
+  }
+
+  // Método para restablecer la confirmación
+  private resetConfirmation(): void {
+    this.showConfirm = false;  // Oculta el cuadro de confirmación
+    this.productIdToDelete = null;  // Limpia el id del producto
   }
 
   createOrUpdateProduct(): void {
@@ -86,7 +117,6 @@ export class CrudProductComponent implements OnInit {
     }
   }
 
-  // Manejo de errores específico
   private handleError(error: any, action: 'crear' | 'actualizar'): void {
     const errorMessage = error.error?.message || 'Error desconocido';
 
@@ -94,7 +124,6 @@ export class CrudProductComponent implements OnInit {
 
     switch (error.status) {
       case 400: // Bad Request
-        // Aquí puedes manejar errores específicos basados en el mensaje
         if (errorMessage.includes('Nombre ya creado')) {
           this.showAlert('El nombre del producto ya existe.', 'error');
         } else if (errorMessage.includes('Código de barras ya creado')) {
@@ -114,8 +143,6 @@ export class CrudProductComponent implements OnInit {
     }
   }
 
-
-
   editProduct(product: Product): void {
     this.product = { ...product };
     this.isEditing = true;
@@ -128,14 +155,7 @@ export class CrudProductComponent implements OnInit {
       stock: product.stock,
       slug: product.slug,
       expiryDate: product.expiryDate || null,
-      barcode: product.barcode || null // Cargar el código de barras, permitir null
-    });
-  }
-
-  deleteProduct(id: string): void {
-    this.productService.deleteProduct(id).subscribe({
-      next: () => this.onSuccess('Producto eliminado con éxito.', 'success'),
-      error: () => this.showAlert('Error al eliminar el producto.', 'error')
+      barcode: product.barcode ||  null// Cargar el código de barras, permitir vacío
     });
   }
 
@@ -162,7 +182,7 @@ export class CrudProductComponent implements OnInit {
       stock: 0,
       slug: '',
       expiryDate: null,
-      barcode: null // Reiniciar el código de barras como null
+      barcode: null // Reiniciar el código de barras como vacío
     });
     this.product = { title: '', compraPrice: 0, ventaPrice: 0, stock: 0, slug: '', user: { id: '' }, expiryDate: undefined, barcode: null };
     this.isEditing = false;
