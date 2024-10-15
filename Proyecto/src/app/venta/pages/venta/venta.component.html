@@ -18,7 +18,7 @@
     <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
       <div *ngFor="let producto of productosFiltrados" class="p-4 bg-white rounded-lg shadow-md">
         <h4 class="text-lg font-bold">{{ producto.title }}</h4>
-        <p class="text-gray-700">Precio: {{ producto.ventaPrice | currency:'USD' }}</p>
+        <p class="text-gray-700">Precio: {{ producto.ventaPrice | currency:'USD':  'symbol':'1.0-0'}}</p>
         <p class="text-gray-700">Stock: {{ producto.stock }}</p>
         <p class="text-gray-700">
           Código de barras:
@@ -60,7 +60,7 @@
         <tbody>
           <tr class="bg-white border-b" *ngFor="let item of carrito">
             <td class="px-4 py-3 text-center">{{ item.product.title }}</td>
-            <td class="px-4 py-3 text-center">{{ item.product.ventaPrice | currency:'USD' }}</td>
+            <td class="px-4 py-3 text-center">{{ item.product.ventaPrice | currency:'USD': 'symbol':'1.0-0' }}</td>
             <td class="px-4 py-3 text-center">{{ item.cantidad }}</td>
             <td class="px-4 py-3 text-center">
               <button
@@ -72,7 +72,7 @@
           </tr>
         </tbody>
       </table>
-      <h3 class="text-lg font-semibold mt-4">Precio Total: {{ totalPrecio | currency:'USD' }}</h3>
+      <h3 class="text-lg font-semibold mt-4">Precio Total: {{ totalPrecio | currency:'USD': 'symbol':'1.0-0'}}</h3>
     </div>
   </div>
 </div>
