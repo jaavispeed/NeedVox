@@ -18,6 +18,7 @@ export class VentaComponent implements OnInit, AfterViewInit {
   carrito: VentaCar[] = [];
   productosFiltrados: Product[] = [];
   searchTerm: string = '';
+  horaCarrito: string | null = null; // Nueva propiedad para la hora del carrito
 
   constructor(private httpClient: HttpClient) {}
 
@@ -50,6 +51,8 @@ export class VentaComponent implements OnInit, AfterViewInit {
     const carritoGuardado = localStorage.getItem('carrito');
     if (carritoGuardado) {
       this.carrito = JSON.parse(carritoGuardado); // Convierte el JSON a un objeto
+      // Establecer la horaCarrito si el carrito no está vacío
+      this.horaCarrito = localStorage.getItem('horaCarrito');
     }
   }
 
@@ -83,19 +86,27 @@ export class VentaComponent implements OnInit, AfterViewInit {
     const ahora = new Date();
     const horaLocal = ahora.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
 
-    if (itemEnCarrito) {
-      itemEnCarrito.cantidad++;
-    } else {
-      this.carrito.push({
-        product: producto,
-        cantidad: 1,
-        hora: horaLocal,
-        ventaPrice: producto.ventaPrice
-      });
+    // Establecer horaCarrito si no está definida
+    if (!this.horaCarrito) {
+        this.horaCarrito = horaLocal; // Almacena la hora al iniciar el carrito
+        localStorage.setItem('horaCarrito', this.horaCarrito); // Guarda la hora en localStorage
     }
 
-    this.guardarCarritoEnLocalStorage(); // Guardar el carrito actualizado
-  }
+    if (itemEnCarrito) {
+        itemEnCarrito.cantidad++;
+    } else {
+        // Asegúrate de incluir la propiedad 'hora' aquí
+        this.carrito.push({
+            product: producto,
+            cantidad: 1,
+            hora: horaLocal, // Asegúrate de agregar la propiedad 'hora'
+            ventaPrice: producto.ventaPrice
+        } as VentaCar); // Asegúrate de que esto coincida con el tipo VentaCar
+    }
+
+    this.guardarCarritoEnLocalStorage(); // Guarda el carrito actualizado
+}
+
 
   eliminarDelCarrito(item: VentaCar): void {
     if (item.cantidad > 1) {
@@ -129,6 +140,8 @@ export class VentaComponent implements OnInit, AfterViewInit {
 
   reiniciarCarrito(): void {
     this.carrito = [];
+    this.horaCarrito = null; // Reiniciar la hora del carrito
+    localStorage.removeItem('horaCarrito'); // Eliminar horaCarrito del localStorage
     this.guardarCarritoEnLocalStorage(); // Guardar el carrito vacío
   }
 }
