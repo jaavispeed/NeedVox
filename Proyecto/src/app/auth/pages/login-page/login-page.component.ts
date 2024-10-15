@@ -32,30 +32,46 @@ export default class LoginPageComponent {
       const password = this.loginform.get('password')?.value;
 
       this.startLoading.emit(); // Emitir el evento para iniciar el spinner
+
       if (email && password) {
-        this.close(); // Cerrar el modal
         this.authService.login({ email, password }).subscribe({
           next: (response: User) => {
-            console.log('Login correcto', response);
-            localStorage.setItem('token', response.token);
-            this.onSuccess.emit(); // Emitir evento de éxito
+            if (response && response.token) { // Verifica que la respuesta sea válida
+              console.log('Login correcto', response);
+              localStorage.setItem('token', response.token);
+              this.onSuccess.emit(); // Emitir evento de éxito
 
-            setTimeout(()=> {
-              this.router.navigate(['/index']);
-              this.stopLoading.emit(); // Detener el spinner después de redirigir
-            }, 1000);
+              this.close(); // Cerrar el modal solo si el login es exitoso
+
+              setTimeout(() => {
+                this.router.navigate(['/index']);
+                this.stopLoading.emit(); // Detener el spinner después de redirigir
+              }, 1000);
+            } else {
+              this.handleLoginError(); // Manejar el caso cuando la respuesta es inválida
+            }
           },
           error: (err) => {
             console.error('Login fallido', err);
             this.stopLoading.emit(); // Detener el spinner en caso de error
             this.onError.emit('Error al iniciar sesión. Verifica tus credenciales.'); // Emitir evento de error
+            // No cerrar el modal aquí, permitir que el usuario corrija sus credenciales
           }
         });
+      } else {
+        console.error('Email o contraseña no válidos');
+        this.stopLoading.emit(); // Detener el spinner si el formulario es inválido
       }
     } else {
       console.error('Formulario inválido');
       this.stopLoading.emit(); // Detener el spinner si el formulario es inválido
     }
+  }
+
+  // Función para manejar errores de inicio de sesión
+  private handleLoginError() {
+    this.stopLoading.emit();
+    this.onError.emit('Error al iniciar sesión. Inténtalo de nuevo.'); // Emitir evento de error
   }
 
   close() {
