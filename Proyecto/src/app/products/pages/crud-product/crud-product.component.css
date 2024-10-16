@@ -8,10 +8,14 @@
   box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
   z-index: 1000;
   border-radius: 15px; /* Hace que el cuadro sea más redondeado */
+  transition: opacity 20s ease, transform 20s ease; /* Transición suave */
+
+
 }
 
 .confirm-dialog button {
   margin-right: 10px;
   padding: 8px 12px;
   border-radius: 8px; /* Redondea los botones */
+
 }
