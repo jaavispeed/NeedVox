@@ -1,23 +1,27 @@
 import { HttpClient, HttpHeaders, HttpErrorResponse } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { Observable, throwError } from 'rxjs';
-import { catchError } from 'rxjs/operators';
-
-// Interfaz para tipar los productos (ajusta según tu estructura)
-interface Product {
-  id: number;
-  name: string;
-  price: number;
-  // Otros campos que el producto tenga
-}
+import { catchError, switchMap } from 'rxjs/operators';
+import { Product } from '../../products/models/product.model';
 
 @Injectable({
-  providedIn: 'root'
+  providedIn: 'root',
 })
 export class VentaService {
-  private apiUrl = 'http://localhost:3000/api/products';
+  private apiUrl = 'http://localhost:3000/api/products'; // URL para obtener productos
+  private authApiUrl = 'http://localhost:3000/api/auth'; // URL para autenticación
 
   constructor(private httpClient: HttpClient) {}
+
+  checkStatus(): Observable<any> {
+    const token = localStorage.getItem('token');
+    const headers = new HttpHeaders({
+      'Authorization': `Bearer ${token}`
+    });
+
+    return this.httpClient.get<any>(`${this.authApiUrl}/check-status`, { headers });
+  }
+
 
   // Método para obtener el token y los headers
   private getHeaders(): HttpHeaders {
@@ -25,6 +29,13 @@ export class VentaService {
     return new HttpHeaders({
       'Authorization': `Bearer ${token}`
     });
+  }
+    // En tu VentaService, actualiza el método crearVenta
+  crearVenta(venta: { userId: string; productos: { productId: string; cantidad: number; ventaPrice: number; }[] }): Observable<any> {
+    return this.httpClient.post<any>('http://localhost:3000/api/ventas', venta, { headers: this.getHeaders() })
+      .pipe(
+        catchError(this.handleError) // Manejo de errores
+      );
   }
 
   // Obtener todos los productos
@@ -34,6 +45,7 @@ export class VentaService {
         catchError(this.handleError) // Manejo de errores
       );
   }
+
 
   // Método para manejar errores
   private handleError(error: HttpErrorResponse) {

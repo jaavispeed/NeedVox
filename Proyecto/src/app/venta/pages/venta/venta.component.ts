@@ -1,147 +1,145 @@
-import { Component, OnInit, AfterViewInit } from '@angular/core';
-import { CommonModule } from '@angular/common';
-import { HttpClient, HttpHeaders } from '@angular/common/http';
+import { Component } from '@angular/core';
+import { FormsModule } from '@angular/forms'; // Importa FormsModule para ngModel
 import { Product } from '../../../products/models/product.model';
-import { FormsModule } from '@angular/forms';
-import { VentaCar } from '../../models/venta-car.model';
+import { VentaService } from '../../service/venta.service';
+import { CommonModule } from '@angular/common';
 
 @Component({
-  selector: 'app-venta',
-  standalone: true,
-  imports: [CommonModule, FormsModule],
+  selector: 'app-ventas',
   templateUrl: './venta.component.html',
-  styleUrls: ['./venta.component.css']
+  styleUrls: ['./venta.component.css'],
+  standalone: true,
+  imports: [FormsModule, CommonModule],
 })
-export class VentaComponent implements OnInit, AfterViewInit {
-  private apiUrl = 'http://localhost:3000/api/products';
-  productos: Product[] = [];
-  carrito: VentaCar[] = [];
-  productosFiltrados: Product[] = [];
+export class VentaComponent {
   searchTerm: string = '';
-  horaCarrito: string | null = null; // Nueva propiedad para la hora del carrito
+  productosFiltrados: Product[] = [];
+  carrito: { product: Product; cantidad: number }[] = [];
+  totalPrecio: number = 0;
+  userId: string = ''; // Inicializa el userId
+  errorMessage: string = '';
+  horaCarrito: string | null = null; // Propiedad para almacenar la hora del carrito
+  userID: string = ''; // Propiedad para almacenar el userId
 
-  constructor(private httpClient: HttpClient) {}
-
-  ngOnInit(): void {
-    this.cargarCarritoDesdeLocalStorage(); // Cargar el carrito al iniciar
-    this.obtenerProductos();
+  constructor(private ventaService: VentaService) {
+    this.cargarProductos(); // Cargar productos al inicializar el componente
   }
 
-  // Obtener todos los productos
-  obtenerProductos(): void {
-    const token = localStorage.getItem('token');
-    const headers = new HttpHeaders({
-      'Authorization': `Bearer ${token}`
-    });
+  ngOnInit(): void {
+    this.obtenerUserID(); // Obtener el userId al iniciar
+  }
 
-    this.httpClient.get<Product[]>(this.apiUrl, { headers }).subscribe(
-      (data) => {
-        this.productos = data;
-        this.productosFiltrados = data;
+  obtenerUserID(): void {
+    this.ventaService.checkStatus().subscribe(
+      (response) => {
+        this.userID = response.id; // Almacena el userId del backend
       },
       (error) => {
-        console.error('Error al obtener los productos:', error);
-        this.productos = [];
+        console.error('Error al verificar el estado del userID:', error);
       }
     );
   }
 
-  // Cargar el carrito desde localStorage
-  cargarCarritoDesdeLocalStorage(): void {
-    const carritoGuardado = localStorage.getItem('carrito');
-    if (carritoGuardado) {
-      this.carrito = JSON.parse(carritoGuardado); // Convierte el JSON a un objeto
-      // Establecer la horaCarrito si el carrito no está vacío
-      this.horaCarrito = localStorage.getItem('horaCarrito');
-    }
-  }
-
-  // Filtrar productos según el término de búsqueda
-  filtrarProductos(): void {
-    const term = this.searchTerm.toLowerCase();
-    this.productosFiltrados = this.productos.filter(producto =>
-      producto.title.toLowerCase().includes(term) ||
-      (producto.barcode && producto.barcode.includes(term))
+  cargarProductos() {
+    this.ventaService.getProducts().subscribe(
+      (productos: Product[]) => {
+        this.productosFiltrados = productos; // Asigna los productos filtrados
+      },
+      error => {
+        console.error("Error al obtener los productos:", error);
+        this.errorMessage = "Error al cargar los productos. Intenta de nuevo más tarde.";
+      }
     );
   }
 
-  // Agregar producto al carrito desde la búsqueda
-  agregarProductoDesdeBusqueda(): void {
-    const productoEncontrado = this.productosFiltrados.find(producto =>
-      producto.title.toLowerCase() === this.searchTerm.toLowerCase() ||
-      (producto.barcode && producto.barcode === this.searchTerm)
+  filtrarProductos() {
+    this.productosFiltrados = this.productosFiltrados.filter(producto =>
+      producto.title?.toLowerCase().includes(this.searchTerm.toLowerCase()) ||
+      producto.barcode?.toLowerCase().includes(this.searchTerm.toLowerCase())
+    );
+  }
+
+  agregarProductoDesdeBusqueda() {
+    const productoEncontrado = this.productosFiltrados.find(
+      producto => producto.barcode === this.searchTerm || producto.title === this.searchTerm
     );
 
     if (productoEncontrado) {
       this.agregarAlCarrito(productoEncontrado);
-      this.searchTerm = '';
-      this.filtrarProductos();
+      this.searchTerm = ''; // Limpia el término de búsqueda
     } else {
-      alert('Producto no encontrado.');
+      this.errorMessage = "Producto no encontrado.";
+      console.log("Producto no encontrado.");
     }
   }
 
-  agregarAlCarrito(producto: Product): void {
-    const itemEnCarrito = this.carrito.find(item => item.product.id === producto.id);
-    const ahora = new Date();
-    const horaLocal = ahora.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
+  agregarAlCarrito(producto: Product) {
+    const existingItem = this.carrito.find(item => item.product.id === producto.id);
 
-    // Establecer horaCarrito si no está definida
-    if (!this.horaCarrito) {
-        this.horaCarrito = horaLocal; // Almacena la hora al iniciar el carrito
-        localStorage.setItem('horaCarrito', this.horaCarrito); // Guarda la hora en localStorage
-    }
-
-    if (itemEnCarrito) {
-        itemEnCarrito.cantidad++;
+    if (existingItem) {
+      existingItem.cantidad++;
     } else {
-        // Asegúrate de incluir la propiedad 'hora' aquí
-        this.carrito.push({
-            product: producto,
-            cantidad: 1,
-            hora: horaLocal, // Asegúrate de agregar la propiedad 'hora'
-            ventaPrice: producto.ventaPrice
-        } as VentaCar); // Asegúrate de que esto coincida con el tipo VentaCar
+      this.carrito.push({ product: producto, cantidad: 1 });
+      this.horaCarrito = new Date().toLocaleTimeString(); // Establecer la hora al agregar un producto
     }
 
-    this.guardarCarritoEnLocalStorage(); // Guarda el carrito actualizado
-}
+    this.actualizarTotal();
+  }
 
+  eliminarDelCarrito(item: { product: Product; cantidad: number }) {
+    this.carrito = this.carrito.filter(carritoItem => carritoItem !== item);
+    this.actualizarTotal();
+  }
 
-  eliminarDelCarrito(item: VentaCar): void {
-    if (item.cantidad > 1) {
-      item.cantidad--;
-    } else {
-      this.carrito = this.carrito.filter(cartItem => cartItem.product.id !== item.product.id);
+  actualizarTotal() {
+    this.totalPrecio = this.carrito.reduce(
+      (total, item) => total + item.product.ventaPrice * item.cantidad,
+      0
+    );
+  }
+
+  procesarVenta() {
+    if (this.carrito.length === 0) {
+      this.errorMessage = "No hay productos en el carrito";
+      console.error(this.errorMessage);
+      return;
     }
 
-    this.guardarCarritoEnLocalStorage(); // Guardar el carrito actualizado
-  }
-
-  // Método para guardar el carrito en localStorage
-  guardarCarritoEnLocalStorage(): void {
-    localStorage.setItem('carrito', JSON.stringify(this.carrito)); // Convierte el objeto a JSON y lo guarda
-  }
-
-  get totalPrecio(): number {
-    return this.carrito.reduce((total, item) => total + (item.product.ventaPrice * item.cantidad), 0);
-  }
-
-  ngAfterViewInit(): void {
-    this.enfocarInput();
-  }
-
-  enfocarInput(): void {
-    const input = document.getElementById('codigo-barra-input') as HTMLInputElement;
-    if (input) {
-      input.focus();
+    if (!this.userID) { // Asegúrate de verificar userID
+      this.errorMessage = "El ID del usuario no está disponible.";
+      console.error(this.errorMessage);
+      return;
     }
+
+    const venta = {
+      userId: this.userID, // Usa el userID recogido
+      productos: this.carrito.map(item => ({
+        productId: item.product.id || '',
+        cantidad: item.cantidad,
+        ventaPrice: item.product.ventaPrice // Precio del producto
+      }))
+    };
+
+    this.ventaService.crearVenta(venta).subscribe(
+      response => {
+        console.log("Venta creada con éxito:", response);
+        this.reiniciarCarrito();
+        this.errorMessage = ''; // Limpia cualquier mensaje de error
+      },
+      error => {
+        this.errorMessage = "Error al crear la venta. Verifica los detalles e intenta de nuevo.";
+        console.error("Error al crear la venta:", error);
+      }
+    );
   }
 
-  reiniciarCarrito(): void {
+  reiniciarCarrito() {
     this.carrito = [];
-    this.horaCarrito = null; // Reiniciar la hora del carrito
-    localStorage.removeItem('horaCarrito'); // Eliminar horaCarrito del localStorage
-    this.guardarCarritoEnLocalStorage(); // Guardar el carrito vacío
+    this.totalPrecio = 0;
+  }
+
+  enfocarInput() {
+    const input = document.getElementById('codigo-barra-input') as HTMLInputElement;
+    input.focus();
   }
 }
