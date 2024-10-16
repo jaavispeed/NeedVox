@@ -10,14 +10,14 @@ import { User } from '../../models/user.model';
   standalone: true,
   imports: [ReactiveFormsModule, CommonModule],
   templateUrl: './login-page.component.html',
-  styleUrls: ['./login-page.component.css']  // Asegúrate de que sea 'style**s**Url' con una "s"
+  styleUrls: ['./login-page.component.css']
 })
 export default class LoginPageComponent {
   router = inject(Router);
   authService = inject(AuthService);
   @Output() closeModal = new EventEmitter<void>();
-  @Output() onSuccess = new EventEmitter<void>(); // Evento de éxito
-  @Output() onError = new EventEmitter<string>(); // Evento de error
+  @Output() onSuccess = new EventEmitter<void>();
+  @Output() onError = new EventEmitter<string>();
   @Output() startLoading = new EventEmitter<void>();
   @Output() stopLoading = new EventEmitter<void>();
 
@@ -31,47 +31,47 @@ export default class LoginPageComponent {
       const email = this.loginform.get('email')?.value;
       const password = this.loginform.get('password')?.value;
 
-      this.startLoading.emit(); // Emitir el evento para iniciar el spinner
+      this.startLoading.emit(); // Iniciar el spinner
 
       if (email && password) {
         this.authService.login({ email, password }).subscribe({
-          next: (response: User) => {
-            if (response && response.token) { // Verifica que la respuesta sea válida
+          next: (response: User | null) => { // Manejar respuesta como User o null
+            if (response) {
               console.log('Login correcto', response);
               localStorage.setItem('token', response.token);
+              if (response.roles) {
+                localStorage.setItem('roles', JSON.stringify(response.roles)); // Almacenar los roles
+              }
               this.onSuccess.emit(); // Emitir evento de éxito
-
-              this.close(); // Cerrar el modal solo si el login es exitoso
+              this.close(); // Cerrar el modal
 
               setTimeout(() => {
                 this.router.navigate(['/index']);
-                this.stopLoading.emit(); // Detener el spinner después de redirigir
+                this.stopLoading.emit(); // Detener el spinner
               }, 1000);
             } else {
-              this.handleLoginError(); // Manejar el caso cuando la respuesta es inválida
+              this.handleLoginError(); // Manejar error si response es null
             }
           },
           error: (err) => {
             console.error('Login fallido', err);
-            this.stopLoading.emit(); // Detener el spinner en caso de error
+            this.stopLoading.emit(); // Detener el spinner
             this.onError.emit('Error al iniciar sesión. Verifica tus credenciales.'); // Emitir evento de error
-            // No cerrar el modal aquí, permitir que el usuario corrija sus credenciales
           }
         });
       } else {
         console.error('Email o contraseña no válidos');
-        this.stopLoading.emit(); // Detener el spinner si el formulario es inválido
+        this.stopLoading.emit(); // Detener el spinner
       }
     } else {
       console.error('Formulario inválido');
-      this.stopLoading.emit(); // Detener el spinner si el formulario es inválido
+      this.stopLoading.emit(); // Detener el spinner
     }
   }
 
-  // Función para manejar errores de inicio de sesión
   private handleLoginError() {
     this.stopLoading.emit();
-    this.onError.emit('Error al iniciar sesión. Inténtalo de nuevo.'); // Emitir evento de error
+    this.onError.emit('Error al iniciar sesión. Inténtalo de nuevo.');
   }
 
   close() {
