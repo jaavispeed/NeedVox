@@ -1,6 +1,7 @@
 import { CommonModule } from '@angular/common';
 import { Component, inject, OnInit } from '@angular/core';
 import { Router, RouterOutlet } from '@angular/router';
+import { NavbarService } from '../../services/navbar.service';
 
 @Component({
   selector: 'app-navbar',
@@ -21,6 +22,15 @@ export default class NavbarComponent implements OnInit {
     this.isLoggedIn = !!localStorage.getItem('token'); // Verificar si está logueado
   }
 
+  userRole: string[] = [];
+
+
+  constructor(private navbarService: NavbarService){}
+
+  ngOnInit(): void {
+    this.obtenerRole();
+  }
+
   toggleMenu(): void {
     this.isUserMenuOpen = !this.isUserMenuOpen; // Alterna el estado del menú
   }
@@ -31,4 +41,17 @@ export default class NavbarComponent implements OnInit {
     localStorage.removeItem('roles'); // Elimina los roles del localStorage
     this.router.navigate(['/']); // Redirigir al home
   }
+
+
+  obtenerRole(): void {
+    this.navbarService.checkStatus().subscribe(
+      (response) => {
+        this.userRole= response.roles; // Asumiendo que el backend devuelve el username
+      },
+      (error) => {
+        console.error('Error al verificar el rol', error);
+      }
+    );
+  }
+
 }

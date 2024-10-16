@@ -26,13 +26,13 @@ export class AlertComponent implements OnChanges{
           this.alertClass = 'alert-hide';
           setTimeout(() => {
             this.showAlert = false;
-          }, 1000); // Duración de la transición
-        }, 3000); // Mostrar durante 5 segundos
+          }, 3000); // Duración de la transición
+        }, 5000); // Mostrar durante 5 segundos
       } else {
         this.alertClass = 'alert-hide';
         setTimeout(() => {
           this.showAlert = false;
-        }, 1000); // Duración de la transición
+        }, 3000); // Duración de la transición
       }
     }
   }

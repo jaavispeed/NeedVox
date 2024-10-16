@@ -114,11 +114,12 @@ export class VentaComponent {
   }
 
   actualizarTotal() {
-    this.totalPrecio = this.carrito.reduce(
-      (total, item) => total + item.product.ventaPrice * item.cantidad,
-      0
-    );
-  }
+    this.totalPrecio = this.carrito.reduce((total, item) => {
+        return total + item.product.ventaPrice * item.cantidad;
+    }, 0);
+}
+
+
 
   procesarVenta() {
     if (this.carrito.length === 0) {
