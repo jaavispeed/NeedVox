@@ -1,6 +1,7 @@
 import { CommonModule } from '@angular/common';
 import { Component, inject } from '@angular/core';
 import { Router, RouterOutlet } from '@angular/router';
+import { NavbarService } from '../../services/navbar.service';
 
 @Component({
   selector: 'app-navbar',
@@ -13,6 +14,15 @@ export default class NavbarComponent {
   router = inject(Router);
   isUserMenuOpen = false; // Propiedad para controlar el menú de usuario
 
+  userRole: string[] = [];
+
+
+  constructor(private navbarService: NavbarService){}
+
+  ngOnInit(): void {
+    this.obtenerRole();
+  }
+
   toggleMenu(): void {
     this.isUserMenuOpen = !this.isUserMenuOpen; // Alterna el estado del menú
   }
@@ -23,4 +33,17 @@ export default class NavbarComponent {
     localStorage.removeItem('horaCarrito'); // Elimina el carrito del localStorage
     this.router.navigate(['/home']);
   }
+
+
+  obtenerRole(): void {
+    this.navbarService.checkStatus().subscribe(
+      (response) => {
+        this.userRole= response.roles; // Asumiendo que el backend devuelve el username
+      },
+      (error) => {
+        console.error('Error al verificar el rol', error);
+      }
+    );
+  }
+
 }
