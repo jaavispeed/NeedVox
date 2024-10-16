@@ -7,6 +7,7 @@ import LoginPageComponent from './auth/pages/login-page/login-page.component';
 import { AuthGuard } from './auth/guards/auth.guard';
 import { NoAuthGuard } from './auth/guards/noAuth.guard';
 import { VentaComponent } from './venta/pages/venta/venta.component';
+import { DetalleVentaComponent } from './detalle_venta/detalle-venta/detalle-venta.component';
 
 export const routes: Routes = [
   {
@@ -46,6 +47,11 @@ export const routes: Routes = [
       {
         path:'venta',
         component: VentaComponent,
+        canActivate: [AuthGuard]
+      },
+      {
+        path: 'calendario',
+        component: DetalleVentaComponent,
         canActivate: [AuthGuard]
       }
     ]
