@@ -1,5 +1,5 @@
 <div class="flex items-start">
-  <div class="flex-1 w-2/5 p-4"> <!-- Cambiado a w-2/5 -->
+  <div class="flex-1 w-1/2 p-4"> <!-- Cambiado a w-1/2 para un 50% -->
     <h2 class="text-xl font-bold mb-4">Código de barra</h2>
 
     <input
@@ -28,7 +28,7 @@
         <tbody>
           <tr class="bg-white border-b" *ngFor="let producto of productosFiltrados">
             <td class="px-4 py-3 text-center">{{ producto.title }}</td>
-            <td class="px-4 py-3 text-center">{{ producto.ventaPrice | currency:'USD': 'symbol':'1.0-2' }}</td>
+            <td class="px-4 py-3 text-center">{{ producto.ventaPrice | currency:'USD':'symbol':'1.0-2' }}</td>
             <td class="px-4 py-3 text-center">{{ producto.stock }}</td>
             <td class="px-4 py-3 text-center">
               <button
@@ -48,7 +48,7 @@
 
   <div class="w-px bg-gray-300 mx-4" style="height: 600px; margin-top: 50px;"></div>
 
-  <div class="flex-none w-3/5 p-4"> <!-- Cambiado a w-3/5 -->
+  <div class="flex-none w-1/2 p-4"> <!-- Cambiado a w-1/2 para un 50% -->
     <div *ngIf="carrito.length > 0" class="flex justify-between mb-2">
       <div class="text-left">
         <span class="font-semibold">Hora:</span> 19:58
@@ -78,7 +78,7 @@
         <tbody>
           <tr class="bg-white border-b" *ngFor="let item of carrito">
             <td class="px-4 py-3 text-center">{{ item.product.title }}</td>
-            <td class="px-4 py-3 text-center">{{ item.product.ventaPrice | currency:'USD': 'symbol':'1.0-2' }}</td>
+            <td class="px-4 py-3 text-center">{{ item.product.ventaPrice | currency:'USD':'symbol':'1.0-2' }}</td>
             <td class="px-4 py-3 text-center">{{ item.cantidad }}</td>
             <td class="px-4 py-3 text-center">
               <button
@@ -91,7 +91,7 @@
           </tr>
         </tbody>
       </table>
-      <h3 class="text-lg font-semibold mt-4 text-center">Precio Total: {{ totalPrecio | currency:'USD': 'symbol':'1.0-2' }}</h3>
+      <h3 class="text-lg font-semibold mt-4 text-center">Precio Total: {{ totalPrecio | currency:'USD':'symbol':'1.0-2' }}</h3>
     </div>
 
     <!-- Botones "Agregar venta" y "Otro" -->

@@ -28,9 +28,9 @@ export default class NavbarComponent {
   }
 
   logout(): void {
-    console.log("entro aca");
     localStorage.removeItem('token');
-    localStorage.removeItem('horaCarrito'); // Elimina el carrito del localStorage
+    localStorage.removeItem('carrito'); // Elimina el carrito del localStorage
+    localStorage.removeItem('userId'); // Elimina el carrito del localStorage
     this.router.navigate(['/home']);
   }
 
