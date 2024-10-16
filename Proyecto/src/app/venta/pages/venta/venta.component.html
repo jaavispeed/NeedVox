@@ -3,15 +3,17 @@
     <h2 class="text-xl font-bold mb-4">Agrega un producto con código de barra</h2>
 
     <input
-      type="text"
-      id="codigo-barra-input"
-      placeholder="Buscar producto por nombre o código de barra"
-      [(ngModel)]="searchTerm"
-      (input)="filtrarProductos()"
-      (keydown.enter)="agregarProductoDesdeBusqueda()"
-      (focusout)="enfocarInput()"
-      class="block w-full p-2 border border-gray-300 rounded-md focus:ring-blue-500 focus:border-blue-500 font-rubik text-black mb-4"
-    />
+  type="text"
+  #codigoBarraInput
+  placeholder="Buscar producto por nombre o código de barra"
+  [(ngModel)]="searchTerm"
+  (input)="filtrarProductos()"
+  (keydown.enter)="agregarProductoDesdeBusqueda()"
+  class="block w-full p-2 border border-gray-300 rounded-md focus:ring-blue-500 focus:border-blue-500 font-rubik text-black mb-4"
+/>
+
+
+
 
     <h3 class="text-lg font-semibold mb-4">Productos Disponibles</h3>
 

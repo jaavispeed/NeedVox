@@ -1,5 +1,5 @@
-import { Component } from '@angular/core';
-import { FormsModule } from '@angular/forms'; // Importa FormsModule para ngModel
+import { Component, ViewChild, ElementRef, HostListener } from '@angular/core';
+import { FormsModule } from '@angular/forms';
 import { Product } from '../../../products/models/product.model';
 import { VentaService } from '../../service/venta.service';
 import { CommonModule } from '@angular/common';
@@ -12,27 +12,39 @@ import { CommonModule } from '@angular/common';
   imports: [FormsModule, CommonModule],
 })
 export class VentaComponent {
+  @ViewChild('codigoBarraInput') codigoBarraInput!: ElementRef;
   searchTerm: string = '';
   productosFiltrados: Product[] = [];
   carrito: { product: Product; cantidad: number }[] = [];
   totalPrecio: number = 0;
-  userId: string = ''; // Inicializa el userId
+  userID: string = '';
   errorMessage: string = '';
-  horaCarrito: string | null = null; // Propiedad para almacenar la hora del carrito
-  userID: string = ''; // Propiedad para almacenar el userId
+  horaCarrito: string | null = null;
 
   constructor(private ventaService: VentaService) {
-    this.cargarProductos(); // Cargar productos al inicializar el componente
+    this.cargarProductos();
   }
 
   ngOnInit(): void {
-    this.obtenerUserID(); // Obtener el userId al iniciar
+    this.obtenerUserID();
+    this.enfocarInput(); // Enfoca el input al inicializar el componente
+  }
+
+  // Escuchar clics en el documento
+  @HostListener('document:mousedown', ['$event'])
+  onDocumentMouseDown(event: MouseEvent): void {
+    const target = event.target as HTMLElement;
+
+    // Si el clic no fue en el input, vuelve a enfocarlo
+    if (!this.codigoBarraInput.nativeElement.contains(target)) {
+      this.enfocarInput();
+    }
   }
 
   obtenerUserID(): void {
     this.ventaService.checkStatus().subscribe(
       (response) => {
-        this.userID = response.id; // Almacena el userId del backend
+        this.userID = response.id;
       },
       (error) => {
         console.error('Error al verificar el estado del userID:', error);
@@ -43,9 +55,9 @@ export class VentaComponent {
   cargarProductos() {
     this.ventaService.getProducts().subscribe(
       (productos: Product[]) => {
-        this.productosFiltrados = productos; // Asigna los productos filtrados
+        this.productosFiltrados = productos; // Cargar todos los productos
       },
-      error => {
+      (error) => {
         console.error("Error al obtener los productos:", error);
         this.errorMessage = "Error al cargar los productos. Intenta de nuevo más tarde.";
       }
@@ -53,6 +65,12 @@ export class VentaComponent {
   }
 
   filtrarProductos() {
+    // Si searchTerm está vacío, carga todos los productos
+    if (this.searchTerm.trim() === '') {
+      this.cargarProductos();
+      return;
+    }
+
     this.productosFiltrados = this.productosFiltrados.filter(producto =>
       producto.title?.toLowerCase().includes(this.searchTerm.toLowerCase()) ||
       producto.barcode?.toLowerCase().includes(this.searchTerm.toLowerCase())
@@ -67,6 +85,8 @@ export class VentaComponent {
     if (productoEncontrado) {
       this.agregarAlCarrito(productoEncontrado);
       this.searchTerm = ''; // Limpia el término de búsqueda
+      this.cargarProductos(); // Vuelve a cargar todos los productos
+      this.enfocarInput(); // Enfoca el input después de agregar
     } else {
       this.errorMessage = "Producto no encontrado.";
       console.log("Producto no encontrado.");
@@ -89,6 +109,8 @@ export class VentaComponent {
   eliminarDelCarrito(item: { product: Product; cantidad: number }) {
     this.carrito = this.carrito.filter(carritoItem => carritoItem !== item);
     this.actualizarTotal();
+    this.cargarProductos(); // Cargar todos los productos nuevamente
+    this.enfocarInput(); // Enfoca el input después de eliminar
   }
 
   actualizarTotal() {
@@ -105,14 +127,14 @@ export class VentaComponent {
       return;
     }
 
-    if (!this.userID) { // Asegúrate de verificar userID
+    if (!this.userID) {
       this.errorMessage = "El ID del usuario no está disponible.";
       console.error(this.errorMessage);
       return;
     }
 
     const venta = {
-      userId: this.userID, // Usa el userID recogido
+      userId: this.userID,
       productos: this.carrito.map(item => ({
         productId: item.product.id || '',
         cantidad: item.cantidad,
@@ -123,7 +145,8 @@ export class VentaComponent {
     this.ventaService.crearVenta(venta).subscribe(
       response => {
         console.log("Venta creada con éxito:", response);
-        this.reiniciarCarrito();
+        this.reiniciarCarrito(); // Reinicia el carrito y la hora
+        this.horaCarrito = null; // Reinicia la hora del carrito
         this.errorMessage = ''; // Limpia cualquier mensaje de error
       },
       error => {
@@ -136,10 +159,13 @@ export class VentaComponent {
   reiniciarCarrito() {
     this.carrito = [];
     this.totalPrecio = 0;
+    this.horaCarrito = null; // Reinicia la hora del carrito aquí también
+    this.enfocarInput(); // Enfoca el input al reiniciar el carrito
   }
 
   enfocarInput() {
-    const input = document.getElementById('codigo-barra-input') as HTMLInputElement;
-    input.focus();
+    setTimeout(() => {
+      this.codigoBarraInput.nativeElement.focus(); // Enfoca el input utilizando ViewChild
+    }, 0); // Usar un timeout para asegurar el enfoque
   }
 }
