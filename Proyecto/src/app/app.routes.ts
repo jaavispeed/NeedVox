@@ -7,8 +7,8 @@ import LoginPageComponent from './auth/pages/login-page/login-page.component';
 import { AuthGuard } from './auth/guards/auth.guard';
 import { NoAuthGuard } from './auth/guards/noAuth.guard';
 import { VentaComponent } from './venta/pages/venta/venta.component';
-import { DetalleVentaComponent } from './detalle_venta/detalle-venta/detalle-venta.component';
 import { TotalUsersComponent } from './admin/pages/totalusers/total-users/total-users.component';
+import { HistorialComponent } from './historial/pages/historial/historial.component';
 
 export const routes: Routes = [
   {
@@ -51,8 +51,8 @@ export const routes: Routes = [
         canActivate: [AuthGuard]
       },
       {
-        path: 'calendario',
-        component: DetalleVentaComponent,
+        path: 'historial',
+        component: HistorialComponent,
         canActivate: [AuthGuard]
       },
       {
