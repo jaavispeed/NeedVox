@@ -107,11 +107,23 @@ export class VentaComponent {
   }
 
   eliminarDelCarrito(item: { product: Product; cantidad: number }) {
-    this.carrito = this.carrito.filter(carritoItem => carritoItem !== item);
+    const existingItem = this.carrito.find(carritoItem => carritoItem.product.id === item.product.id);
+
+    if (existingItem) {
+      if (existingItem.cantidad > 1) {
+        // Reducir la cantidad en 1
+        existingItem.cantidad--;
+      } else {
+        // Si la cantidad es 1, eliminar el producto del carrito
+        this.carrito = this.carrito.filter(carritoItem => carritoItem.product.id !== item.product.id);
+      }
+    }
+
     this.actualizarTotal();
     this.cargarProductos(); // Cargar todos los productos nuevamente
     this.enfocarInput(); // Enfoca el input después de eliminar
   }
+
 
   actualizarTotal() {
     this.totalPrecio = this.carrito.reduce((total, item) => {
