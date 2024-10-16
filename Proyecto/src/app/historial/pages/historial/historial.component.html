@@ -1,41 +1,66 @@
-<div *ngIf="ventas.length > 0; else noVentas">
-  <h2 class="text-2xl font-bold mb-4">Historial de Ventas</h2>
+<div class="flex justify-center">
+  <div class="relative overflow-x-auto shadow-md sm:rounded-lg w-full max-w-3xl mt-2">
+    <h2 class="text-2xl font-bold mb-4 text-center">Historial de Ventas</h2>
 
-  <!-- Contenedor de tarjetas -->
-  <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
-    <div *ngFor="let venta of ventas"
-         class="bg-white shadow-lg rounded-lg p-4 cursor-pointer hover:bg-gray-100"
-         (click)="abrirModal(venta)">
-      <p><strong>ID Venta:</strong> {{ venta.id }}</p>
-      <p><strong>Cantidad de productos:</strong> {{ venta.cantidadTotal }}</p>
-      <p><strong>Precio total:</strong> {{ venta.total }}</p>
-      <p><strong>Hora:</strong> {{ venta.fecha | date:'HH:mm' }}</p>
+    <table class="w-full text-sm text-left text-black">
+      <thead class="text-xs uppercase bg-gray-50">
+        <tr>
+          <th scope="col" class="px-4 py-3 font-bold font-rubik text-center">Número</th>
+          <th scope="col" class="px-4 py-3 font-bold font-rubik text-center">Cantidad de Productos</th>
+          <th scope="col" class="px-4 py-3 font-bold font-rubik text-center">Precio Total</th>
+          <th scope="col" class="px-4 py-3 font-bold font-rubik text-center">Hora</th>
+          <th scope="col" class="px-4 py-3 font-bold font-rubik text-center"><span class="sr-only">Acciones</span></th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr *ngFor="let venta of getVentasParaMostrar(); let i = index" class="bg-white border-b">
+          <td class="px-4 py-3 text-center font-medium text-black font-rubik">{{ obtenerNumeroVenta(i) }}</td>
+          <td class="px-4 py-3 text-center text-black font-rubik">{{ venta.cantidadTotal }} producto{{ venta.cantidadTotal > 1 ? 's' : '' }}</td>
+          <td class="px-4 py-3 text-center text-black font-rubik">{{ venta.total | currency:'USD':'symbol':'1.0-0' }}</td>
+          <td class="px-4 py-3 text-center text-black font-rubik">{{ venta.fecha | date:'HH:mm' }}</td>
+          <td class="px-4 py-3 text-center flex justify-center space-x-2">
+            <button (click)="abrirModal(venta)" class="inline-flex items-center px-4 py-2 bg-[#76ABAE] text-white font-light font-rubik rounded-md shadow hover:bg-[#5b9892] focus:outline-none focus:ring-2 focus:ring-gray-500 transition duration-300 transform hover:scale-105">
+              <i class="fas fa-info-circle mr-1"></i> Info
+            </button>
+          </td>
+        </tr>
+      </tbody>
+    </table>
+
+    <ng-template #noVentas>
+      <p class="text-center text-gray-500">No hay ventas disponibles</p>
+    </ng-template>
+
+    <div *ngIf="ventaSeleccionada" class="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50">
+      <div class="bg-white rounded-lg shadow-lg p-6 max-w-md w-full">
+        <h3 class="text-xl font-semibold mb-4">
+          Detalles de la Venta (ID: {{ ventaSeleccionada.id }})
+        </h3>
+
+        <ul class="mt-4">
+          <li *ngFor="let producto of ventaSeleccionada.productos" class="border-b py-2">
+            <p><strong>Producto:</strong> {{ producto.product.title }}</p>
+            <p><strong>Cantidad:</strong> {{ producto.cantidad }}</p>
+            <p><strong>Precio de Venta:</strong> {{ producto.ventaPrice | currency:'USD':'symbol':'1.0-0' }}</p>
+          </li>
+        </ul>
+
+        <button (click)="cerrarModal()" class="mt-4 bg-red-500 text-white px-4 py-2 rounded">
+          Cerrar
+        </button>
+      </div>
     </div>
   </div>
 </div>
 
-<!-- Mensaje cuando no hay ventas -->
-<ng-template #noVentas>
-  <p class="text-center text-gray-500">No hay ventas disponibles</p>
-</ng-template>
-
-<!-- Modal de detalles de productos de la venta -->
-<div *ngIf="ventaSeleccionada" class="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50">
-  <div class="bg-white rounded-lg shadow-lg p-6 max-w-md w-full">
-    <h3 class="text-xl font-semibold mb-4">
-      Detalles de la Venta (ID: {{ ventaSeleccionada.id }})
-    </h3>
-
-    <ul class="mt-4">
-      <li *ngFor="let producto of ventaSeleccionada.productos" class="border-b py-2">
-        <p><strong>Producto:</strong> {{ producto.product.title }}</p>
-        <p><strong>Cantidad:</strong> {{ producto.cantidad }}</p>
-        <p><strong>Precio de Venta:</strong> {{ producto.ventaPrice }}</p>
-      </li>
-    </ul>
-
-    <button (click)="cerrarModal()" class="mt-4 bg-red-500 text-white px-4 py-2 rounded">
-      Cerrar
+<!-- Controles de paginación centrados con respecto al contenedor -->
+<div class="flex justify-center mt-4">
+  <div class="flex space-x-4">
+    <button (click)="paginaAnterior()" [disabled]="!hayPaginasPrevias()" class="bg-black text-white px-4 py-2 rounded disabled:opacity-50">
+      Anterior
+    </button>
+    <button (click)="siguientePagina()" [disabled]="!hayMasVentas()" class="bg-black text-white px-4 py-2 rounded disabled:opacity-50">
+      Siguiente
     </button>
   </div>
 </div>
