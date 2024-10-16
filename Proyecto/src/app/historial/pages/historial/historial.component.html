@@ -34,7 +34,7 @@
     <div *ngIf="ventaSeleccionada" class="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50">
       <div class="bg-white rounded-lg shadow-lg p-6 max-w-md w-full">
         <h3 class="text-xl font-semibold mb-4">
-          Detalles de la Venta (ID: {{ ventaSeleccionada.id }})
+          Información de la venta <!-- Cambiado el título aquí -->
         </h3>
 
         <ul class="mt-4">
@@ -45,8 +45,8 @@
           </li>
         </ul>
 
-        <button (click)="cerrarModal()" class="mt-4 bg-red-500 text-white px-4 py-2 rounded">
-          Cerrar
+        <button (click)="cerrarModal()" class="mt-4 bg-red-500 text-white px-4 py-2 rounded flex items-center">
+          <i class="fas fa-times mr-1"></i> Cerrar
         </button>
       </div>
     </div>
@@ -54,7 +54,7 @@
 </div>
 
 <!-- Controles de paginación centrados con respecto al contenedor -->
-<div class="flex justify-center mt-4">
+<div class="flex justify-center mt-4" *ngIf="!ventaSeleccionada">
   <div class="flex space-x-4">
     <button (click)="paginaAnterior()" [disabled]="!hayPaginasPrevias()" class="bg-black text-white px-4 py-2 rounded disabled:opacity-50">
       Anterior

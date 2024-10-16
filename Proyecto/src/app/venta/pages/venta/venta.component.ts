@@ -93,18 +93,29 @@ export class VentaComponent {
     }
   }
 
-  agregarAlCarrito(producto: Product) {
-    const existingItem = this.carrito.find(item => item.product.id === producto.id);
+  agregarAlCarrito(producto: any) {
+    const itemEnCarrito = this.carrito.find(item => item.product.id === producto.id);
 
-    if (existingItem) {
-      existingItem.cantidad++;
+    if (itemEnCarrito) {
+      // Si ya existe en el carrito, verifica si se puede aumentar la cantidad
+      if (itemEnCarrito.cantidad < producto.stock) {
+        itemEnCarrito.cantidad++;
+        producto.stock--; // Disminuye el stock del producto
+      } else {
+        alert('No puedes agregar más de este producto. Stock máximo alcanzado.');
+      }
     } else {
-      this.carrito.push({ product: producto, cantidad: 1 });
-      this.horaCarrito = new Date().toLocaleTimeString(); // Establecer la hora al agregar un producto
+      // Si no está en el carrito, verifica el stock
+      if (producto.stock > 0) {
+        this.carrito.push({ product: producto, cantidad: 1 });
+        producto.stock--; // Disminuye el stock del producto
+      } else {
+        alert('No puedes agregar este producto. Stock agotado.');
+      }
     }
-
-    this.actualizarTotal();
   }
+
+
 
   eliminarDelCarrito(item: { product: Product; cantidad: number }) {
     const existingItem = this.carrito.find(carritoItem => carritoItem.product.id === item.product.id);
