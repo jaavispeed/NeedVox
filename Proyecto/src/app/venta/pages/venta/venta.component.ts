@@ -32,7 +32,7 @@ export class VentaComponent {
     if (carritoGuardado) {
       this.carrito = JSON.parse(carritoGuardado);
       this.actualizarTotal(); // Actualiza el total al cargar el carrito
-  }
+    }
   }
 
   // Escuchar clics en el documento
@@ -98,7 +98,6 @@ export class VentaComponent {
     }
   }
 
-
   agregarAlCarrito(producto: any) {
     const itemEnCarrito = this.carrito.find(item => item.product.id === producto.id);
 
@@ -106,7 +105,7 @@ export class VentaComponent {
       // Si ya existe en el carrito, verifica si se puede aumentar la cantidad
       if (itemEnCarrito.cantidad < producto.stock) {
         itemEnCarrito.cantidad++;
-        producto.stock--; // Disminuye el stock del producto
+        // producto.stock--; // Disminuye el stock del producto (eliminado)
       } else {
         alert('No puedes agregar más de este producto. Stock máximo alcanzado.');
       }
@@ -114,7 +113,7 @@ export class VentaComponent {
       // Si no está en el carrito, verifica el stock
       if (producto.stock > 0) {
         this.carrito.push({ product: producto, cantidad: 1 });
-        producto.stock--; // Disminuye el stock del producto
+        // producto.stock--; // Disminuye el stock del producto (eliminado)
       } else {
         alert('No puedes agregar este producto. Stock agotado.');
       }
@@ -123,18 +122,11 @@ export class VentaComponent {
     this.guardarCarritoEnLocalStorage(); // Llama a esta función
   }
 
-
-
   eliminarDelCarrito(item: { product: Product; cantidad: number }) {
     const existingItem = this.carrito.find(carritoItem => carritoItem.product.id === item.product.id);
 
     if (existingItem) {
-      const producto = this.productosFiltrados.find(p => p.id === item.product.id);
-
-      if (producto) {
-        // Aumentar el stock del producto
-        producto.stock += existingItem.cantidad > 1 ? 1 : existingItem.cantidad;
-      }
+      // const producto = this.productosFiltrados.find(p => p.id === item.product.id); (eliminado)
 
       if (existingItem.cantidad > 1) {
         // Reducir la cantidad en 1
@@ -150,15 +142,11 @@ export class VentaComponent {
     this.guardarCarritoEnLocalStorage(); // Llama a esta función
   }
 
-
   actualizarTotal() {
     this.totalPrecio = this.carrito.reduce((total, item) => {
       return total + (item.product.ventaPrice * item.cantidad);
     }, 0);
   }
-
-
-
 
   procesarVenta() {
     if (this.carrito.length === 0) {
@@ -213,5 +201,4 @@ export class VentaComponent {
   guardarCarritoEnLocalStorage() {
     localStorage.setItem('carrito', JSON.stringify(this.carrito));
   }
-
 }
