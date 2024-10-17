@@ -128,6 +128,13 @@ export class VentaComponent {
     const existingItem = this.carrito.find(carritoItem => carritoItem.product.id === item.product.id);
 
     if (existingItem) {
+      const producto = this.productosFiltrados.find(p => p.id === item.product.id);
+
+      if (producto) {
+        // Aumentar el stock del producto
+        producto.stock += existingItem.cantidad > 1 ? 1 : existingItem.cantidad;
+      }
+
       if (existingItem.cantidad > 1) {
         // Reducir la cantidad en 1
         existingItem.cantidad--;
@@ -138,7 +145,6 @@ export class VentaComponent {
     }
 
     this.actualizarTotal();
-    this.cargarProductos(); // Cargar todos los productos nuevamente
     this.enfocarInput(); // Enfoca el input después de eliminar
     this.guardarCarritoEnLocalStorage(); // Llama a esta función
   }
