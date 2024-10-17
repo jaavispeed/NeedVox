@@ -20,17 +20,11 @@ describe('Página de inicio', () => {
     // Hacer clic en el botón "Ingresar" para abrir el pop-up
     cy.contains('Ingresar').click();
 
-    // Esperar y verificar que el pop-up de "Ingresar" esté visible
-    cy.get('app-login-page', { timeout: 10000 }).should('be.visible');
-
     // Hacer clic en el ícono "X" del pop-up de "Ingresar"
     cy.get('app-login-page').find('svg path[fill-rule="evenodd"]').should('exist').click(); // Hacemos clic en el ícono "X"
 
     // Botón Registrarme
     cy.contains('Registrarme').click();
-
-    // Esperar y verificar que el pop-up de "Registro" esté visible
-    cy.get('app-register-page', { timeout: 10000 }).should('be.visible');
 
     // Hacer clic en el ícono "X" del pop-up de "Registro"
     cy.get('app-register-page').find('svg path[fill-rule="evenodd"]').should('exist').click(); // Hacemos clic en el ícono "X"

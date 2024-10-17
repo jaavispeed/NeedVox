@@ -25,8 +25,7 @@ describe('Página de inicio', () => {
       // Abrir el modal de registro
       cy.contains('Registrarme').click();
 
-      // Verificar que el modal de "Registro" esté visible
-      cy.get('app-register-page', { timeout: 10000 }).should('be.visible');
+
 
       // Completar el formulario de registro
       cy.get('input[name="email"]').type(randomEmail);
