@@ -113,6 +113,7 @@ export class VentaComponent {
         alert('No puedes agregar este producto. Stock agotado.');
       }
     }
+    this.actualizarTotal();
   }
 
 
@@ -138,9 +139,10 @@ export class VentaComponent {
 
   actualizarTotal() {
     this.totalPrecio = this.carrito.reduce((total, item) => {
-        return total + item.product.ventaPrice * item.cantidad;
+      return total + (item.product.ventaPrice * item.cantidad);
     }, 0);
-}
+  }
+
 
 
 
