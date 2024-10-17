@@ -1,5 +1,10 @@
-<div class="flex flex-wrap justify-center gap-4 max-w-6xl mx-auto mt-10">
+<app-alert
+class="absolute top-4 left-1/2 transform -translate-x-1/2 z-50"
+[message]="welcomeMessage || ''"
+[isVisible]="!!(welcomeMessage && welcomeMessage.length > 0)"
+[type]="'success'"></app-alert>
 
+<div class="flex flex-wrap justify-center gap-4 max-w-6xl mx-auto mt-10">
   <div class="w-full text-center mb-4">
     <h2 class="text-2xl font-bold">¡Bienvenido, {{userName}}!</h2>
 </div>

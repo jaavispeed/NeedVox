@@ -1,20 +1,28 @@
 import { Component, OnInit } from '@angular/core';
 import { DashboardService } from '../../services/dashboard.service';
+import { CommonModule } from '@angular/common';
+import { AlertComponent } from '../../../shared/pages/alert/alert.component';
 
 @Component({
   selector: 'app-dashboard-page',
   standalone: true,
   templateUrl: './dashboard-page.component.html',
-  styleUrl: './dashboard-page.component.css'
+  styleUrl: './dashboard-page.component.css',
+  imports: [CommonModule, AlertComponent], // Importa el CommonModule aquí
 })
 export default class DashboardPageComponent implements OnInit {
   userName: string = '';
   totalProducts: number = 0; // Propiedad para almacenar el conteo
+  welcomeMessage: string | null = null;
+
 
   constructor(private dashboardService: DashboardService) {}
 
   ngOnInit(): void {
     this.obtenerNombreUsuario();
+    const storedMessage = localStorage.getItem('welcomeMessage');
+    this.welcomeMessage = storedMessage || ''; // Asigna una cadena vacía si es null
+    localStorage.removeItem('welcomeMessage');
   }
 
   obtenerNombreUsuario(): void {

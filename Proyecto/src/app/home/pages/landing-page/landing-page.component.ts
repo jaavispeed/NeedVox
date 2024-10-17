@@ -54,4 +54,9 @@ export default class LandingPageComponent {
   stopLoading() {
     this.isLoading = false;
   }
+
+  handleLoginSuccess() {
+    localStorage.setItem('welcomeMessage', 'Bienvenido a Needvox!');
+  }
+
 }
