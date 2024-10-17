@@ -88,15 +88,16 @@ export class VentaComponent {
     );
 
     if (productoEncontrado) {
+      // Llama a agregarAlCarrito que ya maneja la lógica de stock
       this.agregarAlCarrito(productoEncontrado);
       this.searchTerm = ''; // Limpia el término de búsqueda
-      this.cargarProductos(); // Vuelve a cargar todos los productos
       this.enfocarInput(); // Enfoca el input después de agregar
     } else {
       this.errorMessage = "Producto no encontrado.";
       console.log("Producto no encontrado.");
     }
   }
+
 
   agregarAlCarrito(producto: any) {
     const itemEnCarrito = this.carrito.find(item => item.product.id === producto.id);

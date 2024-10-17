@@ -61,9 +61,10 @@
       </button>
     </div>
 
-    <div *ngIf="carrito.length === 0" class="text-center text-gray-500 mb-4">
-      Aún no has agregado productos para vender.
+    <div *ngIf="carrito.length === 0" class="flex justify-center items-center mt-32 text-gray-500 mb-4">
+      <span>Aún no has agregado productos para vender.</span>
     </div>
+
 
     <div class="overflow-x-auto shadow-md sm:rounded-lg" *ngIf="carrito.length > 0">
       <table class="w-full text-sm text-left text-black">
