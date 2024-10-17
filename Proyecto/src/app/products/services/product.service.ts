@@ -71,6 +71,4 @@ export class ProductService {
     });
     return this.httpClient.delete<any>(`${this.apiUrl}/${id}`, { headers });
   }
-
-
 }

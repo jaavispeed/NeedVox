@@ -1,60 +1,165 @@
-<div class="p-6 min-h-screen">
-  <h1 class="text-2xl font-bold mb-6">Bienvenido, {{userName}}!</h1>
+<div class="flex flex-wrap justify-center gap-4 max-w-6xl mx-auto mt-10">
 
-  <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-    <!-- Ventas Totales del Mes -->
-    <div class="p-4 bg-white rounded-lg shadow-md">
-      <h2 class="text-lg font-semibold">Ventas Totales del Mes</h2>
-      <p class="text-2xl font-bold">$0.00</p>
-    </div>
+  <div class="w-full text-center mb-4">
+    <h2 class="text-2xl font-bold">¡Bienvenido, {{userName}}!</h2>
+</div>
 
-    <!-- Ventas Totales Diarias -->
-    <div class="p-4 bg-white rounded-lg shadow-md">
-      <h2 class="text-lg font-semibold">Ventas Totales Diarias</h2>
-      <p class="text-2xl font-bold">$0.00</p>
-    </div>
+  <div class="flex flex-wrap justify-center gap-4 w-full">
+      <div class="relative flex flex-col items-center rounded-[10px] border-[1px] border-gray-200 bg-white bg-clip-border shadow-md shadow-[#F3F3F3] transform transition-transform duration-200 hover:shadow-lg hover:-translate-y-1 p-4 w-60">
+          <div class="flex h-[90px] w-auto items-center justify-center">
+              <div class="rounded-full bg-lightPrimary p-3">
+                  <span class="flex items-center text-brand-500">
+                      <svg stroke="currentColor" fill="currentColor" stroke-width="0" viewBox="0 0 24 24" class="h-7 w-7">
+                          <path fill="none" d="M0 0h24v24H0z"></path>
+                          <path d="M4 9h4v11H4zM16 13h4v7h-4zM10 4h4v16h-4z"></path>
+                      </svg>
+                  </span>
+              </div>
+          </div>
+          <div class="flex flex-col items-center justify-center">
+              <p class="font-dm text-sm font-medium text-gray-600">Ventas Mensuales</p>
+              <h4 class="text-xl font-bold text-black">X</h4>
+          </div>
+      </div>
 
-    <!-- Ventas Totales Anuales -->
-    <div class="p-4 bg-white rounded-lg shadow-md">
-      <h2 class="text-lg font-semibold">Ventas Totales Anuales</h2>
-      <p class="text-2xl font-bold">$0.00</p>
-    </div>
+      <div class="relative flex flex-col items-center rounded-[10px] border-[1px] border-gray-200 bg-white bg-clip-border shadow-md shadow-[#F3F3F3] transform transition-transform duration-200 hover:shadow-lg hover:-translate-y-1 p-4 w-60">
+          <div class="flex h-[90px] w-auto items-center justify-center">
+              <div class="rounded-full bg-lightPrimary p-3">
+                  <span class="flex items-center text-brand-500">
+                      <svg stroke="currentColor" fill="currentColor" stroke-width="0" viewBox="0 0 24 24" class="h-7 w-7">
+                          <path fill="none" d="M0 0h24v24H0z"></path>
+                          <path d="M4 9h4v11H4zM16 13h4v7h-4zM10 4h4v16h-4z"></path>
+                      </svg>
+                  </span>
+              </div>
+          </div>
+          <div class="flex flex-col items-center justify-center">
+              <p class="font-dm text-sm font-medium text-gray-600">Ventas Diarias</p>
+              <h4 class="text-xl font-bold text-black">X</h4>
+          </div>
+      </div>
 
-    <!-- Ganancias -->
-    <div class="p-4 bg-white rounded-lg shadow-md">
-      <h2 class="text-lg font-semibold">Ganancias</h2>
-      <p class="text-2xl font-bold">$0.00</p>
-    </div>
+      <div class="relative flex flex-col items-center rounded-[10px] border-[1px] border-gray-200 bg-white bg-clip-border shadow-md shadow-[#F3F3F3] transform transition-transform duration-200 hover:shadow-lg hover:-translate-y-1 p-4 w-60">
+          <div class="flex h-[90px] w-auto items-center justify-center">
+              <div class="rounded-full bg-lightPrimary p-3">
+                  <span class="flex items-center text-brand-500">
+                      <svg stroke="currentColor" fill="currentColor" stroke-width="0" viewBox="0 0 24 24" class="h-7 w-7">
+                          <path fill="none" d="M0 0h24v24H0z"></path>
+                          <path d="M4 9h4v11H4zM16 13h4v7h-4zM10 4h4v16h-4z"></path>
+                      </svg>
+                  </span>
+              </div>
+          </div>
+          <div class="flex flex-col items-center justify-center">
+              <p class="font-dm text-sm font-medium text-gray-600">Ventas Anuales</p>
+              <h4 class="text-xl font-bold text-black">X</h4>
+          </div>
+      </div>
+  </div>
 
-    <!-- Gastos -->
-    <div class="p-4 bg-white rounded-lg shadow-md">
-      <h2 class="text-lg font-semibold">Gastos</h2>
-      <p class="text-2xl font-bold">$0.00</p>
-    </div>
+  <div class="flex flex-wrap justify-center gap-4 w-full">
+      <div class="relative flex flex-col items-center rounded-[10px] border-[1px] border-gray-200 bg-white bg-clip-border shadow-md shadow-[#F3F3F3] transform transition-transform duration-200 hover:shadow-lg hover:-translate-y-1 p-4 w-60">
+          <div class="flex h-[90px] w-auto items-center justify-center">
+              <div class="rounded-full bg-lightPrimary p-3">
+                  <span class="flex items-center text-brand-500">
+                      <svg stroke="currentColor" fill="currentColor" stroke-width="0" viewBox="0 0 24 24" class="h-7 w-7">
+                          <path fill="none" d="M0 0h24v24H0z"></path>
+                          <path d="M4 9h4v11H4zM16 13h4v7h-4zM10 4h4v16h-4z"></path>
+                      </svg>
+                  </span>
+              </div>
+          </div>
+          <div class="flex flex-col items-center justify-center">
+              <p class="font-dm text-sm font-medium text-gray-600">Ganancias</p>
+              <h4 class="text-xl font-bold text-black">X</h4>
+          </div>
+      </div>
 
-    <!-- Producto Más Vendido -->
-    <div class="p-4 bg-white rounded-lg shadow-md">
-      <h2 class="text-lg font-semibold">Producto Más Vendido</h2>
-      <p class="text-2xl font-bold">Nombre del Producto</p>
-      <p class="text-lg text-gray-600">Cantidad: X</p>
-    </div>
+      <div class="relative flex flex-col items-center rounded-[10px] border-[1px] border-gray-200 bg-white bg-clip-border shadow-md shadow-[#F3F3F3] transform transition-transform duration-200 hover:shadow-lg hover:-translate-y-1 p-4 w-60">
+          <div class="flex h-[90px] w-auto items-center justify-center">
+              <div class="rounded-full bg-lightPrimary p-3">
+                  <span class="flex items-center text-brand-500">
+                      <svg stroke="currentColor" fill="currentColor" stroke-width="0" viewBox="0 0 24 24" class="h-7 w-7">
+                          <path fill="none" d="M0 0h24v24H0z"></path>
+                          <path d="M4 9h4v11H4zM16 13h4v7h-4zM10 4h4v16h-4z"></path>
+                      </svg>
+                  </span>
+              </div>
+          </div>
+          <div class="flex flex-col items-center justify-center">
+              <p class="font-dm text-sm font-medium text-gray-600">Productos Totales</p>
+              <h4 class="text-xl font-bold text-black">{{ totalProducts   }}</h4>
+          </div>
+      </div>
 
-    <!-- Producto Menos Vendido -->
-    <div class="p-4 bg-white rounded-lg shadow-md">
-      <h2 class="text-lg font-semibold">Producto Menos Vendido</h2>
-      <p class="text-2xl font-bold">Nombre del Producto</p>
-      <p class="text-lg text-gray-600">Cantidad: X</p>
-    </div>
+      <div class="relative flex flex-col items-center rounded-[10px] border-[1px] border-gray-200 bg-white bg-clip-border shadow-md shadow-[#F3F3F3] transform transition-transform duration-200 hover:shadow-lg hover:-translate-y-1 p-4 w-60">
+          <div class="flex h-[90px] w-auto items-center justify-center">
+              <div class="rounded-full bg-lightPrimary p-3">
+                  <span class="flex items-center text-brand-500">
+                      <svg stroke="currentColor" fill="currentColor" stroke-width="0" viewBox="0 0 24 24" class="h-7 w-7">
+                          <path fill="none" d="M0 0h24v24H0z"></path>
+                          <path d="M4 9h4v11H4zM16 13h4v7h-4zM10 4h4v16h-4z"></path>
+                      </svg>
+                  </span>
+              </div>
+          </div>
+          <div class="flex flex-col items-center justify-center">
+              <p class="font-dm text-sm font-medium text-gray-600">Gastos</p>
+              <h4 class="text-xl font-bold text-black">X</h4>
+          </div>
+      </div>
+  </div>
 
-    <!-- Mejor Hora para Vender -->
-    <div class="p-4 bg-white rounded-lg shadow-md">
-      <h2 class="text-lg font-semibold">Mejor Hora para Vender</h2>
-      <p class="text-2xl font-bold">Entre las 11am y las 1pm</p>
-    </div>
+  <div class="flex flex-wrap justify-center gap-4 w-full">
+      <div class="relative flex flex-col items-center rounded-[10px] border-[1px] border-gray-200 bg-white bg-clip-border shadow-md shadow-[#F3F3F3] transform transition-transform duration-200 hover:shadow-lg hover:-translate-y-1 p-4 w-60">
+          <div class="flex h-[90px] w-auto items-center justify-center">
+              <div class="rounded-full bg-lightPrimary p-3">
+                  <span class="flex items-center text-brand-500">
+                      <svg stroke="currentColor" fill="currentColor" stroke-width="0" viewBox="0 0 24 24" class="h-7 w-7">
+                          <path fill="none" d="M0 0h24v24H0z"></path>
+                          <path d="M4 9h4v11H4zM16 13h4v7h-4zM10 4h4v16h-4z"></path>
+                      </svg>
+                  </span>
+              </div>
+          </div>
+          <div class="flex flex-col items-center justify-center">
+              <p class="font-dm text-sm font-medium text-gray-600">Producto mas vendido</p>
+              <h4 class="text-xl font-bold text-black">X</h4>
+          </div>
+      </div>
 
-    <div class="p-4 bg-white rounded-lg shadow-md">
-      <h2 class="text-lg font-semibold">Cantidad de productos en el inventario</h2>
-      <p class="text-lg text-gray-600">Cantidad: X</p>
-    </div>
+      <div class="relative flex flex-col items-center rounded-[10px] border-[1px] border-gray-200 bg-white bg-clip-border shadow-md shadow-[#F3F3F3] transform transition-transform duration-200 hover:shadow-lg hover:-translate-y-1 p-4 w-60">
+          <div class="flex h-[90px] w-auto items-center justify-center">
+              <div class="rounded-full bg-lightPrimary p-3">
+                  <span class="flex items-center text-brand-500">
+                      <svg stroke="currentColor" fill="currentColor" stroke-width="0" viewBox="0 0 24 24" class="h-7 w-7">
+                          <path fill="none" d="M0 0h24v24H0z"></path>
+                          <path d="M4 9h4v11H4zM16 13h4v7h-4zM10 4h4v16h-4z"></path>
+                      </svg>
+                  </span>
+              </div>
+          </div>
+          <div class="flex flex-col items-center justify-center">
+              <p class="font-dm text-sm font-medium text-gray-600">Mejor hora para vender</p>
+              <h4 class="text-xl font-bold text-black">X</h4>
+          </div>
+      </div>
+
+      <div class="relative flex flex-col items-center rounded-[10px] border-[1px] border-gray-200 bg-white bg-clip-border shadow-md shadow-[#F3F3F3] transform transition-transform duration-200 hover:shadow-lg hover:-translate-y-1 p-4 w-60">
+          <div class="flex h-[90px] w-auto items-center justify-center">
+              <div class="rounded-full bg-lightPrimary p-3">
+                  <span class="flex items-center text-brand-500">
+                      <svg stroke="currentColor" fill="currentColor" stroke-width="0" viewBox="0 0 24 24" class="h-7 w-7">
+                          <path fill="none" d="M0 0h24v24H0z"></path>
+                          <path d="M4 9h4v11H4zM16 13h4v7h-4zM10 4h4v16h-4z"></path>
+                      </svg>
+                  </span>
+              </div>
+          </div>
+          <div class="flex flex-col items-center justify-center">
+              <p class="font-dm text-sm font-medium text-gray-600">Producto menos vendido</p>
+              <h4 class="text-xl font-bold text-black">X</h4>
+          </div>
+      </div>
   </div>
 </div>

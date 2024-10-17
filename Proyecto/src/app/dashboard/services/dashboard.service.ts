@@ -7,6 +7,7 @@ import { Observable } from 'rxjs';
 })
 export class DashboardService {
   private apiUrl = 'http://localhost:3000/api/auth';
+  private apiUrlprod = 'http://localhost:3000/api/products';
 
   constructor(private http: HttpClient) {}
 
@@ -18,4 +19,14 @@ export class DashboardService {
 
     return this.http.get<any>(`${this.apiUrl}/check-status`, { headers });
   }
+
+  getProductCount(userId: string): Observable<number> {
+    const token = localStorage.getItem('token');
+    const headers = new HttpHeaders({
+      'Authorization': `Bearer ${token}`
+    });
+
+    return this.http.get<number>(`${this.apiUrlprod}/count/${userId}`, { headers });
+  }
+
 }
