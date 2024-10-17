@@ -28,6 +28,11 @@ export class VentaComponent {
   ngOnInit(): void {
     this.obtenerUserID();
     this.enfocarInput(); // Enfoca el input al inicializar el componente
+    const carritoGuardado = localStorage.getItem('carrito');
+    if (carritoGuardado) {
+      this.carrito = JSON.parse(carritoGuardado);
+      this.actualizarTotal(); // Actualiza el total al cargar el carrito
+  }
   }
 
   // Escuchar clics en el documento
@@ -114,6 +119,7 @@ export class VentaComponent {
       }
     }
     this.actualizarTotal();
+    this.guardarCarritoEnLocalStorage(); // Llama a esta función
   }
 
 
@@ -134,6 +140,7 @@ export class VentaComponent {
     this.actualizarTotal();
     this.cargarProductos(); // Cargar todos los productos nuevamente
     this.enfocarInput(); // Enfoca el input después de eliminar
+    this.guardarCarritoEnLocalStorage(); // Llama a esta función
   }
 
 
@@ -187,6 +194,7 @@ export class VentaComponent {
     this.totalPrecio = 0;
     this.horaCarrito = null; // Reinicia la hora del carrito aquí también
     this.enfocarInput(); // Enfoca el input al reiniciar el carrito
+    this.guardarCarritoEnLocalStorage(); // Llama a esta función
   }
 
   enfocarInput() {
@@ -194,4 +202,9 @@ export class VentaComponent {
       this.codigoBarraInput.nativeElement.focus(); // Enfoca el input utilizando ViewChild
     }, 0); // Usar un timeout para asegurar el enfoque
   }
+
+  guardarCarritoEnLocalStorage() {
+    localStorage.setItem('carrito', JSON.stringify(this.carrito));
+  }
+
 }
