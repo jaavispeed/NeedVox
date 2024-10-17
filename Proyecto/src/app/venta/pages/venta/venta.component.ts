@@ -88,9 +88,9 @@ export class VentaComponent {
     );
 
     if (productoEncontrado) {
-      // Llama a agregarAlCarrito que ya maneja la lógica de stock
       this.agregarAlCarrito(productoEncontrado);
       this.searchTerm = ''; // Limpia el término de búsqueda
+      this.filtrarProductos(); // Refresca la lista de productos para mostrar todos
       this.enfocarInput(); // Enfoca el input después de agregar
     } else {
       this.errorMessage = "Producto no encontrado.";
