@@ -18,7 +18,7 @@ export class CrudProductComponent implements OnInit {
   filteredProducts: Product[] = [];
   currentPage = 1;
   itemsPerPage = 5;
-  product: Product = { title: '', compraPrice: 0, ventaPrice: 0, stock: 0, slug: '', user: { id: '' }, expiryDate: undefined, barcode: null };
+  product: Product = { title: '', compraPrice: 0, ventaPrice: 0, stock: 0, slug: '', user: { id: '' }, barcode: null };
   isEditing: boolean = false;
   isModalOpen: boolean = false;
   searchTerm: string = '';
@@ -155,7 +155,6 @@ export class CrudProductComponent implements OnInit {
       ventaPrice: product.ventaPrice,
       stock: product.stock,
       slug: product.slug,
-      expiryDate: product.expiryDate || null,
       barcode: product.barcode ||  null// Cargar el código de barras, permitir vacío
     });
   }
@@ -185,7 +184,7 @@ export class CrudProductComponent implements OnInit {
       expiryDate: null,
       barcode: null // Reiniciar el código de barras como vacío
     });
-    this.product = { title: '', compraPrice: 0, ventaPrice: 0, stock: 0, slug: '', user: { id: '' }, expiryDate: undefined, barcode: null };
+    this.product = { title: '', compraPrice: 0, ventaPrice: 0, stock: 0, slug: '', user: { id: '' },barcode: null };
     this.isEditing = false;
   }
 

@@ -8,6 +8,5 @@ export interface Product {
   user: {
     id: string;
   };
-  expiryDate?: string; // Añadir la propiedad de fecha de vencimiento
   barcode?: string | null;
 }
