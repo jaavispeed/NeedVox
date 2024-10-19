@@ -39,7 +39,6 @@ export class CrudProductComponent implements OnInit {
       ventaPrice: new FormControl(0, [Validators.required, Validators.min(0)]),
       stock: new FormControl(0, [Validators.required, Validators.min(0)]),
       slug: new FormControl(''),
-      expiryDate: new FormControl(null),
       barcode: new FormControl(null) //// Campo agregado
     });
   }
@@ -97,7 +96,6 @@ export class CrudProductComponent implements OnInit {
       ...this.crudForm.value,
       compraPrice: Number(this.crudForm.value.compraPrice),
       ventaPrice: Number(this.crudForm.value.ventaPrice),
-      expiryDate: this.crudForm.value.expiryDate === '' ? null : this.crudForm.value.expiryDate,
       barcode: this.crudForm.value.barcode === '' ? null : this.crudForm.value.barcode // Asegurarse de que barcode sea null si está vacío
     };
 
@@ -181,7 +179,6 @@ export class CrudProductComponent implements OnInit {
       ventaPrice: 0,
       stock: 0,
       slug: '',
-      expiryDate: null,
       barcode: null // Reiniciar el código de barras como vacío
     });
     this.product = { title: '', compraPrice: 0, ventaPrice: 0, stock: 0, slug: '', user: { id: '' },barcode: null };
