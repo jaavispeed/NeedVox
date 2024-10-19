@@ -87,6 +87,7 @@ export class CrudProductComponent implements OnInit {
   }
 
   createOrUpdateProduct(): void {
+    this.crudForm.markAllAsTouched();
     if (this.crudForm.invalid) {
       this.showAlert('Por favor completa todos los campos correctamente.', 'error');
       return;
