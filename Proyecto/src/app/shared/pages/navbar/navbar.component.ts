@@ -1,5 +1,5 @@
 import { CommonModule } from '@angular/common';
-import { Component, inject } from '@angular/core';
+import { Component, HostListener, inject } from '@angular/core';
 import { Router, RouterOutlet } from '@angular/router';
 import { NavbarService } from '../../services/navbar.service';
 
@@ -29,7 +29,6 @@ export default class NavbarComponent {
 
   logout(): void {
     localStorage.removeItem('token');
-    localStorage.removeItem('carrito'); // Elimina el carrito del localStorage
     localStorage.removeItem('userId'); // Elimina el carrito del localStorage
     this.router.navigate(['/home']);
   }
@@ -45,5 +44,26 @@ export default class NavbarComponent {
       }
     );
   }
+
+  @HostListener('document:click', ['$event'])
+  closeMenuOnClick(event: MouseEvent): void {
+    const target = event.target as HTMLElement;
+
+    // Referencias al botón del menú y al menú de usuario
+    const userMenuButton = document.getElementById('user-menu-button');
+    const userMenu = document.getElementById('user-menu');
+
+    // Verifica si el clic fue fuera del botón y del menú
+    if (
+      this.isUserMenuOpen &&
+      userMenuButton &&
+      !userMenuButton.contains(target) &&
+      userMenu &&
+      !userMenu.contains(target)
+    ) {
+      this.isUserMenuOpen = false; // Cierra el menú
+    }
+  }
+
 
 }
