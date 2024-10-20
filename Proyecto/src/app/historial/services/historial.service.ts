@@ -1,23 +1,35 @@
-import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { Injectable } from '@angular/core';
+import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { Observable } from 'rxjs';
+import { Venta } from '../../venta/models/venta-car.model';
 
 @Injectable({
-  providedIn: 'root'
+  providedIn: 'root',
 })
 export class HistorialService {
+  private apiUrl = 'http://localhost:3000/api/ventas'; // URL de la API
 
-  private apiUrl = 'http://localhost:3000/api/ventas';
+  constructor(private http: HttpClient) {}
 
-  constructor(private http: HttpClient) { }
-
-  getVentas(): Observable<any> {
-    const token = localStorage.getItem('token'); // Obtener el token del almacenamiento local o desde donde lo almacenes.
-
-    const headers = new HttpHeaders({
-      'Authorization': `Bearer ${token}` // Agregar el token al encabezado de la solicitud
+  // Método para obtener todas las ventas
+  getVentas(): Observable<Venta[]> {
+    return this.http.get<Venta[]>(this.apiUrl, {
+      headers: this.getHeaders(),
     });
+  }
 
-    return this.http.get<any>(this.apiUrl, { headers });
+  // Método para obtener ventas por fecha
+  getVentasPorFecha(fecha: string): Observable<Venta[]> {
+    return this.http.get<Venta[]>(`${this.apiUrl}/fecha/${fecha}`, {
+      headers: this.getHeaders(),
+    });
+  }
+
+  // Método para obtener el token y los headers
+  private getHeaders(): HttpHeaders {
+    const token = localStorage.getItem('token');
+    return new HttpHeaders({
+      'Authorization': `Bearer ${token}`
+    });
   }
 }

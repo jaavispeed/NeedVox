@@ -1,9 +1,30 @@
-<div class="flex justify-center">
-  <div class="relative overflow-x-auto shadow-md sm:rounded-lg w-full max-w-3xl mt-2">
-    <h2 class="text-2xl font-bold mb-4 text-center">Historial de Ventas</h2>
+<div class="flex flex-col items-center justify-center w-full max-w-2xl mt-4 mx-auto"> <!-- Aumenté max-w-lg a max-w-2xl -->
+  <!-- Contenedor de la fecha -->
+  <div class="flex justify-center w-full mb-4">
+    <div class="flex justify-between items-center bg-white rounded-full px-6 py-2 shadow-lg w-full">
+      <button (click)="cambiarDiaAnterior()" class="bg-black text-white rounded-full px-3 py-2 hover:bg-gray-800">
+        <i class="fas fa-chevron-left"></i>
+      </button>
 
-    <div *ngIf="ventas.length === 0" class="text-center text-gray-500">
-      Aun no has hecho ninguna venta.
+      <span class="text-lg font-medium text-gray-600 font-rubik">
+        {{ fechaSeleccionada | date: 'dd MMMM yyyy' }}
+      </span>
+
+      <button (click)="cambiarDiaSiguiente()" class="bg-black text-white rounded-full px-3 py-2 hover:bg-gray-800">
+        <i class="fas fa-chevron-right"></i>
+      </button>
+    </div>
+
+    <!-- Botón de calendario estilizado -->
+    <button (click)="abrirCalendario()" class="bg-[#76ABAE] text-white rounded-full px-4 py-2 hover:bg-[#5b9892] flex items-center justify-center ml-4 shadow-md transition duration-300 transform hover:scale-105">
+      <i class="fas fa-calendar-alt"></i>
+    </button>
+  </div>
+
+  <!-- Contenedor de la lista -->
+  <div class="relative overflow-x-auto shadow-md sm:rounded-lg w-full mt-2">
+    <div *ngIf="ventas.length === 0" class="text-center text-gray-500 mb-4">
+      Aún no has hecho ninguna venta.
     </div>
 
     <table *ngIf="ventas.length > 0" class="w-full text-sm text-left text-black">
@@ -13,15 +34,17 @@
           <th scope="col" class="px-4 py-3 font-bold font-rubik text-center">Cantidad de Productos</th>
           <th scope="col" class="px-4 py-3 font-bold font-rubik text-center">Precio Total</th>
           <th scope="col" class="px-4 py-3 font-bold font-rubik text-center">Hora</th>
-          <th scope="col" class="px-4 py-3 font-bold font-rubik text-center"><span class="sr-only">Acciones</span></th>
+          <th scope="col" class="px-4 py-3 font-bold font-rubik text-center">
+            <span class="sr-only">Acciones</span>
+          </th>
         </tr>
       </thead>
       <tbody>
         <tr *ngFor="let venta of getVentasParaMostrar(); let i = index" class="bg-white border-b">
           <td class="px-4 py-3 text-center font-medium text-black font-rubik">{{ obtenerNumeroVenta(i) }}</td>
-          <td class="px-4 py-3 text-center text-black font-rubik">{{ venta.cantidadTotal }} producto{{ venta.cantidadTotal > 1 ? 's' : '' }}</td>
+          <td class="px-4 py-3 text-center text-black font-rubik">{{ venta.productos.length }} Producto{{ venta.productos.length > 1 ? 's' : '' }}</td>
           <td class="px-4 py-3 text-center text-black font-rubik">{{ venta.total | currency:'USD':'symbol':'1.0-0' }}</td>
-          <td class="px-4 py-3 text-center text-black font-rubik">{{ venta.fecha | date:'HH:mm' }}</td>
+          <td class="px-4 py-3 text-center text-black font-rubik">{{ venta.hora | date:'HH:mm' }}</td>
           <td class="px-4 py-3 text-center flex justify-center space-x-2">
             <button (click)="abrirModal(venta)" class="inline-flex items-center px-4 py-2 bg-[#76ABAE] text-white font-light font-rubik rounded-md shadow hover:bg-[#5b9892] focus:outline-none focus:ring-2 focus:ring-gray-500 transition duration-300 transform hover:scale-105">
               <i class="fas fa-info-circle mr-1"></i> Info
@@ -37,18 +60,14 @@
 
     <div *ngIf="ventaSeleccionada" class="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50">
       <div class="bg-white rounded-lg shadow-lg p-6 max-w-md w-full">
-        <h3 class="text-xl font-semibold mb-4">
-          Información de la venta
-        </h3>
-
+        <h3 class="text-xl font-semibold mb-4 text-black">Información de la venta</h3>
         <ul class="mt-4">
           <li *ngFor="let producto of ventaSeleccionada.productos" class="border-b py-2">
-            <p><strong>Producto:</strong> {{ producto.product.title }}</p>
-            <p><strong>Cantidad:</strong> {{ producto.cantidad }}</p>
-            <p><strong>Precio de Venta:</strong> {{ producto.ventaPrice | currency:'USD':'symbol':'1.0-0' }}</p>
+            <p class="text-black"><strong>Producto:</strong> {{ producto.productId }}</p>
+            <p class="text-black"><strong>Cantidad:</strong> {{ producto.cantidad }}</p>
+            <p class="text-black"><strong>Precio de Venta:</strong> {{ producto.precioUnitario | currency:'USD':'symbol':'1.0-0' }}</p>
           </li>
         </ul>
-
         <button (click)="cerrarModal()" class="mt-4 bg-red-500 text-white px-4 py-2 rounded flex items-center">
           <i class="fas fa-times mr-1"></i> Cerrar
         </button>
