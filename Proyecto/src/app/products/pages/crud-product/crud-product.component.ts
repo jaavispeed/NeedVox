@@ -18,7 +18,11 @@ export class CrudProductComponent implements OnInit {
   filteredProducts: Product[] = [];
   currentPage = 1;
   itemsPerPage = 5;
-  product: Product = { title: '', compraPrice: 0, ventaPrice: 0, stock: 0, slug: '', user: { id: '' }, barcode: null };
+  product: Product = { title: '', compraPrice: 0, ventaPrice: 0, stock: 0, slug: '', user: { id: '' }, expiryDate: undefined, barcode: null, fechaCreacion: new Date().toLocaleDateString('es-ES', {
+    day: 'numeric',
+    month: 'long',
+    year: 'numeric'
+  })  };
   isEditing: boolean = false;
   isModalOpen: boolean = false;
   searchTerm: string = '';
@@ -39,6 +43,7 @@ export class CrudProductComponent implements OnInit {
       ventaPrice: new FormControl(0, [Validators.required, Validators.min(0)]),
       stock: new FormControl(0, [Validators.required, Validators.min(0)]),
       slug: new FormControl(''),
+      expiryDate: new FormControl(null),
       barcode: new FormControl(null) //// Campo agregado
     });
   }
@@ -50,8 +55,16 @@ export class CrudProductComponent implements OnInit {
   getProducts(): void {
     this.productService.getProducts().subscribe({
       next: (data) => {
-        this.products = data;
-        this.filteredProducts = data;
+        this.products = data.map(product => ({
+          ...product,
+          fechaCreacion: new Date(product.fechaCreacion).toLocaleDateString('es-ES', {
+            year: 'numeric',
+            month: 'long',
+            day: 'numeric',
+            timeZone: 'America/Santiago'
+          })
+        }));
+        this.filteredProducts = this.products;
       },
       error: (error) => this.showAlert('Error al obtener los productos.', 'error')
     });
@@ -86,7 +99,6 @@ export class CrudProductComponent implements OnInit {
   }
 
   createOrUpdateProduct(): void {
-    this.crudForm.markAllAsTouched();
     if (this.crudForm.invalid) {
       this.showAlert('Por favor completa todos los campos correctamente.', 'error');
       return;
@@ -96,6 +108,8 @@ export class CrudProductComponent implements OnInit {
       ...this.crudForm.value,
       compraPrice: Number(this.crudForm.value.compraPrice),
       ventaPrice: Number(this.crudForm.value.ventaPrice),
+      expiryDate: this.crudForm.value.expiryDate === '' ? null : this.crudForm.value.expiryDate,
+      fechaCreacion: new Date().toISOString(), // Agregar esta línea
       barcode: this.crudForm.value.barcode === '' ? null : this.crudForm.value.barcode // Asegurarse de que barcode sea null si está vacío
     };
 
@@ -153,6 +167,7 @@ export class CrudProductComponent implements OnInit {
       ventaPrice: product.ventaPrice,
       stock: product.stock,
       slug: product.slug,
+      expiryDate: product.expiryDate || null,
       barcode: product.barcode ||  null// Cargar el código de barras, permitir vacío
     });
   }
@@ -179,9 +194,10 @@ export class CrudProductComponent implements OnInit {
       ventaPrice: 0,
       stock: 0,
       slug: '',
+      expiryDate: null,
       barcode: null // Reiniciar el código de barras como vacío
     });
-    this.product = { title: '', compraPrice: 0, ventaPrice: 0, stock: 0, slug: '', user: { id: '' },barcode: null };
+    this.product = { title: '', compraPrice: 0, ventaPrice: 0, stock: 0, slug: '', user: { id: '' }, expiryDate: undefined, barcode: null, fechaCreacion: new Date().toISOString()  };
     this.isEditing = false;
   }
 
@@ -208,4 +224,5 @@ export class CrudProductComponent implements OnInit {
     const endIndex = startIndex + this.itemsPerPage;
     return this.filteredProducts.slice(startIndex, endIndex);
   }
+
 }

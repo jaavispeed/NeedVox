@@ -8,5 +8,7 @@ export interface Product {
   user: {
     id: string;
   };
+  expiryDate?: Date | null; // Puede ser un objeto Date o null
   barcode?: string | null;
+  fechaCreacion: string; // Añadir la propiedad de fecha de creación
 }

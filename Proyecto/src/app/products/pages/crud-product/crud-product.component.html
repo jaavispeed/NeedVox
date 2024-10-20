@@ -36,7 +36,9 @@
             <th scope="col" class="px-2 py-3 font-bold font-rubik text-center">Precio de Compra</th>
             <th scope="col" class="px-2 py-3 font-bold font-rubik text-center">Precio de Venta</th>
             <th scope="col" class="px-2 py-3 font-bold font-rubik text-center">Stock</th>
+            <th scope="col" class="px-2 py-3 font-bold font-rubik text-center">Fecha de Vencimiento</th>
             <th scope="col" class="px-2 py-3 font-bold font-rubik text-center">Código de Barras</th>
+            <th scope="col" class="px-2 py-3 font-bold font-rubik text-center">Fecha de Creación</th>
             <th scope="col" class="px-2 py-3 font-bold font-rubik text-center"><span class="sr-only">Acciones</span></th>
           </tr>
         </thead>
@@ -46,7 +48,9 @@
             <td class="px-4 py-3 text-center text-black font-rubik">{{ product.compraPrice | currency:'USD':'symbol':'1.0-0' }}</td>
             <td class="px-4 py-3 text-center text-black font-rubik">{{ product.ventaPrice | currency:'USD':'symbol':'1.0-0' }}</td>
             <td class="px-4 py-3 text-center text-black font-rubik">{{ product.stock }}</td>
+            <td class="px-4 py-3 text-center text-black font-rubik">{{ product.expiryDate || 'Sin fecha de vencimiento' }}</td>
             <td class="px-4 py-3 text-center text-black font-rubik">{{ product.barcode || 'Sin código de barras' }}</td>
+            <td class="px-4 py-3 text-center text-black font-rubik">{{ product.fechaCreacion }}</td>
             <td class="px-4 py-3 text-center flex justify-center space-x-2">
               <button (click)="editProduct(product)" class="inline-flex items-center px-4 py-2 bg-[#76ABAE] text-white font-light font-rubik rounded-md shadow hover:bg-[#5b9892] focus:outline-none focus:ring-2 focus:ring-gray-500 transition duration-300 transform hover:scale-105">
                 <i class="fas fa-edit mr-1"></i>
@@ -158,6 +162,14 @@
               <div *ngIf="crudForm.get('stock')?.errors?.['required']" class="text-red-600">El stock es obligatorio.</div>
               <div *ngIf="crudForm.get('stock')?.errors?.['min']" class="text-red-600">El stock no puede ser negativo.</div>
             </div>
+          </div>
+          <div class="mb-4">
+            <label class="block text-sm font-medium text-gray-700">Fecha de Vencimiento:</label>
+            <input
+              type="date"
+              formControlName="expiryDate"
+              class="mt-1 block w-full p-2 border border-gray-300 rounded-md focus:ring-blue-500 focus:border-blue-500 font-rubik text-black"
+            />
           </div>
           <div class="mb-4">
             <label class="block text-sm font-medium text-gray-700">Código de Barras:</label>
