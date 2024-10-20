@@ -13,7 +13,8 @@ import { Venta } from '../../../venta/models/venta-car.model';
 })
 export class HistorialComponent {
   ventas: Venta[] = [];
-  ventaSeleccionada: Venta | null = null;
+  ventaSeleccionada: any | null = null; // Cambiado a any para incluir los detalles del producto
+  productos: any[] = []; // Lista de productos
   fechaSeleccionada: string = ''; // Fecha seleccionada para filtrar
   ventasPorPagina: number = 5;
   paginaActual: number = 1;
@@ -21,13 +22,25 @@ export class HistorialComponent {
   constructor(private historialService: HistorialService) {}
 
   ngOnInit(): void {
+    this.cargarProductos(); // Cargar productos al iniciar
     this.navegarHoy(); // Cargar ventas de hoy al iniciar
+  }
+
+  cargarProductos(): void {
+    this.historialService.getVentasProductVenta().subscribe(
+      (data) => {
+        this.productos = data.map(item => item.product); // Almacenar la lista de productos
+      },
+      (error) => {
+        console.error('Error al obtener productos', error);
+      }
+    );
   }
 
   cargarVentas(): void {
     this.historialService.getVentas().subscribe(
       (data: Venta[]) => {
-        this.ventas = data.sort((a, b) => new Date(b.hora).getTime() - new Date(a.hora).getTime());
+        this.ventas = data.sort((a, b) => new Date(b.fecha).getTime() - new Date(a.fecha).getTime());
       },
       (error) => {
         console.error('Error al obtener ventas', error);
@@ -35,13 +48,14 @@ export class HistorialComponent {
     );
   }
 
+
   filtrarVentasPorFecha(): void {
     if (!this.fechaSeleccionada) {
       this.cargarVentas(); // Cargar todas las ventas si no hay filtro
     } else {
       this.historialService.getVentasPorFecha(this.fechaSeleccionada).subscribe(
         (data: Venta[]) => {
-          this.ventas = data.sort((a, b) => new Date(b.hora).getTime() - new Date(a.hora).getTime());
+          this.ventas = data.sort((a, b) => new Date(b.fecha).getTime() - new Date(a.fecha).getTime());
           this.paginaActual = 1; // Reiniciar a la primera página después de filtrar
         },
         (error) => {
@@ -71,11 +85,7 @@ export class HistorialComponent {
     this.filtrarVentasPorFecha();
   }
 
-  abrirCalendario(): void {
-    // Aquí podrías manejar la lógica para abrir el calendario si es necesario
-  }
-
-  abrirModal(venta: Venta): void {
+  abrirModal(venta: any): void {
     this.ventaSeleccionada = venta;
   }
 
@@ -115,5 +125,10 @@ export class HistorialComponent {
 
   private formatearFecha(fecha: Date): string {
     return fecha.toISOString().split('T')[0]; // Formato YYYY-MM-DD
+  }
+
+  // Método para obtener el producto por ID
+  obtenerProductoPorId(productId: string) {
+    return this.productos.find(producto => producto.id === productId);
   }
 }

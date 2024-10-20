@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core';
 import { HttpClient, HttpHeaders } from '@angular/common/http';
-import { Observable } from 'rxjs';
+import { Observable, tap } from 'rxjs';
 import { Venta } from '../../venta/models/venta-car.model';
 
 @Injectable({
@@ -8,6 +8,7 @@ import { Venta } from '../../venta/models/venta-car.model';
 })
 export class HistorialService {
   private apiUrl = 'http://localhost:3000/api/ventas'; // URL de la API
+  private productVentaUrl = 'http://localhost:3000/api/ventas/product-venta'; // URL de la API de ProductVenta
 
   constructor(private http: HttpClient) {}
 
@@ -15,7 +16,7 @@ export class HistorialService {
   getVentas(): Observable<Venta[]> {
     return this.http.get<Venta[]>(this.apiUrl, {
       headers: this.getHeaders(),
-    });
+    }).pipe(tap(data => console.log('Ventas recibidas:', data)));
   }
 
   // Método para obtener ventas por fecha
@@ -31,5 +32,12 @@ export class HistorialService {
     return new HttpHeaders({
       'Authorization': `Bearer ${token}`
     });
+  }
+
+  // Método para obtener todas las ventas con productos
+  getVentasProductVenta(): Observable<any[]> {
+    return this.http.get<any[]>(this.productVentaUrl, {
+      headers: this.getHeaders(),
+    }).pipe(tap(data => console.log('Ventas con productos recibidas:', data)));
   }
 }

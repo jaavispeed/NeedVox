@@ -16,7 +16,7 @@
     </div>
 
     <!-- Botón de calendario estilizado -->
-    <button (click)="abrirCalendario()" class="bg-[#76ABAE] text-white rounded-full px-4 py-2 hover:bg-[#5b9892] flex items-center justify-center ml-4 shadow-md transition duration-300 transform hover:scale-105">
+    <button  class="bg-[#76ABAE] text-white rounded-full px-4 py-2 hover:bg-[#5b9892] flex items-center justify-center ml-4 shadow-md transition duration-300 transform hover:scale-105">
       <i class="fas fa-calendar-alt"></i>
     </button>
   </div>
@@ -44,8 +44,10 @@
           <td class="px-4 py-3 text-center font-medium text-black font-rubik">{{ obtenerNumeroVenta(i) }}</td>
           <td class="px-4 py-3 text-center text-black font-rubik">{{ venta.productos.length }} Producto{{ venta.productos.length > 1 ? 's' : '' }}</td>
           <td class="px-4 py-3 text-center text-black font-rubik">{{ venta.total | currency:'USD':'symbol':'1.0-0' }}</td>
-          <td class="px-4 py-3 text-center text-black font-rubik">{{ venta.hora | date:'HH:mm' }}</td>
-          <td class="px-4 py-3 text-center flex justify-center space-x-2">
+          <td class="px-4 py-3 text-center text-black font-rubik">
+            {{ (venta.fecha ? (venta.fecha | date: 'HH:mm') : 'Hora no disponible') }}
+          </td>
+                    <td class="px-4 py-3 text-center flex justify-center space-x-2">
             <button (click)="abrirModal(venta)" class="inline-flex items-center px-4 py-2 bg-[#76ABAE] text-white font-light font-rubik rounded-md shadow hover:bg-[#5b9892] focus:outline-none focus:ring-2 focus:ring-gray-500 transition duration-300 transform hover:scale-105">
               <i class="fas fa-info-circle mr-1"></i> Info
             </button>
@@ -63,9 +65,9 @@
         <h3 class="text-xl font-semibold mb-4 text-black">Información de la venta</h3>
         <ul class="mt-4">
           <li *ngFor="let producto of ventaSeleccionada.productos" class="border-b py-2">
-            <p class="text-black"><strong>Producto:</strong> {{ producto.productId }}</p>
+            <p class="text-black"><strong>Producto:</strong> {{ producto.product.title}}</p>
             <p class="text-black"><strong>Cantidad:</strong> {{ producto.cantidad }}</p>
-            <p class="text-black"><strong>Precio de Venta:</strong> {{ producto.precioUnitario | currency:'USD':'symbol':'1.0-0' }}</p>
+            <p class="text-black"><strong>Precio de Venta:</strong> {{ producto.ventaPrice | currency:'USD':'symbol':'1.0-0' }}</p>
           </li>
         </ul>
         <button (click)="cerrarModal()" class="mt-4 bg-red-500 text-white px-4 py-2 rounded flex items-center">

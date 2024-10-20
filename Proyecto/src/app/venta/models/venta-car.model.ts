@@ -5,6 +5,6 @@ export interface Venta {
     cantidad: number; // Cantidad de este producto
     precioUnitario: number; // Precio unitario del producto
   }[]; // Array de productos
-  hora: string; // Hora de la venta
+  fecha: string; // Hora de la venta
   total: number; // Total de la venta
 }
