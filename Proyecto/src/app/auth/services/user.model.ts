@@ -4,4 +4,5 @@ export interface User {
   username: string;
   password: string;
   token: string;
+  isActive: boolean; // Agregamos el campo isActive
 }

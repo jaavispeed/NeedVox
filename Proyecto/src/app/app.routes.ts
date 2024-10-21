@@ -1,4 +1,3 @@
-
 import { Routes } from '@angular/router';
 import IndexComponent from './index/pages/index/index.component';
 import DashboardPageComponent from './dashboard/pages/dashboard-page/dashboard-page.component';
@@ -7,7 +6,7 @@ import LoginPageComponent from './auth/pages/login-page/login-page.component';
 import { AuthGuard } from './auth/guards/auth.guard';
 import { NoAuthGuard } from './auth/guards/noAuth.guard';
 import { VentaComponent } from './venta/pages/venta/venta.component';
-import { TotalUsersComponent } from './admin/pages/totalusers/total-users/total-users.component';
+import { UsuariosComponent } from './admin/pages/totalusers/total-users/usuarios.component'; // Ruta actualizada
 import { HistorialComponent } from './historial/pages/historial/historial.component';
 
 export const routes: Routes = [
@@ -46,7 +45,7 @@ export const routes: Routes = [
         canActivate: [AuthGuard]
       },
       {
-        path:'venta',
+        path: 'venta',
         component: VentaComponent,
         canActivate: [AuthGuard]
       },
@@ -56,9 +55,9 @@ export const routes: Routes = [
         canActivate: [AuthGuard]
       },
       {
-        path: "total-users",
-        component: TotalUsersComponent,
-        canActivate: [AuthGuard]
+        path: 'total-users', // Ruta para acceder al componente de usuarios
+        component: UsuariosComponent,
+        canActivate: [AuthGuard] // Solo accesible por usuarios autenticados
       },
     ]
   },
@@ -75,4 +74,3 @@ export const routes: Routes = [
     redirectTo: '404'
   }
 ];
-

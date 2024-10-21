@@ -1,1 +1,23 @@
-<p>total-users works!</p>
+<div class="flex justify-center mb-4">
+  <h3 class="text-lg font-semibold">Usuarios registrados</h3>
+</div>
+<br>
+
+<div class="overflow-x-auto shadow-md sm:rounded-lg mb-4">
+  <table class="w-full text-sm text-center text-black">
+    <thead class="text-xs uppercase bg-gray-50">
+      <tr>
+        <th class="px-2 py-3 font-bold text-center">Nombre</th>
+        <th class="px-2 py-3 font-bold text-center">Correo</th>
+        <th class="px-2 py-3 font-bold text-center">Rol</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr class="bg-white border-b" *ngFor="let usuario of usuarios">
+        <td class="px-4 py-3 text-center">{{ usuario.username }}</td>
+        <td class="px-4 py-3 text-center">{{ usuario.email }}</td>
+        <td class="px-4 py-3 text-center">{{ usuario.roles }}</td>
+      </tr>
+    </tbody>
+  </table>
+</div>
