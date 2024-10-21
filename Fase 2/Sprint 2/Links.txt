@@ -1,0 +1,5 @@
+Netlify: needvox.netlify.app
+Figma: https://trello.com/b/tHOXLxm0/sprint-3-10-10-2024-24-10-2024
+Trello: https://trello.com/b/o8PiSCBx/capstone-sprint-12-09-26-09
+Github Front: https://github.com/jaavispeed/Needvox
+Github Back: https://github.com/jaavispeed/NeedvoxBackend
