@@ -22,7 +22,11 @@ export default class RegisterPageComponent {
 
   constructor() {
     this.registerform = new FormGroup({
-      email: new FormControl('', [Validators.required, Validators.email]),
+      email: new FormControl('', [
+        Validators.required,
+        Validators.email,
+        Validators.pattern('^[\\w\\.-]+@(gmail|hotmail|outlook|yahoo)\\.com$') // Validación del dominio
+      ]),
       username: new FormControl('', [Validators.required, Validators.minLength(3)]),
       password: new FormControl('', [Validators.required, Validators.minLength(6)]),
       confirmpassword: new FormControl('', [Validators.required, Validators.minLength(6)])

@@ -66,6 +66,9 @@
             <p *ngIf="registerform.get('email')?.errors?.['email']">
               Ingrese un correo válido.
             </p>
+            <p *ngIf="registerform.get('email')?.errors?.['pattern']">
+              El correo debe ser de Gmail, Hotmail, Outlook o Yahoo.
+            </p>
           </div>
           <!-- Correo electrónico -->
 
