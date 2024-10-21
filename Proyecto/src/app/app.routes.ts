@@ -1,4 +1,3 @@
-
 import { Routes } from '@angular/router';
 import IndexComponent from './index/pages/index/index.component';
 import DashboardPageComponent from './dashboard/pages/dashboard-page/dashboard-page.component';
@@ -46,7 +45,7 @@ export const routes: Routes = [
         canActivate: [AuthGuard]
       },
       {
-        path:'venta',
+        path: 'venta',
         component: VentaComponent,
         canActivate: [AuthGuard]
       },
@@ -75,4 +74,3 @@ export const routes: Routes = [
     redirectTo: '404'
   }
 ];
-
