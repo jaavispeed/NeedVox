@@ -21,11 +21,13 @@ export default class LoginPageComponent {
   @Output() startLoading = new EventEmitter<void>();
   @Output() stopLoading = new EventEmitter<void>();
 
+  // Formulario de inicio de sesión
   loginform = new FormGroup({
     email: new FormControl('', [Validators.required, Validators.email]),
     password: new FormControl('', [Validators.required, Validators.minLength(6)])
   });
 
+  // Método que se ejecuta al enviar el formulario
   onSubmit() {
     if (this.loginform.valid) {
       const email = this.loginform.get('email')?.value;
@@ -34,15 +36,18 @@ export default class LoginPageComponent {
       this.startLoading.emit(); // Emitir el evento para iniciar el spinner
 
       if (email && password) {
+        // Realiza la llamada al servicio de autenticación
         this.authService.login({ email, password }).subscribe({
           next: (response: User) => {
             if (response && response.token) { // Verifica que la respuesta sea válida
               console.log('Login correcto', response);
-              localStorage.setItem('token', response.token);
-              this.onSuccess.emit(); // Emitir evento de éxito
+              console.log('Roles del usuario:', response.roles); // Verifica que los roles se muestren aquí
+              localStorage.setItem('token', response.token); // Almacena el token
 
+              this.onSuccess.emit(); // Emitir evento de éxito
               this.close(); // Cerrar el modal solo si el login es exitoso
 
+              // Redirige al usuario después de un pequeño retraso
               setTimeout(() => {
                 this.router.navigate(['/index']);
                 this.stopLoading.emit(); // Detener el spinner después de redirigir
@@ -74,6 +79,7 @@ export default class LoginPageComponent {
     this.onError.emit('Error al iniciar sesión. Inténtalo de nuevo.'); // Emitir evento de error
   }
 
+  // Método para cerrar el modal
   close() {
     this.closeModal.emit();
   }
