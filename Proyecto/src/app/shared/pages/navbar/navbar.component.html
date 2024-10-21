@@ -1,7 +1,10 @@
 <nav class="bg-black">
   <div class="mx-auto max-w-7xl px-2 sm:px-6 lg:px-8">
     <div class="relative flex h-16 items-center justify-between">
+<<<<<<< HEAD
+=======
       <!-- Código existente para el botón de menú móvil y el logo -->
+<<<<<<< HEAD
       <div class="left-0">
         <!-- Logo SVG -->
         <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="h-8 w-8 text-[#EEEEEE]">
@@ -9,12 +12,23 @@
           <!-- SVG Path -->
         </svg>
       </div>
+=======
+
+>>>>>>> origin/main
+>>>>>>> 86e70382ec76646423d6cfb13dc807501c2af7d3
       <div class="flex flex-1 items-center justify-center sm:items-stretch sm:justify-center">
 
 
         <!-- Menú para usuarios regulares -->
         <div *ngIf="userRole.includes('user')" class="hidden sm:ml-6 sm:block">
           <div class="flex space-x-4">
+<<<<<<< HEAD
+            <ng-container *ngIf="isAdmin">
+              <a href="/index/dashboard" class="rounded-md px-3 py-2 text-sm font-medium text-[#EEEEEE] hover:bg-gray-700 hover:text-white">Dashboard</a>
+              <a href="/index/crud-productos" class="rounded-md px-3 py-2 text-sm font-medium text-[#EEEEEE] hover:bg-gray-700 hover:text-white">Productos</a>
+              <a href="/index/venta" class="rounded-md px-3 py-2 text-sm font-medium text-[#EEEEEE] hover:bg-gray-700 hover:text-white">Usuarios</a>
+            </ng-container>
+=======
             <a href="/index/dashboard" class="rounded-md px-3 py-2 text-sm font-medium text-[#EEEEEE] hover:bg-gray-700 hover:text-white">Dashboard</a>
             <a href="/index/crud-productos" class="rounded-md px-3 py-2 text-sm font-medium text-[#EEEEEE] hover:bg-gray-700 hover:text-white">Productos</a>
             <a href="/index/venta" class="rounded-md px-3 py-2 text-sm font-medium text-[#EEEEEE] hover:bg-gray-700 hover:text-white">Venta</a>
@@ -28,12 +42,25 @@
             <a href="" class="rounded-md px-3 py-2 text-sm font-medium text-[#EEEEEE] hover:bg-gray-700 hover:text-white">Admin Dashboard</a>
             <a href="/index/total-users" class="rounded-md px-3 py-2 text-sm font-medium text-[#EEEEEE] hover:bg-gray-700 hover:text-white">Total Users</a>
             <a href="" class="rounded-md px-3 py-2 text-sm font-medium text-[#EEEEEE] hover:bg-gray-700 hover:text-white">Total Products</a>
+>>>>>>> origin/main
           </div>
         </div>
       </div>
 
       <!-- Código para el menú de usuario y opciones adicionales -->
       <div class="absolute inset-y-0 right-0 flex items-center pr-2 sm:static sm:inset-auto sm:ml-6 sm:pr-0">
+<<<<<<< HEAD
+        <div class="relative ml-3">
+          <div>
+            <button type="button" (click)="toggleMenu()" class="relative flex rounded-full bg-black text-sm focus:outline-none" id="user-menu-button" aria-expanded="false" aria-haspopup="true">
+              <span class="absolute -inset-1.5"></span>
+              <span class="sr-only">Open user menu</span>
+              <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor" class="h-8 w-8 text-white">
+                <path d="M10 8a3 3 0 1 0 0-6 3 3 0 0 0 0 6ZM3.465 14.493a1.23 1.23 0 0 0 .41 1.412A9.957 9.957 0 0 0 10 18c2.31 0 4.438-.784 6.131-2.1.43-.333.604-.903.408-1.41a7.002 7.002 0 0 0-13.074.003Z" />
+              </svg>
+            </button>
+          </div>
+=======
         <!-- Notificación y menú de usuario -->
         <button type="button" class="relative rounded-full bg-black p-1 text-gray-400 hover:bg-gray-700 hover:text-white focus:outline-none focus:ring-2 focus:ring-gray-500 focus:ring-offset-2 focus:ring-offset-gray-800">
           <span class="absolute -inset-1.5"></span>
@@ -57,6 +84,7 @@
           </div>
 
           <!-- Menú de usuario -->
+>>>>>>> origin/main
           <div id="user-menu" class="absolute right-0 z-10 mt-2 w-48 origin-top-right rounded-md bg-white py-1 shadow-lg ring-1 ring-black ring-opacity-5 focus:outline-none"
                [ngClass]="{'hidden': !isUserMenuOpen}" role="menu" aria-orientation="vertical" aria-labelledby="user-menu-button">
             <a href="#" class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-200" role="menuitem" tabindex="-1" id="user-menu-item-0">Perfil</a>
@@ -71,6 +99,14 @@
   <!-- Menú móvil -->
   <div class="sm:hidden" id="mobile-menu">
     <div class="space-y-1 px-2 pb-3 pt-2">
+<<<<<<< HEAD
+      <ng-container *ngIf="isAdmin">
+        <a href="/index/dashboard" class="block rounded-md bg-gray-900 px-3 py-2 text-base font-medium text-[#EEEEEE] hover:bg-gray-700 hover:text-white" aria-current="page">Dashboard</a>
+        <a href="/index/crud-productos" class="block rounded-md px-3 py-2 text-base font-medium text-[#EEEEEE] hover:bg-gray-700 hover:text-white">Productos</a>
+        <a href="/index/venta" class="block rounded-md px-3 py-2 text-base font-medium text-[#EEEEEE] hover:bg-gray-700 hover:text-white">Venta</a>
+        <a href="/index/calendario" class="rounded-md px-3 py-2 text-sm font-medium text-[#EEEEEE] hover:bg-gray-700 hover:text-white">Historial</a>
+      </ng-container>
+=======
       <a *ngIf="userRole.includes('user')" href="/index/dashboard" class="block rounded-md bg-gray-900 px-3 py-2 text-base font-medium text-[#EEEEEE] hover:bg-gray-700 hover:text-white">Dashboard</a>
       <a *ngIf="userRole.includes('user')" href="/index/crud-productos" class="block rounded-md px-3 py-2 text-base font-medium text-[#EEEEEE] hover:bg-gray-700 hover:text-white">Productos</a>
       <a *ngIf="userRole.includes('user')" href="/index/venta" class="block rounded-md px-3 py-2 text-base font-medium text-[#EEEEEE] hover:bg-gray-700 hover:text-white">Venta</a>
@@ -80,7 +116,7 @@
       <a *ngIf="userRole.includes('admin')" href="/admin-dashboard" class="block rounded-md px-3 py-2 text-base font-medium text-[#EEEEEE] hover:bg-gray-700 hover:text-white">Admin Dashboard</a>
       <a *ngIf="userRole.includes('admin')" href="/total-users" class="block rounded-md px-3 py-2 text-base font-medium text-[#EEEEEE] hover:bg-gray-700 hover:text-white">Total Users</a>
       <a *ngIf="userRole.includes('admin')" href="/total-products" class="block rounded-md px-3 py-2 text-base font-medium text-[#EEEEEE] hover:bg-gray-700 hover:text-white">Total Products</a>
+>>>>>>> origin/main
     </div>
   </div>
 </nav>
-<router-outlet></router-outlet>
