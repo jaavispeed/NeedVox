@@ -1,5 +1,5 @@
 <div class="flex items-start">
-  <div class="flex-1 w-1/2 p-4"> <!-- Cambiado a w-1/2 para un 50% -->
+  <div class="flex-1 w-1/2 p-4">
     <h2 class="text-xl font-bold mb-4">Código de barra</h2>
 
     <input
@@ -48,7 +48,7 @@
 
   <div class="w-px bg-gray-300 mx-4" style="height: 600px; margin-top: 50px;"></div>
 
-  <div class="flex-none w-1/2 p-4"> <!-- Cambiado a w-1/2 para un 50% -->
+  <div class="flex-none w-1/2 p-4">
     <div *ngIf="carrito.length > 0" class="flex justify-between mb-2">
       <div class="text-left">
         <span class="font-semibold">Hora:</span> 19:58
@@ -64,7 +64,6 @@
     <div *ngIf="carrito.length === 0" class="flex justify-center items-center mt-32 text-gray-500 mb-4">
       <span>Aún no has agregado productos para vender.</span>
     </div>
-
 
     <div class="overflow-x-auto shadow-md sm:rounded-lg" *ngIf="carrito.length > 0">
       <table class="w-full text-sm text-left text-black">
@@ -105,9 +104,38 @@
       </button>
 
       <button
+        (click)="abrirModal()"
         class="px-6 py-3 bg-gray-600 text-white font-semibold rounded-md shadow hover:bg-gray-700 focus:outline-none focus:ring-2 focus:ring-gray-500"
       >
         Otro
+      </button>
+    </div>
+  </div>
+</div>
+
+<!-- Modal para ingresar monto -->
+<div *ngIf="modalAbierto" class="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50 z-50">
+  <div class="bg-white p-6 rounded-lg shadow-lg">
+    <h3 class="text-lg font-semibold mb-4">Ingresar Monto</h3>
+    <input
+      type="number"
+      #montoInput
+      [(ngModel)]="montoIngresado"
+      placeholder="Monto"
+      class="block w-full p-2 border border-gray-300 rounded-md focus:outline-none focus:border-gray-500 mb-4"
+    />
+    <div class="flex justify-end">
+      <button
+        (click)="confirmarMonto()"
+        class="px-4 py-2 bg-blue-600 text-white font-semibold rounded-md hover:bg-blue-700 focus:outline-none"
+      >
+        Confirmar
+      </button>
+      <button
+        (click)="cerrarModal()"
+        class="px-4 py-2 bg-red-600 text-white font-semibold rounded-md hover:bg-red-700 focus:outline-none ml-2"
+      >
+        Cancelar
       </button>
     </div>
   </div>

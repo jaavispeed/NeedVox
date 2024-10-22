@@ -3,6 +3,8 @@ import { FormsModule } from '@angular/forms';
 import { Product } from '../../../products/models/product.model';
 import { VentaService } from '../../service/venta.service';
 import { CommonModule } from '@angular/common';
+import { v4 as uuidv4 } from 'uuid';
+
 
 @Component({
   selector: 'app-ventas',
@@ -13,6 +15,7 @@ import { CommonModule } from '@angular/common';
 })
 export class VentaComponent {
   @ViewChild('codigoBarraInput') codigoBarraInput!: ElementRef;
+  @ViewChild('montoInput') montoInput!: ElementRef; // Agrega esta línea para la referencia al input
   searchTerm: string = '';
   productosFiltrados: Product[] = [];
   carrito: { product: Product; cantidad: number }[] = [];
@@ -20,6 +23,10 @@ export class VentaComponent {
   userID: string = '';
   errorMessage: string = '';
   horaCarrito: string | null = null;
+
+   // Propiedades para el modal
+   modalAbierto: boolean = false;
+   montoIngresado: number = 0;
 
   constructor(private ventaService: VentaService) {
     this.cargarProductos();
@@ -162,6 +169,8 @@ export class VentaComponent {
         ventaPrice: item.product.ventaPrice // Precio del producto
       }))
     };
+    console.log("Objeto venta a enviar:", venta); // Verifica la estructura
+
 
     this.ventaService.crearVenta(venta).subscribe(
       response => {
@@ -191,5 +200,40 @@ export class VentaComponent {
     }, 0); // Usar un timeout para asegurar el enfoque
   }
 
+
+  abrirModal() {
+    this.modalAbierto = true;
+    this.enfocarInputMonto(); // Enfocar el input de monto al abrir el modal
+    this.codigoBarraInput.nativeElement.blur(); // Quitar el foco del input de código de barras
+  }
+
+  enfocarInputMonto() {
+    setTimeout(() => {
+      this.montoInput.nativeElement.focus(); // Enfocar el input de monto
+    }, 0);
+  }
+
+  cerrarModal() {
+    this.modalAbierto = false;
+    this.montoIngresado = 0; // Limpiar monto al cerrar
+    this.codigoBarraInput.nativeElement.focus(); // Regresar el foco al input de código de barras
+  }
+  confirmarMonto() {
+    if (this.montoIngresado > 0) {
+      const productoEspecial = {
+        id: '' + Date.now(), // Generar un ID único para este "producto"
+        title: 'Otro', // Nombre del producto
+        ventaPrice: this.montoIngresado, // Precio del producto será el monto ingresado
+        stock: 1 // Puedes definir el stock como 1 para que solo se pueda agregar una vez
+      };
+
+      // Agregar el producto especial al carrito
+      this.agregarAlCarrito(productoEspecial);
+
+      this.cerrarModal(); // Cerrar el modal después de agregar el producto
+    } else {
+      this.errorMessage = "Por favor, ingresa un monto válido.";
+    }
+  }
 
 }
