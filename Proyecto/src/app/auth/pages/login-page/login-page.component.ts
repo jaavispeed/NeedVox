@@ -1,3 +1,4 @@
+// src/app/auth/components/login-page.component.ts
 import { CommonModule } from '@angular/common';
 import { Component, EventEmitter, inject, Output } from '@angular/core';
 import { FormControl, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
@@ -10,7 +11,7 @@ import { User } from '../../models/user.model';
   standalone: true,
   imports: [ReactiveFormsModule, CommonModule],
   templateUrl: './login-page.component.html',
-  styleUrls: ['./login-page.component.css']  // Asegúrate de que sea 'style**s**Url' con una "s"
+  styleUrls: ['./login-page.component.css'] // Asegúrate de que sea 'style**s**Url' con una "s"
 })
 export default class LoginPageComponent {
   router = inject(Router);
