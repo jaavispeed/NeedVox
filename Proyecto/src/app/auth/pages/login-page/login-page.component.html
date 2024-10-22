@@ -52,7 +52,7 @@
 
                     <div *ngIf="loginform.get('email')?.invalid && loginform.get('email')?.touched"
                         class="font-rubik text-red-500 sm:text-sm sm:leading-5 px-2">
-                        <p *ngIf="loginform.get('email')?.errors?.['email']">Ingrese un correo valido.</p>
+                        <p *ngIf="loginform.get('email')?.errors?.['pattern']">Ingrese un correo valido.</p>
                         <p *ngIf="loginform.get('email')?.errors?.['required']">Ingrese un correo.</p>
                     </div>
 
