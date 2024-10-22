@@ -8,6 +8,7 @@ import { NoAuthGuard } from './auth/guards/noAuth.guard';
 import { VentaComponent } from './venta/pages/venta/venta.component';
 import { UsuariosComponent } from './admin/pages/totalusers/total-users/usuarios.component';
 import { HistorialComponent } from './historial/pages/historial/historial.component';
+import { TotalProductosComponent } from './admin/pages/totalusers/total-users/total-productos.component'; // Verifica que la ruta sea correcta
 
 export const routes: Routes = [
   {
@@ -18,7 +19,7 @@ export const routes: Routes = [
   {
     path: 'home',
     loadComponent: () => import('./home/pages/landing-page/landing-page.component'),
-    canActivate: [NoAuthGuard]  // Protege la página de inicio con NoAuthGuard
+    canActivate: [NoAuthGuard]
   },
   {
     path: 'login',
@@ -55,9 +56,14 @@ export const routes: Routes = [
         canActivate: [AuthGuard]
       },
       {
-        path: "total-users",
+        path: 'total-users',
         component: UsuariosComponent,
         canActivate: [AuthGuard]
+      },
+      {
+        path: 'total-productos', // Ruta para TotalProductosComponent
+        component: TotalProductosComponent,
+        canActivate: [AuthGuard] // Protege la ruta con AuthGuard
       },
     ]
   },
