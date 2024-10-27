@@ -1,12 +1,9 @@
 <div class="container mx-auto p-10 bg-white flex flex-col items-center relative mt-8">
-  <!-- Mensaje de alerta en la esquina inferior derecha -->
   <div class="fixed top-14 left-1/2 transform -translate-x-1/2 m-4">
     <app-alert [message]="alertMessage" [isVisible]="alertVisible" [type]="alertType"></app-alert>
   </div>
 
-  <!-- Contenedor para la barra de búsqueda y la tabla -->
   <div class="w-full max-w-6xl flex flex-col items-start mb-2">
-    <!-- Barra de búsqueda -->
     <div class="mb-2 w-full flex justify-between">
       <div class="relative w-full max-w-md">
         <input
@@ -19,7 +16,6 @@
         <i class="fas fa-search absolute right-3 top-3 text-gray-500"></i>
       </div>
 
-      <!-- Botón de agregar producto -->
       <div class="ml-2">
         <button (click)="openModal()" class="inline-flex items-center px-4 py-2 bg-[#31363F] text-[#EEEEEE] text-sm font-light font-rubik rounded-md shadow hover:bg-gray-700 focus:outline-none focus:ring-2 focus:ring-gray-500 transition duration-300 transform hover:scale-105">
           Agregar Producto
@@ -27,16 +23,12 @@
       </div>
     </div>
 
-    <!-- Contenedor para la tabla de productos -->
     <div class="relative overflow-x-auto shadow-md sm:rounded-lg w-full mt-2">
       <table class="w-full text-sm text-left text-black">
         <thead class="text-xs uppercase bg-gray-50">
           <tr>
             <th scope="col" class="px-2 py-3 font-bold font-rubik text-center">Producto</th>
-            <th scope="col" class="px-2 py-3 font-bold font-rubik text-center">Precio de Compra</th>
-            <th scope="col" class="px-2 py-3 font-bold font-rubik text-center">Precio de Venta</th>
             <th scope="col" class="px-2 py-3 font-bold font-rubik text-center">Stock</th>
-            <th scope="col" class="px-2 py-3 font-bold font-rubik text-center">Fecha de Vencimiento</th>
             <th scope="col" class="px-2 py-3 font-bold font-rubik text-center">Código de Barras</th>
             <th scope="col" class="px-2 py-3 font-bold font-rubik text-center">Fecha de Creación</th>
             <th scope="col" class="px-2 py-3 font-bold font-rubik text-center"><span class="sr-only">Acciones</span></th>
@@ -45,16 +37,17 @@
         <tbody>
           <tr *ngFor="let product of paginatedProducts" class="bg-white border-b">
             <td class="px-4 py-3 text-center font-medium text-black font-rubik">{{ product.title }}</td>
-            <td class="px-4 py-3 text-center text-black font-rubik">{{ product.compraPrice | currency:'USD':'symbol':'1.0-0' }}</td>
-            <td class="px-4 py-3 text-center text-black font-rubik">{{ product.ventaPrice | currency:'USD':'symbol':'1.0-0' }}</td>
-            <td class="px-4 py-3 text-center text-black font-rubik">{{ product.stock }}</td>
-            <td class="px-4 py-3 text-center text-black font-rubik">{{ product.expiryDate || 'Sin fecha de vencimiento' }}</td>
+            <td class="px-4 py-3 text-center text-black font-rubik">{{ product.stockTotal }}</td>
             <td class="px-4 py-3 text-center text-black font-rubik">{{ product.barcode || 'Sin código de barras' }}</td>
             <td class="px-4 py-3 text-center text-black font-rubik">{{ product.fechaCreacion }}</td>
             <td class="px-4 py-3 text-center flex justify-center space-x-2">
               <button (click)="editProduct(product)" class="inline-flex items-center px-4 py-2 bg-[#76ABAE] text-white font-light font-rubik rounded-md shadow hover:bg-[#5b9892] focus:outline-none focus:ring-2 focus:ring-gray-500 transition duration-300 transform hover:scale-105">
                 <i class="fas fa-edit mr-1"></i>
                 Editar
+              </button>
+              <button (click)="openLoteModal(product)" class="inline-flex items-center px-4 py-2 bg-[#76ABAE] text-white font-light font-rubik rounded-md shadow hover:bg-[#5b9892] focus:outline-none focus:ring-2 focus:ring-gray-500 transition duration-300 transform hover:scale-105">
+                <i class="fas fa-box mr-1"></i>
+                Ver Lotes
               </button>
               <button (click)="promptDelete(product.id ?? '')" class="inline-flex items-center px-4 py-2 bg-red-600 text-white font-light font-rubik rounded-md shadow hover:bg-red-700 focus:outline-none focus:ring-2 focus:ring-gray-500 transition duration-300 transform hover:scale-105">
                 <i class="fas fa-trash-alt mr-1"></i> Eliminar
@@ -64,13 +57,11 @@
         </tbody>
       </table>
 
-      <!-- Mensaje cuando no hay productos -->
       <div *ngIf="products.length === 0" class="mt-4 flex items-center justify-center p-2">
         <p class="text-base font-light text-black font-rubik">No hay productos agregados aún.</p>
       </div>
     </div>
 
-    <!-- Cuadro de confirmación -->
     <div *ngIf="showConfirm" class="fixed inset-0 z-50 flex items-center justify-center bg-black bg-opacity-50">
       <div class="bg-white p-8 rounded-md shadow-md w-full max-w-md">
         <p class="text-lg font-light font-rubik text-center">¿Estás seguro de que deseas eliminar este producto?</p>
@@ -85,7 +76,6 @@
       </div>
     </div>
 
-    <!-- Controles de paginación -->
     <div *ngIf="filteredProducts.length > itemsPerPage" class="flex justify-center mt-4 w-full max-w-6xl">
       <button
         (click)="currentPage = currentPage - 1"
@@ -104,7 +94,7 @@
       </button>
     </div>
 
-    <!-- Modal para crear o editar producto -->
+    <!-- Modal para Crear/Editar Producto -->
     <div *ngIf="isModalOpen" class="fixed inset-0 z-50 flex items-center justify-center bg-black bg-opacity-50">
       <div class="bg-white p-6 rounded-md shadow-md w-full max-w-2xl">
         <h2 class="text-xl font-bold mb-4">{{ isEditing ? 'Editar Producto' : 'Crear Producto' }}</h2>
@@ -122,56 +112,6 @@
             </div>
           </div>
           <div class="mb-4">
-            <label class="block text-sm font-medium text-gray-700">Precio de Compra:</label>
-            <input
-              type="number"
-              formControlName="compraPrice"
-              required
-              min="0"
-              class="mt-1 block w-full p-2 border border-gray-300 rounded-md focus:ring-blue-500 focus:border-blue-500 font-rubik text-black"
-            />
-            <div *ngIf="crudForm.get('compraPrice')?.invalid && (crudForm.get('compraPrice')?.touched || crudForm.get('compraPrice')?.dirty)">
-              <div *ngIf="crudForm.get('compraPrice')?.errors?.['required']" class="text-red-600">El precio de compra es obligatorio.</div>
-              <div *ngIf="crudForm.get('compraPrice')?.errors?.['min']" class="text-red-600">El precio de compra no puede ser negativo.</div>
-            </div>
-          </div>
-          <div class="mb-4">
-            <label class="block text-sm font-medium text-gray-700">Precio de Venta:</label>
-            <input
-              type="number"
-              formControlName="ventaPrice"
-              required
-              min="0"
-              class="mt-1 block w-full p-2 border border-gray-300 rounded-md focus:ring-blue-500 focus:border-blue-500 font-rubik text-black"
-            />
-            <div *ngIf="crudForm.get('ventaPrice')?.invalid && (crudForm.get('ventaPrice')?.touched || crudForm.get('ventaPrice')?.dirty)">
-              <div *ngIf="crudForm.get('ventaPrice')?.errors?.['required']" class="text-red-600">El precio de venta es obligatorio.</div>
-              <div *ngIf="crudForm.get('ventaPrice')?.errors?.['min']" class="text-red-600">El precio de venta no puede ser negativo.</div>
-            </div>
-          </div>
-          <div class="mb-4">
-            <label class="block text-sm font-medium text-gray-700">Stock:</label>
-            <input
-              type="number"
-              formControlName="stock"
-              required
-              min="0"
-              class="mt-1 block w-full p-2 border border-gray-300 rounded-md focus:ring-blue-500 focus:border-blue-500 font-rubik text-black"
-            />
-            <div *ngIf="crudForm.get('stock')?.invalid && (crudForm.get('stock')?.touched || crudForm.get('stock')?.dirty)">
-              <div *ngIf="crudForm.get('stock')?.errors?.['required']" class="text-red-600">El stock es obligatorio.</div>
-              <div *ngIf="crudForm.get('stock')?.errors?.['min']" class="text-red-600">El stock no puede ser negativo.</div>
-            </div>
-          </div>
-          <div class="mb-4">
-            <label class="block text-sm font-medium text-gray-700">Fecha de Vencimiento:</label>
-            <input
-              type="date"
-              formControlName="expiryDate"
-              class="mt-1 block w-full p-2 border border-gray-300 rounded-md focus:ring-blue-500 focus:border-blue-500 font-rubik text-black"
-            />
-          </div>
-          <div class="mb-4">
             <label class="block text-sm font-medium text-gray-700">Código de Barras:</label>
             <input
               type="text"
@@ -180,12 +120,102 @@
               class="mt-1 block w-full p-2 border border-gray-300 rounded-md focus:ring-blue-500 focus:border-blue-500 font-rubik text-black"
             />
           </div>
-          <div class="flex justify-between">
-            <button type="button" (click)="closeModal()" class="px-4 py-2 bg-gray-500 text-white rounded-md">Cancelar</button>
-            <button type="submit" class="px-4 py-2 bg-[#76ABAE] text-white rounded-md">{{ isEditing ? 'Actualizar' : 'Crear' }}</button>
+          <div class="flex justify-end">
+            <button type="submit" class="inline-flex items-center px-4 py-2 bg-blue-600 text-white font-light font-rubik rounded-md shadow hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-gray-500 transition duration-300 transform hover:scale-105">
+              <i class="fas fa-save mr-1"></i> {{ isEditing ? 'Actualizar' : 'Crear' }}
+            </button>
+            <button (click)="closeModal()" type="button" class="inline-flex items-center px-4 py-2 bg-gray-300 text-black font-light font-rubik rounded-md shadow hover:bg-gray-400 focus:outline-none focus:ring-2 focus:ring-gray-500 transition duration-300 transform hover:scale-105 ml-2">
+              <i class="fas fa-times mr-1"></i> Cancelar
+            </button>
           </div>
         </form>
       </div>
     </div>
+
+
+<!-- Modal de Lotes -->
+<div *ngIf="isLoteModalOpen" class="fixed inset-0 z-50 flex items-center justify-center bg-black bg-opacity-50">
+  <div class="bg-white p-6 rounded-md shadow-md w-full max-w-2xl relative">
+    <h2 class="text-xl font-bold mb-4">Lotes de {{ selectedProduct?.title }}</h2>
+
+    <!-- Botón para mostrar el formulario de agregar lote en la esquina superior derecha -->
+    <button (click)="showAddLoteForm = !showAddLoteForm" class="absolute top-4 right-4 inline-flex items-center px-4 py-2 bg-blue-600 text-white font-light font-rubik rounded-md shadow hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-500 transition duration-300 transform hover:scale-105">
+      {{ showAddLoteForm ? 'Cancelar' : 'Agregar Lote' }}
+    </button>
+
+    <!-- Formulario para agregar un nuevo lote, solo visible si showAddLoteForm es true -->
+    <div *ngIf="showAddLoteForm" class="mt-6">
+      <form (ngSubmit)="createLote(lote)" class="mb-4">
+        <div class="mb-4">
+          <label class="block mb-2 font-medium">Precio Compra:</label>
+          <input type="number" [(ngModel)]="lote.precioCompra" name="precioCompra" required class="border rounded-md p-2 w-full" placeholder="Ingrese el precio de compra">
+        </div>
+        <div class="mb-4">
+          <label class="block mb-2 font-medium">Precio Venta:</label>
+          <input type="number" [(ngModel)]="lote.precioVenta" name="precioVenta" required class="border rounded-md p-2 w-full" placeholder="Ingrese el precio de venta">
+        </div>
+        <div class="mb-4">
+          <label class="block mb-2 font-medium">Stock:</label>
+          <input type="number" [(ngModel)]="lote.stock" name="stock" required class="border rounded-md p-2 w-full" placeholder="Ingrese el stock">
+        </div>
+        <div class="mb-4">
+          <label class="block mb-2 font-medium">Fecha de Caducidad:</label>
+          <input type="date" [(ngModel)]="lote.fechaCaducidad" name="fechaCaducidad" required class="border rounded-md p-2 w-full">
+        </div>
+        <div class="flex justify-end">
+          <button type="submit" class="inline-flex items-center px-4 py-2 bg-blue-600 text-white font-light font-rubik rounded-md shadow hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-500 transition duration-300 transform hover:scale-105">
+            Agregar Lote
+          </button>
+        </div>
+      </form>
+    </div>
+
+    <div *ngIf="selectedLotes.length > 0; else noLotes">
+      <table class="min-w-full bg-white mt-2 shadow-md">
+        <thead>
+          <tr class="bg-gray-50">
+            <th class="px-4 py-2 font-bold font-rubik text-left">Precio Compra</th>
+            <th class="px-4 py-2 font-bold font-rubik text-left">Precio Venta</th>
+            <th class="px-4 py-2 font-bold font-rubik text-left">Stock</th>
+            <th class="px-4 py-2 font-bold font-rubik text-left">Fecha Caducidad</th>
+            <th class="px-4 py-2 font-bold font-rubik text-left"><span class="sr-only">Acciones</span></th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr *ngFor="let lote of selectedLotes" class="border-b">
+            <td class="px-4 py-3">{{ lote.precioCompra }}</td>
+            <td class="px-4 py-3">{{ lote.precioVenta }}</td>
+            <td class="px-4 py-3">{{ lote.stock }}</td>
+            <td class="px-4 py-3">{{ lote.fechaCaducidad | date:'shortDate' }}</td>
+            <td class="px-4 py-3 flex justify-center">
+              <button (click)="deleteLote(lote.id)" class="text-red-600 hover:text-red-800">
+                <i class="fas fa-trash"></i> Eliminar
+              </button>
+            </td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+    <ng-template #noLotes>
+      <p class="mt-4 text-gray-600">No hay lotes disponibles para este producto.</p>
+    </ng-template>
+
+    <!-- Espacio adicional para separar el contenido del botón -->
+    <div class="mt-4"></div>
+
+    <!-- Botón de cerrar en la esquina inferior derecha -->
+    <div class="flex justify-end">
+      <button (click)="closeLoteModal()" class="inline-flex items-center px-4 py-2 bg-gray-300 text-black font-light font-rubik rounded-md shadow hover:bg-gray-400 focus:outline-none focus:ring-2 focus:ring-gray-500 transition duration-300 transform hover:scale-105">
+        <i class="fas fa-times mr-1"></i> Cerrar
+      </button>
+    </div>
   </div>
 </div>
+
+
+
+
+
+
+
+

@@ -1,14 +1,14 @@
+import { Lote } from "./lotes.models";
+
 export interface Product {
   id?: string; // Opcional si se crea uno nuevo
   title: string;
-  compraPrice: number; // Precio de Compra
-  ventaPrice: number; // Precio de Venta
-  stock: number;
+  stockTotal: number; // Cambiado a stockTotal según tu backend
   slug?: string; // Opcional, si se genera automáticamente en el backend
   user: {
     id: string;
   };
-  expiryDate?: Date | null; // Puede ser un objeto Date o null
-  barcode?: string | null;
-  fechaCreacion: string; // Añadir la propiedad de fecha de creación
+  barcode?: string | null; // Código de barras puede ser nulo
+  fechaCreacion?: string; // Propiedad de fecha de creación
+  lotes?: Lote[]; // Agregar la propiedad de lotes
 }

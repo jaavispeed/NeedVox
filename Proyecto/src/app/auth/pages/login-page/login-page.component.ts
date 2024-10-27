@@ -23,7 +23,7 @@ export default class LoginPageComponent {
   @Output() stopLoading = new EventEmitter<void>();
 
   loginform = new FormGroup({
-    email: new FormControl('', [Validators.required, Validators.email,Validators.pattern('^[\\w\\.-]+@(gmail|hotmail|outlook|yahoo)\\.com$')]),
+    email: new FormControl('', [Validators.required, Validators.email,Validators.pattern('^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$')]),
     password: new FormControl('', [Validators.required, Validators.minLength(6)])
   });
 

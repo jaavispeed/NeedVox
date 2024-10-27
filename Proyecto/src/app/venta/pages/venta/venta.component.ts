@@ -5,7 +5,6 @@ import { VentaService } from '../../service/venta.service';
 import { CommonModule } from '@angular/common';
 import { v4 as uuidv4 } from 'uuid';
 
-
 @Component({
   selector: 'app-ventas',
   templateUrl: './venta.component.html',
@@ -15,18 +14,18 @@ import { v4 as uuidv4 } from 'uuid';
 })
 export class VentaComponent {
   @ViewChild('codigoBarraInput') codigoBarraInput!: ElementRef;
-  @ViewChild('montoInput') montoInput!: ElementRef; // Agrega esta línea para la referencia al input
+  @ViewChild('montoInput') montoInput!: ElementRef;
   searchTerm: string = '';
   productosFiltrados: Product[] = [];
-  carrito: { product: Product; cantidad: number }[] = [];
+  carrito: { product: Product; lote: any; cantidad: number }[] = []; // Ajustado para incluir lote
   totalPrecio: number = 0;
   userID: string = '';
   errorMessage: string = '';
   horaCarrito: string | null = null;
 
-   // Propiedades para el modal
-   modalAbierto: boolean = false;
-   montoIngresado: number = 0;
+  // Propiedades para el modal
+  modalAbierto: boolean = false;
+  montoIngresado: number = 0;
 
   constructor(private ventaService: VentaService) {
     this.cargarProductos();
@@ -34,7 +33,7 @@ export class VentaComponent {
 
   ngOnInit(): void {
     this.obtenerUserID();
-    this.enfocarInput(); // Enfoca el input al inicializar el componente
+    this.enfocarInput();
   }
 
   // Escuchar clics en el documento
@@ -42,7 +41,6 @@ export class VentaComponent {
   onDocumentMouseDown(event: MouseEvent): void {
     const target = event.target as HTMLElement;
 
-    // Si el clic no fue en el input, vuelve a enfocarlo
     if (!this.codigoBarraInput.nativeElement.contains(target)) {
       this.enfocarInput();
     }
@@ -62,7 +60,7 @@ export class VentaComponent {
   cargarProductos() {
     this.ventaService.getProducts().subscribe(
       (productos: Product[]) => {
-        this.productosFiltrados = productos; // Cargar todos los productos
+        this.productosFiltrados = productos;
       },
       (error) => {
         console.error("Error al obtener los productos:", error);
@@ -72,7 +70,6 @@ export class VentaComponent {
   }
 
   filtrarProductos() {
-    // Si searchTerm está vacío, carga todos los productos
     if (this.searchTerm.trim() === '') {
       this.cargarProductos();
       return;
@@ -90,61 +87,60 @@ export class VentaComponent {
     );
 
     if (productoEncontrado) {
-      this.agregarAlCarrito(productoEncontrado);
-      this.searchTerm = ''; // Limpia el término de búsqueda
-      this.filtrarProductos(); // Refresca la lista de productos para mostrar todos
-      this.enfocarInput(); // Enfoca el input después de agregar
+      if (productoEncontrado.lotes && productoEncontrado.lotes.length > 0) {
+        const loteSeleccionado = productoEncontrado.lotes[0]; // Elegir el primer lote disponible
+        this.agregarAlCarrito(productoEncontrado, loteSeleccionado);
+      } else {
+        this.errorMessage = "No hay lotes disponibles para este producto.";
+        console.log("No hay lotes disponibles para este producto.");
+      }
+
+      this.searchTerm = '';
+      this.filtrarProductos();
+      this.enfocarInput();
     } else {
       this.errorMessage = "Producto no encontrado.";
       console.log("Producto no encontrado.");
     }
   }
 
-  agregarAlCarrito(producto: any) {
-    const itemEnCarrito = this.carrito.find(item => item.product.id === producto.id);
+  agregarAlCarrito(producto: Product, lote: any, ) {
+    const itemEnCarrito = this.carrito.find(item => item.product.id === producto.id && item.lote.id === lote.id);
 
     if (itemEnCarrito) {
-      // Si ya existe en el carrito, verifica si se puede aumentar la cantidad
-      if (itemEnCarrito.cantidad < producto.stock) {
+      if (itemEnCarrito.cantidad < lote.stock) {
         itemEnCarrito.cantidad++;
-        // producto.stock--; // Disminuye el stock del producto (eliminado)
       } else {
-        alert('No puedes agregar más de este producto. Stock máximo alcanzado.');
+        alert('No puedes agregar más de este lote. Stock máximo alcanzado.');
       }
     } else {
-      // Si no está en el carrito, verifica el stock
-      if (producto.stock > 0) {
-        this.carrito.push({ product: producto, cantidad: 1 });
-        // producto.stock--; // Disminuye el stock del producto (eliminado)
+      if (lote.stock > 0) {
+        this.carrito.push({ product: producto, lote: lote, cantidad: 1 });
       } else {
-        alert('No puedes agregar este producto. Stock agotado.');
+        alert('No puedes agregar este lote. Stock agotado.');
       }
     }
     this.actualizarTotal();
   }
 
-  eliminarDelCarrito(item: { product: Product; cantidad: number }) {
-    const existingItem = this.carrito.find(carritoItem => carritoItem.product.id === item.product.id);
+  eliminarDelCarrito(item: { product: Product; lote: any; cantidad: number }) {
+    const existingItem = this.carrito.find(carritoItem => carritoItem.product.id === item.product.id && carritoItem.lote.id === item.lote.id);
 
     if (existingItem) {
-      // const producto = this.productosFiltrados.find(p => p.id === item.product.id); (eliminado)
-
       if (existingItem.cantidad > 1) {
-        // Reducir la cantidad en 1
         existingItem.cantidad--;
       } else {
-        // Si la cantidad es 1, eliminar el producto del carrito
-        this.carrito = this.carrito.filter(carritoItem => carritoItem.product.id !== item.product.id);
+        this.carrito = this.carrito.filter(carritoItem => carritoItem.product.id !== item.product.id || carritoItem.lote.id !== item.lote.id);
       }
     }
 
     this.actualizarTotal();
-    this.enfocarInput(); // Enfoca el input después de eliminar
+    this.enfocarInput();
   }
 
   actualizarTotal() {
     this.totalPrecio = this.carrito.reduce((total, item) => {
-      return total + (item.product.ventaPrice * item.cantidad);
+      return total + (item.lote.precioVenta * item.cantidad); // Usar el precio de venta del lote
     }, 0);
   }
 
@@ -165,19 +161,19 @@ export class VentaComponent {
       userId: this.userID,
       productos: this.carrito.map(item => ({
         productId: item.product.id || '',
+        loteId: item.lote.id || '',
         cantidad: item.cantidad,
-        ventaPrice: item.product.ventaPrice // Precio del producto
+        ventaPrice: item.lote.precioVenta // Precio del lote
       }))
     };
-    console.log("Objeto venta a enviar:", venta); // Verifica la estructura
-
+    console.log("Objeto venta a enviar:", venta);
 
     this.ventaService.crearVenta(venta).subscribe(
       response => {
         console.log("Venta creada con éxito:", response);
-        this.reiniciarCarrito(); // Reinicia el carrito y la hora
-        this.horaCarrito = null; // Reinicia la hora del carrito
-        this.errorMessage = ''; // Limpia cualquier mensaje de error
+        this.reiniciarCarrito();
+        this.horaCarrito = null;
+        this.errorMessage = '';
       },
       error => {
         this.errorMessage = "Error al crear la venta. Verifica los detalles e intenta de nuevo.";
@@ -189,51 +185,56 @@ export class VentaComponent {
   reiniciarCarrito() {
     this.carrito = [];
     this.totalPrecio = 0;
-    this.horaCarrito = null; // Reinicia la hora del carrito aquí también
-    this.enfocarInput(); // Enfoca el input al reiniciar el carrito
-
+    this.horaCarrito = null;
+    this.enfocarInput();
   }
 
   enfocarInput() {
     setTimeout(() => {
-      this.codigoBarraInput.nativeElement.focus(); // Enfoca el input utilizando ViewChild
-    }, 0); // Usar un timeout para asegurar el enfoque
+      this.codigoBarraInput.nativeElement.focus();
+    }, 0);
   }
-
 
   abrirModal() {
     this.modalAbierto = true;
-    this.enfocarInputMonto(); // Enfocar el input de monto al abrir el modal
-    this.codigoBarraInput.nativeElement.blur(); // Quitar el foco del input de código de barras
+    this.enfocarInputMonto();
+    this.codigoBarraInput.nativeElement.blur();
   }
 
   enfocarInputMonto() {
     setTimeout(() => {
-      this.montoInput.nativeElement.focus(); // Enfocar el input de monto
+      this.montoInput.nativeElement.focus();
     }, 0);
   }
 
   cerrarModal() {
     this.modalAbierto = false;
-    this.montoIngresado = 0; // Limpiar monto al cerrar
-    this.codigoBarraInput.nativeElement.focus(); // Regresar el foco al input de código de barras
+    this.montoIngresado = 0;
+    this.codigoBarraInput.nativeElement.focus();
   }
+
   confirmarMonto() {
     if (this.montoIngresado > 0) {
-      const productoEspecial = {
-        id: '' + Date.now(), // Generar un ID único para este "producto"
-        title: 'Otro', // Nombre del producto
-        ventaPrice: this.montoIngresado, // Precio del producto será el monto ingresado
-        stock: 1 // Puedes definir el stock como 1 para que solo se pueda agregar una vez
+      const productoEspecial: Product = {
+        id: '' + Date.now(), // O utiliza un UUID
+        title: 'Otro',
+        stockTotal: 1, // Define un stock total, puede ser un valor fijo o calculado
+        slug: '', // Puedes dejarlo vacío o generarlo si lo necesitas
+        user: { id: this.userID }, // Asignar el ID del usuario
+        barcode: null, // Puede ser nulo si no es necesario
+        fechaCreacion: new Date().toISOString(), // Establecer la fecha de creación
       };
 
-      // Agregar el producto especial al carrito
-      this.agregarAlCarrito(productoEspecial);
+      const loteFicticio = {
+        id: uuidv4(),
+        precioVenta: this.montoIngresado,
+        stock: 1,
+      };
 
-      this.cerrarModal(); // Cerrar el modal después de agregar el producto
+      this.agregarAlCarrito(productoEspecial, loteFicticio); // Añadir lote ficticio
+      this.cerrarModal();
     } else {
       this.errorMessage = "Por favor, ingresa un monto válido.";
     }
   }
-
 }

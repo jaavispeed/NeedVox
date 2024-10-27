@@ -5,6 +5,8 @@ import { FormControl, FormGroup, FormsModule, ReactiveFormsModule, Validators } 
 import { Product } from '../../models/product.model';
 import { NgxPaginationModule } from 'ngx-pagination';
 import { AlertComponent } from '../../../shared/pages/alert/alert.component';
+import { Lote } from '../../models/lotes.models';
+import { LotesService } from '../../services/lotes.service';
 
 @Component({
   selector: 'app-crud-product',
@@ -18,33 +20,39 @@ export class CrudProductComponent implements OnInit {
   filteredProducts: Product[] = [];
   currentPage = 1;
   itemsPerPage = 5;
-  product: Product = { title: '', compraPrice: 0, ventaPrice: 0, stock: 0, slug: '', user: { id: '' }, expiryDate: undefined, barcode: null, fechaCreacion: new Date().toLocaleDateString('es-ES', {
-    day: 'numeric',
-    month: 'long',
-    year: 'numeric'
-  })  };
+  product: Product = { title: '', stockTotal: 0, slug: '', user: { id: '' }, barcode: null };
   isEditing: boolean = false;
   isModalOpen: boolean = false;
+  isLoteModalOpen: boolean = false; // Controla el modal del lote
   searchTerm: string = '';
+  lote: Lote = {
+    id: '',
+    precioCompra: 0,
+    precioVenta: 0,
+    stock: 0,
+    fechaCaducidad: new Date(),
+    fechaCreacion: '',
+    product: { id: '', title: '', stockTotal: 0, slug: '', user: { id: '' }, barcode: '', fechaCreacion: '' },
+    user: { id: '' } // opcional, si necesitas incluirlo
+  };
 
   alertVisible: boolean = false;
   alertMessage: string = '';
   alertType: 'success' | 'error' = 'success';
 
   crudForm: FormGroup;
+  showConfirm: boolean = false;
+  productIdToDelete: string | null = null;
+  selectedProduct: Product | null = null; // Almacena el producto seleccionado
+  selectedLotes: Lote[] = []; // Almacena los lotes del producto seleccionado
+  showAddLoteForm: boolean = false; // Controla la visibilidad del formulario para agregar un lote
 
-  showConfirm: boolean = false; // Variable para mostrar el cuadro de confirmación
-  productIdToDelete: string | null = null; // Almacena el id del producto que se eliminará
 
-  constructor(private productService: ProductService) {
+  constructor(private productService: ProductService, private loteService: LotesService) {
     this.crudForm = new FormGroup({
       title: new FormControl('', [Validators.required, Validators.minLength(3)]),
-      compraPrice: new FormControl(0, [Validators.required, Validators.min(0)]),
-      ventaPrice: new FormControl(0, [Validators.required, Validators.min(0)]),
-      stock: new FormControl(0, [Validators.required, Validators.min(0)]),
       slug: new FormControl(''),
-      expiryDate: new FormControl(null),
-      barcode: new FormControl(null) //// Campo agregado
+      barcode: new FormControl(null)
     });
   }
 
@@ -66,36 +74,96 @@ export class CrudProductComponent implements OnInit {
         }));
         this.filteredProducts = this.products;
       },
-      error: (error) => this.showAlert('Error al obtener los productos.', 'error')
+      error: () => this.showAlert('Error al obtener los productos.', 'error')
     });
   }
 
-  // Método para activar el cuadro de confirmación de eliminación
-  promptDelete(id: string): void {
-    this.productIdToDelete = id;
-    this.showConfirm = true;  // Muestra el cuadro de confirmación
+  openLoteModal(product: Product): void {
+    if (product.id) {
+      this.loteService.getLotesByProduct(product.id).subscribe({
+        next: (lotes) => {
+          this.selectedLotes = lotes;
+          this.selectedProduct = product; // Almacena el producto seleccionado
+          this.isLoteModalOpen = true;
+        },
+        error: () => this.showAlert('Error al obtener los lotes del producto.', 'error')
+      });
+    } else {
+      this.showAlert('ID del producto no disponible.', 'error');
+    }
   }
 
-  // Método que se llama cuando se confirma la eliminación
+  closeLoteModal(): void {
+    this.isLoteModalOpen = false; // Cierra el modal
+    this.selectedProduct = null; // Resetea el producto seleccionado
+    this.selectedLotes = []; // Resetea los lotes seleccionados
+  }
+
+  // Método createLote para usar el objeto lote
+  createLote(lote: Lote): void {
+    if (this.selectedProduct) {
+      const loteToCreate: Lote = {
+        ...lote,
+        product: this.selectedProduct // Asume que this.selectedProduct es de tipo Product
+      };
+
+      this.loteService.createLote(loteToCreate).subscribe({
+        next: () => this.onLoteSuccess('Lote creado con éxito.'),
+        error: () => this.showAlert('Error al crear el lote.', 'error')
+      });
+    } else {
+      this.showAlert('Producto no seleccionado.', 'error');
+    }
+  }
+
+  updateLote(lote: Lote): void {
+    this.loteService.updateLote(lote.id, lote).subscribe({
+      next: () => this.onLoteSuccess('Lote actualizado con éxito.'),
+      error: () => this.showAlert('Error al actualizar el lote.', 'error')
+    });
+  }
+
+  deleteLote(loteId: string): void {
+    this.loteService.deleteLote(loteId).subscribe({
+      next: () => this.onLoteSuccess('Lote eliminado con éxito.'),
+      error: () => this.showAlert('Error al eliminar el lote.', 'error')
+    });
+  }
+
+  private onLoteSuccess(message: string): void {
+    this.showAlert(message, 'success');
+    // Vuelve a obtener los lotes del producto seleccionado para reflejar cambios
+    const productId = this.selectedProduct?.id;
+    if (productId) {
+      this.loteService.getLotesByProduct(productId).subscribe({
+        next: (lotes) => (this.selectedLotes = lotes),
+        error: () => this.showAlert('Error al obtener los lotes actualizados.', 'error'),
+      });
+    }
+  }
+
+  promptDelete(id: string): void {
+    this.productIdToDelete = id;
+    this.showConfirm = true;
+  }
+
   confirmDelete(): void {
     if (this.productIdToDelete) {
       this.productService.deleteProduct(this.productIdToDelete).subscribe({
         next: () => this.onSuccess('Producto eliminado con éxito.', 'success'),
         error: () => this.showAlert('Error al eliminar el producto.', 'error')
       });
-      this.resetConfirmation(); // Resetea el estado de confirmación
+      this.resetConfirmation();
     }
   }
 
-  // Método que se llama cuando se cancela la eliminación
   cancelDelete(): void {
-    this.resetConfirmation();  // Oculta el cuadro de confirmación
+    this.resetConfirmation();
   }
 
-  // Método para restablecer la confirmación
   private resetConfirmation(): void {
-    this.showConfirm = false;  // Oculta el cuadro de confirmación
-    this.productIdToDelete = null;  // Limpia el id del producto
+    this.showConfirm = false;
+    this.productIdToDelete = null;
   }
 
   createOrUpdateProduct(): void {
@@ -106,52 +174,43 @@ export class CrudProductComponent implements OnInit {
 
     const productToSend = {
       ...this.crudForm.value,
-      compraPrice: Number(this.crudForm.value.compraPrice),
-      ventaPrice: Number(this.crudForm.value.ventaPrice),
-      expiryDate: this.crudForm.value.expiryDate === '' ? null : this.crudForm.value.expiryDate,
-      fechaCreacion: new Date().toISOString(), // Agregar esta línea
-      barcode: this.crudForm.value.barcode === '' ? null : this.crudForm.value.barcode // Asegurarse de que barcode sea null si está vacío
+      barcode: this.crudForm.value.barcode === '' ? null : this.crudForm.value.barcode
     };
 
     if (this.isEditing) {
       this.productService.updateProduct(this.product.id!, productToSend).subscribe({
         next: () => this.onSuccess('Producto actualizado con éxito.', 'success'),
-        error: (error) => {
-          this.handleError(error, 'actualizar'); // Manejo de errores para la actualización
-        }
+        error: (error) => this.handleError(error, 'actualizar')
       });
     } else {
       this.productService.createProduct(productToSend).subscribe({
         next: () => this.onSuccess('Producto creado con éxito.', 'success'),
-        error: (error) => {
-          this.handleError(error, 'crear'); // Manejo de errores para la creación
-        }
+        error: (error) => this.handleError(error, 'crear')
       });
     }
   }
 
   private handleError(error: any, action: 'crear' | 'actualizar'): void {
     const errorMessage = error.error?.message || 'Error desconocido';
-
-    console.log('Error recibido:', error); // Para depurar el error
+    console.log('Error recibido:', error);
 
     switch (error.status) {
-      case 400: // Bad Request
+      case 400:
         if (errorMessage.includes('Nombre ya creado')) {
           this.showAlert('El nombre del producto ya existe.', 'error');
         } else if (errorMessage.includes('Código de barras ya creado')) {
           this.showAlert('El código de barras ya existe.', 'error');
         } else {
-          this.showAlert(errorMessage, 'error'); // Usar solo el mensaje específico
+          this.showAlert(errorMessage, 'error');
         }
         break;
 
-      case 500: // Internal Server Error
+      case 500:
         this.showAlert(`Por favor, inténtelo de nuevo más tarde.`, 'error');
         break;
 
       default:
-        this.showAlert(errorMessage, 'error'); // Usar solo el mensaje específico
+        this.showAlert(errorMessage, 'error');
         break;
     }
   }
@@ -163,12 +222,8 @@ export class CrudProductComponent implements OnInit {
 
     this.crudForm.setValue({
       title: product.title,
-      compraPrice: product.compraPrice,
-      ventaPrice: product.ventaPrice,
-      stock: product.stock,
       slug: product.slug,
-      expiryDate: product.expiryDate || null,
-      barcode: product.barcode ||  null// Cargar el código de barras, permitir vacío
+      barcode: product.barcode || null
     });
   }
 
@@ -190,22 +245,16 @@ export class CrudProductComponent implements OnInit {
   resetForm(): void {
     this.crudForm.reset({
       title: '',
-      compraPrice: 0,
-      ventaPrice: 0,
-      stock: 0,
+      stockTotal: 0,
       slug: '',
-      expiryDate: null,
-      barcode: null // Reiniciar el código de barras como vacío
+      barcode: null
     });
-    this.product = { title: '', compraPrice: 0, ventaPrice: 0, stock: 0, slug: '', user: { id: '' }, expiryDate: undefined, barcode: null, fechaCreacion: new Date().toISOString()  };
+    this.product = { title: '', stockTotal: 0, slug: '', user: { id: '' }, barcode: null };
     this.isEditing = false;
   }
 
   openModal(): void {
     this.isModalOpen = true;
-    if (!this.isEditing) {
-      this.resetForm();
-    }
   }
 
   closeModal(): void {
@@ -217,12 +266,11 @@ export class CrudProductComponent implements OnInit {
     this.filteredProducts = this.products.filter(product =>
       product.title.toLowerCase().includes(this.searchTerm.toLowerCase())
     );
+    this.currentPage = 1; // Reinicia la página al filtrar
   }
 
-  get paginatedProducts() {
+  get paginatedProducts(): Product[] {
     const startIndex = (this.currentPage - 1) * this.itemsPerPage;
-    const endIndex = startIndex + this.itemsPerPage;
-    return this.filteredProducts.slice(startIndex, endIndex);
+    return this.filteredProducts.slice(startIndex, startIndex + this.itemsPerPage);
   }
-
 }
