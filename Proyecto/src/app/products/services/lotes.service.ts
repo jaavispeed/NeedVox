@@ -1,8 +1,8 @@
 import { Injectable } from '@angular/core';
 import { HttpClient, HttpHeaders } from '@angular/common/http';
-import { Observable, of } from 'rxjs';
+import { Observable, of, throwError } from 'rxjs';
 import { catchError } from 'rxjs/operators';
-import { Lote } from '../models/lotes.models';
+import { Lote, LoteCreate } from '../models/lotes.models';
 
 @Injectable({
   providedIn: 'root',
@@ -36,9 +36,12 @@ export class LotesService {
   }
 
   // Crear un nuevo lote
-  createLote(lote: Lote): Observable<Lote> {
+  createLote(lote: LoteCreate): Observable<Lote> {
     return this.http.post<Lote>(this.apiUrl, lote, { headers: this.getHeaders() }).pipe(
-      catchError(this.handleError<Lote>('createLote'))
+      catchError((error) => {
+        console.error('Error en createLote:', error);
+        return throwError(() => error);
+      })
     );
   }
 

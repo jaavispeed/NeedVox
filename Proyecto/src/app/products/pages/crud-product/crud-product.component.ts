@@ -5,7 +5,7 @@ import { FormControl, FormGroup, FormsModule, ReactiveFormsModule, Validators } 
 import { Product } from '../../models/product.model';
 import { NgxPaginationModule } from 'ngx-pagination';
 import { AlertComponent } from '../../../shared/pages/alert/alert.component';
-import { Lote } from '../../models/lotes.models';
+import { Lote, LoteCreate } from '../../models/lotes.models';
 import { LotesService } from '../../services/lotes.service';
 
 @Component({
@@ -30,11 +30,20 @@ export class CrudProductComponent implements OnInit {
     precioCompra: 0,
     precioVenta: 0,
     stock: 0,
-    fechaCaducidad: new Date(),
-    fechaCreacion: '',
-    product: { id: '', title: '', stockTotal: 0, slug: '', user: { id: '' }, barcode: '', fechaCreacion: '' },
-    user: { id: '' } // opcional, si necesitas incluirlo
+    fechaCaducidad: new Date(), // Inicializado con un objeto Date
+    fechaCreacion: new Date().toISOString(), // Inicializado como string
+    product: {
+      id: '',
+      title: '',
+      stockTotal: 0,
+      slug: '',
+      user: { id: '' }, // Este es el objeto user con id
+      barcode: null,
+      fechaCreacion: new Date().toISOString() // Asegúrate de inicializar este campo también
+    },
+    user: { id: '' } // Opcional, si es necesario
   };
+
 
   alertVisible: boolean = false;
   alertMessage: string = '';
@@ -46,7 +55,6 @@ export class CrudProductComponent implements OnInit {
   selectedProduct: Product | null = null; // Almacena el producto seleccionado
   selectedLotes: Lote[] = []; // Almacena los lotes del producto seleccionado
   showAddLoteForm: boolean = false; // Controla la visibilidad del formulario para agregar un lote
-
 
   constructor(private productService: ProductService, private loteService: LotesService) {
     this.crudForm = new FormGroup({
@@ -99,22 +107,37 @@ export class CrudProductComponent implements OnInit {
     this.selectedLotes = []; // Resetea los lotes seleccionados
   }
 
-  // Método createLote para usar el objeto lote
   createLote(lote: Lote): void {
-    if (this.selectedProduct) {
-      const loteToCreate: Lote = {
-        ...lote,
-        product: this.selectedProduct // Asume que this.selectedProduct es de tipo Product
+    if (this.selectedProduct && this.selectedProduct.id) {
+      const fechaCaducidad = typeof lote.fechaCaducidad === 'string'
+        ? new Date(lote.fechaCaducidad)
+        : lote.fechaCaducidad;
+
+      // Crea el objeto LoteCreate, asegurándote de convertir fechaCaducidad a string
+      const loteToCreate: LoteCreate = {
+        precioCompra: lote.precioCompra,
+        precioVenta: lote.precioVenta,
+        stock: lote.stock,
+        fechaCaducidad: fechaCaducidad.toISOString(), // Convierte a string
+        productId: this.selectedProduct.id // Asegúrate de que sea un string válido
       };
+
+      console.log('Enviando lote:', loteToCreate); // Verifica el objeto transformado
 
       this.loteService.createLote(loteToCreate).subscribe({
         next: () => this.onLoteSuccess('Lote creado con éxito.'),
-        error: () => this.showAlert('Error al crear el lote.', 'error')
+        error: (error) => {
+          console.error('Error en createLote:', error);
+          this.showAlert('Error al crear el lote.', 'error');
+        }
       });
     } else {
-      this.showAlert('Producto no seleccionado.', 'error');
+      this.showAlert('Producto no seleccionado o ID no disponible.', 'error');
     }
   }
+
+
+
 
   updateLote(lote: Lote): void {
     this.loteService.updateLote(lote.id, lote).subscribe({
