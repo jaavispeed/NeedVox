@@ -44,7 +44,6 @@ export class CrudProductComponent implements OnInit {
     user: { id: '' } // Opcional, si es necesario
   };
 
-
   alertVisible: boolean = false;
   alertMessage: string = '';
   alertType: 'success' | 'error' = 'success';
@@ -55,6 +54,7 @@ export class CrudProductComponent implements OnInit {
   selectedProduct: Product | null = null; // Almacena el producto seleccionado
   selectedLotes: Lote[] = []; // Almacena los lotes del producto seleccionado
   showAddLoteForm: boolean = false; // Controla la visibilidad del formulario para agregar un lote
+  totalStock: number = 0;
 
   constructor(private productService: ProductService, private loteService: LotesService) {
     this.crudForm = new FormGroup({
@@ -89,8 +89,9 @@ export class CrudProductComponent implements OnInit {
   openLoteModal(product: Product): void {
     if (product.id) {
       this.loteService.getLotesByProduct(product.id).subscribe({
-        next: (lotes) => {
-          this.selectedLotes = lotes;
+        next: (response) => {
+          this.selectedLotes = response.lotes; // Asigna los lotes
+          this.totalStock = response.stockTotal; // Asigna el stock total
           this.selectedProduct = product; // Almacena el producto seleccionado
           this.isLoteModalOpen = true;
         },
@@ -105,6 +106,7 @@ export class CrudProductComponent implements OnInit {
     this.isLoteModalOpen = false; // Cierra el modal
     this.selectedProduct = null; // Resetea el producto seleccionado
     this.selectedLotes = []; // Resetea los lotes seleccionados
+    this.totalStock = 0; // Resetea el stock total
   }
 
   createLote(lote: Lote): void {
@@ -136,9 +138,6 @@ export class CrudProductComponent implements OnInit {
     }
   }
 
-
-
-
   updateLote(lote: Lote): void {
     this.loteService.updateLote(lote.id, lote).subscribe({
       next: () => this.onLoteSuccess('Lote actualizado con éxito.'),
@@ -159,7 +158,10 @@ export class CrudProductComponent implements OnInit {
     const productId = this.selectedProduct?.id;
     if (productId) {
       this.loteService.getLotesByProduct(productId).subscribe({
-        next: (lotes) => (this.selectedLotes = lotes),
+        next: (response) => {
+          this.selectedLotes = response.lotes; // Actualiza los lotes
+          this.totalStock = response.stockTotal; // Actualiza el stock total
+        },
         error: () => this.showAlert('Error al obtener los lotes actualizados.', 'error'),
       });
     }
@@ -224,76 +226,80 @@ export class CrudProductComponent implements OnInit {
         } else if (errorMessage.includes('Código de barras ya creado')) {
           this.showAlert('El código de barras ya existe.', 'error');
         } else {
-          this.showAlert(errorMessage, 'error');
+          this.showAlert(`Error al ${action} el producto: ${errorMessage}`, 'error');
         }
         break;
-
       case 500:
-        this.showAlert(`Por favor, inténtelo de nuevo más tarde.`, 'error');
+        this.showAlert(`Error interno al ${action} el producto. Intente nuevamente más tarde.`, 'error');
         break;
-
       default:
-        this.showAlert(errorMessage, 'error');
-        break;
+        this.showAlert('Ocurrió un error inesperado. Intente nuevamente.', 'error');
     }
   }
 
-  editProduct(product: Product): void {
-    this.product = { ...product };
-    this.isEditing = true;
-    this.openModal();
-
-    this.crudForm.setValue({
-      title: product.title,
-      slug: product.slug,
-      barcode: product.barcode || null
-    });
-  }
-
-  onSuccess(message: string, type: 'success' | 'error'): void {
-    this.getProducts();
-    this.resetForm();
-    this.closeModal();
+  private onSuccess(message: string, type: 'success' | 'error'): void {
     this.showAlert(message, type);
+    this.getProducts(); // Refresca la lista de productos
+    this.resetForm();
   }
 
-  showAlert(message: string, type: 'success' | 'error'): void {
+  private showAlert(message: string, type: 'success' | 'error'): void {
     this.alertMessage = message;
     this.alertType = type;
     this.alertVisible = true;
 
-    setTimeout(() => this.alertVisible = false, 3000);
+    setTimeout(() => {
+      this.alertVisible = false;
+    }, 3000); // Ocultar el mensaje después de 3 segundos
   }
 
-  resetForm(): void {
-    this.crudForm.reset({
-      title: '',
-      stockTotal: 0,
-      slug: '',
-      barcode: null
-    });
-    this.product = { title: '', stockTotal: 0, slug: '', user: { id: '' }, barcode: null };
+  private resetForm(): void {
+    this.crudForm.reset();
     this.isEditing = false;
+    this.product = { title: '', stockTotal: 0, slug: '', user: { id: '' }, barcode: null };
   }
 
-  openModal(): void {
-    this.isModalOpen = true;
+  editProduct(product: Product): void {
+    this.product = product;
+    this.isEditing = true;
+    this.crudForm.patchValue({
+      title: product.title,
+      slug: product.slug,
+      barcode: product.barcode
+    });
   }
 
-  closeModal(): void {
-    this.isModalOpen = false;
-    this.resetForm();
-  }
-
-  filterProducts(): void {
+  onSearchTermChange(): void {
     this.filteredProducts = this.products.filter(product =>
       product.title.toLowerCase().includes(this.searchTerm.toLowerCase())
     );
-    this.currentPage = 1; // Reinicia la página al filtrar
+  }
+
+  filterProducts(): void {
+    if (this.searchTerm) {
+      this.filteredProducts = this.products.filter(product =>
+        product.title.toLowerCase().includes(this.searchTerm.toLowerCase())
+      );
+    } else {
+      this.filteredProducts = this.products; // Restablece la lista si no hay término de búsqueda
+    }
+  }
+
+  openModal(): void {
+    this.resetForm(); // Resetea el formulario antes de abrir el modal
+    this.isModalOpen = true; // Cambia el estado para abrir el modal
   }
 
   get paginatedProducts(): Product[] {
     const startIndex = (this.currentPage - 1) * this.itemsPerPage;
     return this.filteredProducts.slice(startIndex, startIndex + this.itemsPerPage);
   }
+
+  closeModal(): void {
+    this.isModalOpen = false; // Cambia el estado para cerrar el modal
+    this.resetForm(); // Resetea el formulario al cerrar
+  }
+
+
+
 }

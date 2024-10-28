@@ -60,11 +60,15 @@ export class LotesService {
   }
 
   // Obtener lotes por producto
-  getLotesByProduct(productId: string): Observable<Lote[]> {
-    return this.http.get<Lote[]>(`${this.apiUrl}/producto/${productId}`, { headers: this.getHeaders() }).pipe(
-      catchError(this.handleError<Lote[]>('getLotesByProduct', []))
-    );
-  }
+// Obtener lotes por producto con stock total
+getLotesByProduct(productId: string): Observable<{ lotes: Lote[]; stockTotal: number }> {
+  return this.http.get<{ lotes: Lote[]; stockTotal: number }>(`${this.apiUrl}/producto/${productId}`, {
+    headers: this.getHeaders(),
+  }).pipe(
+    catchError(this.handleError<{ lotes: Lote[]; stockTotal: number }>('getLotesByProduct', { lotes: [], stockTotal: 0 }))
+  );
+}
+
 
   // Manejo de errores
   private handleError<T>(operation = 'operation', result?: T) {
