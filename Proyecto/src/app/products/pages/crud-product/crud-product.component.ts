@@ -24,19 +24,14 @@ export class CrudProductComponent implements OnInit {
   product: Product = { title: '', stockTotal: 0, slug: '', user: { id: '' }, barcode: null };
   isEditing: boolean = false;
   isModalOpen: boolean = false;
-  // isLoteModalOpen: boolean = false; // Controla el modal del lote
   searchTerm: string = '';
-  // lote: Lote = { ... }; // Información de lote eliminada
   alertVisible: boolean = false;
   alertMessage: string = '';
   alertType: 'success' | 'error' = 'success';
-
   crudForm: FormGroup;
   showConfirm: boolean = false;
   productIdToDelete: string | null = null;
   selectedProduct: Product | null = null; // Almacena el producto seleccionado
-  // selectedLotes: Lote[] = []; // Almacena los lotes del producto seleccionado
-  // showAddLoteForm: boolean = false; // Controla la visibilidad del formulario para agregar un lote
   totalStock: number = 0;
 
   constructor(private productService: ProductService) {
@@ -68,14 +63,6 @@ export class CrudProductComponent implements OnInit {
       error: () => this.showAlert('Error al obtener los productos.', 'error')
     });
   }
-
-  // Métodos relacionados con lotes eliminados
-  // openLoteModal(product: Product): void { ... }
-  // closeLoteModal(): void { ... }
-  // createLote(lote: Lote): void { ... }
-  // updateLote(lote: Lote): void { ... }
-  // deleteLote(loteId: string): void { ... }
-  // private onLoteSuccess(message: string): void { ... }
 
   promptDelete(id: string): void {
     this.productIdToDelete = id;
@@ -114,12 +101,18 @@ export class CrudProductComponent implements OnInit {
 
     if (this.isEditing) {
       this.productService.updateProduct(this.product.id!, productToSend).subscribe({
-        next: () => this.onSuccess('Producto actualizado con éxito.', 'success'),
+        next: () => {
+          this.onSuccess('Producto actualizado con éxito.', 'success');
+          this.closeModal(); // Cerrar el modal después de actualizar
+        },
         error: (error) => this.handleError(error, 'actualizar')
       });
     } else {
       this.productService.createProduct(productToSend).subscribe({
-        next: () => this.onSuccess('Producto creado con éxito.', 'success'),
+        next: () => {
+          this.onSuccess('Producto creado con éxito.', 'success');
+          this.closeModal(); // Cerrar el modal después de crear
+        },
         error: (error) => this.handleError(error, 'crear')
       });
     }
@@ -146,6 +139,7 @@ export class CrudProductComponent implements OnInit {
         this.showAlert('Ocurrió un error inesperado. Intente nuevamente.', 'error');
     }
   }
+
 
   private onSuccess(message: string, type: 'success' | 'error'): void {
     this.showAlert(message, type);
