@@ -1,0 +1,135 @@
+<div class="container mx-auto">
+  <h1 class="text-2xl font-bold mb-4">Gestión de Compras</h1>
+
+  <!-- Campo de búsqueda -->
+  <input
+    type="text"
+    [(ngModel)]="searchTerm"
+    (input)="filterProducts()"
+    placeholder="Buscar productos..."
+    class="mb-4 p-2 border border-gray-300 rounded"
+  />
+
+  <!-- Tabla de productos (solo se muestra en vista predeterminada) -->
+  <div *ngIf="viewMode === 'default'">
+    <table class="min-w-full border-collapse border border-gray-300">
+      <thead>
+        <tr>
+          <th class="border border-gray-300 p-2">Producto</th>
+          <th class="border border-gray-300 p-2">Codigo de barra</th>
+          <th class="border border-gray-300 p-2">Acciones</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr *ngFor="let product of filteredProducts">
+          <td class="border border-gray-300 p-2">{{ product.title }}</td>
+          <td class="border border-gray-300 p-2">
+            {{ product.barcode ? product.barcode : 'Sin código de barras' }}
+          </td>
+          <td class="border border-gray-300 p-2">
+            <button
+              (click)="openAddLoteForm(product)"
+              class="bg-blue-500 text-white py-1 px-2 rounded"
+            >
+              Agregar Lote
+            </button>
+            <button
+              (click)="onHistorialCompras(product)"
+              class="bg-green-500 text-white py-1 px-2 rounded ml-2"
+            >
+              Historial de Compras
+            </button>
+          </td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+
+  <!-- Mensajes de alerta -->
+  <app-alert *ngIf="alertVisible" [message]="alertMessage" [type]="alertType"></app-alert>
+
+  <!-- Formulario de agregar lote -->
+  <div *ngIf="viewMode === 'form'" class="mt-4 p-4 border border-gray-300 rounded">
+    <h2 class="text-xl font-bold mb-2">Agregar Lote</h2>
+    <button (click)="goBack()" class="mb-4 bg-gray-300 text-black py-1 px-2 rounded">
+      Volver
+    </button>
+    <form [formGroup]="loteForm" (ngSubmit)="createLote()">
+      <div class="mb-2">
+        <label for="precioCompra" class="block">Precio de Compra</label>
+        <input
+          id="precioCompra"
+          type="number"
+          formControlName="precioCompra"
+          class="border border-gray-300 p-1 w-full"
+          required
+        />
+      </div>
+      <div class="mb-2">
+        <label for="precioVenta" class="block">Precio de Venta</label>
+        <input
+          id="precioVenta"
+          type="number"
+          formControlName="precioVenta"
+          class="border border-gray-300 p-1 w-full"
+          required
+        />
+      </div>
+      <div class="mb-2">
+        <label for="stock" class="block">Stock</label>
+        <input
+          id="stock"
+          type="number"
+          formControlName="stock"
+          class="border border-gray-300 p-1 w-full"
+          required
+        />
+      </div>
+      <div class="mb-2">
+        <label for="fechaCaducidad" class="block">Fecha de Caducidad</label>
+        <input
+          id="fechaCaducidad"
+          type="date"
+          formControlName="fechaCaducidad"
+          class="border border-gray-300 p-1 w-full"
+          required
+        />
+      </div>
+      <button type="submit" class="bg-blue-500 text-white py-1 px-2 rounded">
+        Crear Lote
+      </button>
+    </form>
+  </div>
+
+<!-- Historial de compras -->
+<div *ngIf="viewMode === 'historial'" class="mt-4 p-4 border border-gray-300 rounded">
+  <h2 class="text-xl font-bold mb-2">Historial de Compras para {{ selectedProduct?.title }}</h2>
+  <button (click)="goBack()" class="mb-4 bg-gray-300 text-black py-1 px-2 rounded">
+    Volver
+  </button>
+
+  <table class="min-w-full border-collapse border border-gray-300">
+    <thead>
+      <tr>
+        <th class="border border-gray-300 p-2">Precio de Compra</th>
+        <th class="border border-gray-300 p-2">Precio de Venta</th>
+        <th class="border border-gray-300 p-2">Stock</th>
+        <th class="border border-gray-300 p-2">Fecha de Caducidad</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr *ngFor="let lote of selectedLotes">
+        <td class="border border-gray-300 p-2">{{ lote.precioCompra }}</td>
+        <td class="border border-gray-300 p-2">{{ lote.precioVenta }}</td>
+        <td class="border border-gray-300 p-2">{{ lote.stock }}</td>
+        <td class="border border-gray-300 p-2">{{ lote.fechaCaducidad | date:'dd/MM/yyyy' }}</td>
+      </tr>
+    </tbody>
+  </table>
+
+  <div *ngIf="selectedLotes.length === 0" class="mt-2 text-gray-600">
+    No hay lotes registrados para este producto.
+  </div>
+</div>
+
+</div>

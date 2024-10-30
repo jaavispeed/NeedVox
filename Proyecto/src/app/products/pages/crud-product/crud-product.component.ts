@@ -6,7 +6,7 @@ import { Product } from '../../models/product.model';
 import { NgxPaginationModule } from 'ngx-pagination';
 import { AlertComponent } from '../../../shared/pages/alert/alert.component';
 import { Lote, LoteCreate } from '../../models/lotes.models';
-import { LotesService } from '../../services/lotes.service';
+import { LotesService } from '../../../compras/services/compras.service';
 
 @Component({
   selector: 'app-crud-product',

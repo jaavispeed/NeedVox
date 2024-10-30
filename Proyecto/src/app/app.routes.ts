@@ -9,6 +9,7 @@ import { VentaComponent } from './venta/pages/venta/venta.component';
 import { UsuariosComponent } from './admin/pages/totalusers/total-users/usuarios.component';
 import { HistorialComponent } from './historial/pages/historial/historial.component';
 import { TotalProductosComponent } from './admin/pages/totalusers/total-users/total-productos.component'; // Verifica que la ruta sea correcta
+import { ComprasComponent } from './compras/pages/compras/compras.component';
 
 export const routes: Routes = [
   {
@@ -65,6 +66,11 @@ export const routes: Routes = [
         component: TotalProductosComponent,
         canActivate: [AuthGuard] // Protege la ruta con AuthGuard
       },
+      {
+        path:'compras',
+        component: ComprasComponent,
+        canActivate: [AuthGuard]
+      }
     ]
   },
   {
