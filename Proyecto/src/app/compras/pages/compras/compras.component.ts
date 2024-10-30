@@ -36,7 +36,7 @@ export class ComprasComponent implements OnInit {
       precioCompra: new FormControl(0, Validators.required),
       precioVenta: new FormControl(0, Validators.required),
       stock: new FormControl(0, Validators.required),
-      fechaCaducidad: new FormControl('', Validators.required), // Inicializar sin valor
+      fechaCaducidad: new FormControl(new Date().toISOString(), Validators.required),
       productId: new FormControl('')
     });
   }
@@ -155,18 +155,5 @@ export class ComprasComponent implements OnInit {
     const defaultDate = today.toISOString().split('T')[0]; // Obtener solo la parte de la fecha
     this.loteForm.patchValue({ fechaCaducidad: defaultDate });
   }
-
-  formatFecha(fechaCaducidad: string): string {
-    const date = new Date(fechaCaducidad);
-    const options: Intl.DateTimeFormatOptions = {
-      day: 'numeric',
-      month: 'long',
-      year: 'numeric',
-    };
-    return date.toLocaleDateString('es-ES', options);
-  }
-
-
-
 
 }
