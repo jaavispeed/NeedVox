@@ -45,10 +45,6 @@
                 <i class="fas fa-edit mr-1"></i>
                 Editar
               </button>
-              <button (click)="openLoteModal(product)" class="inline-flex items-center px-4 py-2 bg-[#76ABAE] text-white font-light font-rubik rounded-md shadow hover:bg-[#5b9892] focus:outline-none focus:ring-2 focus:ring-gray-500 transition duration-300 transform hover:scale-105">
-                <i class="fas fa-box mr-1"></i>
-                Ver Lotes
-              </button>
               <button (click)="promptDelete(product.id ?? '')" class="inline-flex items-center px-4 py-2 bg-red-600 text-white font-light font-rubik rounded-md shadow hover:bg-red-700 focus:outline-none focus:ring-2 focus:ring-gray-500 transition duration-300 transform hover:scale-105">
                 <i class="fas fa-trash-alt mr-1"></i> Eliminar
               </button>
@@ -131,91 +127,5 @@
         </form>
       </div>
     </div>
-
-
-<!-- Modal de Lotes -->
-<div *ngIf="isLoteModalOpen" class="fixed inset-0 z-50 flex items-center justify-center bg-black bg-opacity-50">
-  <div class="bg-white p-6 rounded-md shadow-md w-full max-w-2xl relative">
-    <h2 class="text-xl font-bold mb-4">Lotes de {{ selectedProduct?.title }}</h2>
-
-    <!-- Botón para mostrar el formulario de agregar lote en la esquina superior derecha -->
-    <button (click)="showAddLoteForm = !showAddLoteForm" class="absolute top-4 right-4 inline-flex items-center px-4 py-2 bg-blue-600 text-white font-light font-rubik rounded-md shadow hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-500 transition duration-300 transform hover:scale-105">
-      {{ showAddLoteForm ? 'Cancelar' : 'Agregar Lote' }}
-    </button>
-
-    <!-- Formulario para agregar un nuevo lote, solo visible si showAddLoteForm es true -->
-    <div *ngIf="showAddLoteForm" class="mt-6">
-      <form (ngSubmit)="createLote(lote)" class="mb-4">
-        <div class="mb-4">
-          <label class="block mb-2 font-medium">Precio Compra:</label>
-          <input type="number" [(ngModel)]="lote.precioCompra" name="precioCompra" required class="border rounded-md p-2 w-full" placeholder="Ingrese el precio de compra">
-        </div>
-        <div class="mb-4">
-          <label class="block mb-2 font-medium">Precio Venta:</label>
-          <input type="number" [(ngModel)]="lote.precioVenta" name="precioVenta" required class="border rounded-md p-2 w-full" placeholder="Ingrese el precio de venta">
-        </div>
-        <div class="mb-4">
-          <label class="block mb-2 font-medium">Stock:</label>
-          <input type="number" [(ngModel)]="lote.stock" name="stock" required class="border rounded-md p-2 w-full" placeholder="Ingrese el stock">
-        </div>
-        <div class="mb-4">
-          <label class="block mb-2 font-medium">Fecha de Caducidad:</label>
-          <input type="date" [(ngModel)]="lote.fechaCaducidad" name="fechaCaducidad" required class="border rounded-md p-2 w-full">
-        </div>
-        <div class="flex justify-end">
-          <button type="submit" class="inline-flex items-center px-4 py-2 bg-blue-600 text-white font-light font-rubik rounded-md shadow hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-500 transition duration-300 transform hover:scale-105">
-            Agregar Lote
-          </button>
-        </div>
-      </form>
-    </div>
-
-    <div *ngIf="selectedLotes.length > 0; else noLotes">
-      <table class="min-w-full bg-white mt-2 shadow-md">
-        <thead>
-          <tr class="bg-gray-50">
-            <th class="px-4 py-2 font-bold font-rubik text-left">Precio Compra</th>
-            <th class="px-4 py-2 font-bold font-rubik text-left">Precio Venta</th>
-            <th class="px-4 py-2 font-bold font-rubik text-left">Stock</th>
-            <th class="px-4 py-2 font-bold font-rubik text-left">Fecha Caducidad</th>
-            <th class="px-4 py-2 font-bold font-rubik text-left"><span class="sr-only">Acciones</span></th>
-          </tr>
-        </thead>
-        <tbody>
-          <tr *ngFor="let lote of selectedLotes" class="border-b">
-            <td class="px-4 py-3">{{ lote.precioCompra }}</td>
-            <td class="px-4 py-3">{{ lote.precioVenta }}</td>
-            <td class="px-4 py-3">{{ lote.stock }}</td>
-            <td class="px-4 py-3">{{ lote.fechaCaducidad | date:'shortDate' }}</td>
-            <td class="px-4 py-3 flex justify-center">
-              <button (click)="deleteLote(lote.id)" class="text-red-600 hover:text-red-800">
-                <i class="fas fa-trash"></i> Eliminar
-              </button>
-            </td>
-          </tr>
-        </tbody>
-      </table>
-    </div>
-    <ng-template #noLotes>
-      <p class="mt-4 text-gray-600">No hay lotes disponibles para este producto.</p>
-    </ng-template>
-
-    <!-- Espacio adicional para separar el contenido del botón -->
-    <div class="mt-4"></div>
-
-    <!-- Botón de cerrar en la esquina inferior derecha -->
-    <div class="flex justify-end">
-      <button (click)="closeLoteModal()" class="inline-flex items-center px-4 py-2 bg-gray-300 text-black font-light font-rubik rounded-md shadow hover:bg-gray-400 focus:outline-none focus:ring-2 focus:ring-gray-500 transition duration-300 transform hover:scale-105">
-        <i class="fas fa-times mr-1"></i> Cerrar
-      </button>
-    </div>
   </div>
 </div>
-
-
-
-
-
-
-
-
