@@ -2,7 +2,7 @@ import { Injectable } from '@angular/core';
 import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { Observable, of, throwError } from 'rxjs';
 import { catchError } from 'rxjs/operators';
-import { Lote, LoteCreate } from '../../products/models/lotes.models';
+import { Lote, LoteCreate } from '../models/lotes.models';
 
 @Injectable({
   providedIn: 'root',

@@ -4,7 +4,7 @@ import { FormControl, FormGroup, FormsModule, ReactiveFormsModule, Validators } 
 import { NgxPaginationModule } from 'ngx-pagination';
 import { AlertComponent } from '../../../shared/pages/alert/alert.component';
 import { Product } from '../../../products/models/product.model';
-import { Lote } from '../../../products/models/lotes.models';
+import { Lote } from '../../models/lotes.models';
 import { ProductService } from '../../../products/services/product.service';
 import { LotesService } from '../../services/compras.service';
 

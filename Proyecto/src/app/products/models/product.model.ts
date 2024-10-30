@@ -1,4 +1,4 @@
-import { Lote } from "./lotes.models";
+import { Lote } from "../../compras/models/lotes.models";
 
 export interface Product {
   id?: string; // Opcional si se crea uno nuevo

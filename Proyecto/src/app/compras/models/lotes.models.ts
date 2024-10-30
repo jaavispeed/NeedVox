@@ -1,6 +1,6 @@
 // models/lotes.models.ts
 
-import { Product } from "./product.model";
+import { Product } from "../../products/models/product.model";
 
 export interface Lote {
   id: string;               // ID del lote (UUID)
