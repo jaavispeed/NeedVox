@@ -10,7 +10,6 @@
       (input)="filtrarProductos()"
       (keydown.enter)="agregarProductoDesdeBusqueda()"
       class="block w-full p-2 border border-gray-300 rounded-md focus:outline-none focus:border-gray-500 font-rubik text-black mb-4"
-      style="border-color: gray; box-shadow: none;"
     />
 
     <h3 class="text-lg font-semibold mb-4">Productos Disponibles</h3>
@@ -20,8 +19,8 @@
         <thead class="text-xs uppercase bg-gray-50">
           <tr>
             <th class="px-2 py-3 font-bold text-center">Producto</th>
-            <th class="px-2 py-3 font-bold text-center">Precio</th>
-            <th class="px-2 py-3 font-bold text-center">Stock</th>
+            <th class="px-2 py-3 font-bold text-center">Precio de Venta</th>
+            <th class="px-2 py-3 font-bold text-center">Stock Total</th>
             <th class="px-2 py-3 font-bold text-center">Acciones</th>
           </tr>
         </thead>
@@ -29,17 +28,19 @@
           <tr class="bg-white border-b" *ngFor="let producto of productosFiltrados">
             <td class="px-4 py-3 text-center">{{ producto.title }}</td>
             <td class="px-4 py-3 text-center">
-              <!-- Mostrar precio de venta de los lotes disponibles -->
               <ng-container *ngFor="let lote of producto.lotes">
                 {{ lote.precioVenta }} <span *ngIf="lote.stock > 0"> (Stock: {{ lote.stock }})</span>
               </ng-container>
             </td>
             <td class="px-4 py-3 text-center">
+              {{ producto.stockTotal }}
+            </td>
+            <td class="px-4 py-3 text-center">
               <ng-container *ngFor="let lote of producto.lotes">
                 <button
+                  *ngIf="lote.stock > 0"
                   (click)="agregarAlCarrito(producto, lote)"
                   class="text-blue-600 hover:underline"
-                  *ngIf="lote.stock > 0"
                 >
                   Agregar
                 </button>
@@ -99,7 +100,6 @@
       <h3 class="text-lg font-semibold mt-4 text-center">Precio Total: {{ totalPrecio | currency:'USD':'symbol':'1.0-2' }}</h3>
     </div>
 
-    <!-- Botones "Agregar venta" y "Otro" -->
     <div class="flex justify-center mt-4 space-x-4" *ngIf="carrito.length > 0">
       <button
         (click)="procesarVenta()"
@@ -118,7 +118,6 @@
   </div>
 </div>
 
-<!-- Modal para ingresar monto -->
 <div *ngIf="modalAbierto" class="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50 z-50">
   <div class="bg-white p-6 rounded-lg shadow-lg">
     <h3 class="text-lg font-semibold mb-4">Ingresar Monto</h3>

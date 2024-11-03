@@ -1,14 +1,16 @@
 import { HttpClient, HttpHeaders, HttpErrorResponse } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { Observable, throwError } from 'rxjs';
-import { catchError, switchMap } from 'rxjs/operators';
+import { catchError } from 'rxjs/operators';
 import { Product } from '../../products/models/product.model';
+import { Lote } from '../../compras/models/lotes.models';
 
 @Injectable({
   providedIn: 'root',
 })
 export class VentaService {
   private apiUrl = 'http://localhost:3000/api/products'; // URL para obtener productos
+  private loteApiUrl = 'http://localhost:3000/api/lotes'; // URL para obtener lotes
   private authApiUrl = 'http://localhost:3000/api/auth'; // URL para autenticación
 
   constructor(private httpClient: HttpClient) {}
@@ -22,7 +24,6 @@ export class VentaService {
     return this.httpClient.get<any>(`${this.authApiUrl}/check-status`, { headers });
   }
 
-
   // Método para obtener el token y los headers
   private getHeaders(): HttpHeaders {
     const token = localStorage.getItem('token');
@@ -30,7 +31,8 @@ export class VentaService {
       'Authorization': `Bearer ${token}`
     });
   }
-    // En tu VentaService, actualiza el método crearVenta
+
+  // En tu VentaService, actualiza el método crearVenta
   crearVenta(venta: { userId: string; productos: { productId: string; cantidad: number; ventaPrice: number; }[] }): Observable<any> {
     return this.httpClient.post<any>('http://localhost:3000/api/ventas', venta, { headers: this.getHeaders() })
       .pipe(
@@ -46,6 +48,13 @@ export class VentaService {
       );
   }
 
+  // Obtener todos los lotes
+  getLotes(): Observable<Lote[]> {
+    return this.httpClient.get<Lote[]>(this.loteApiUrl, { headers: this.getHeaders() })
+      .pipe(
+        catchError(this.handleError) // Manejo de errores
+      );
+  }
 
   // Método para manejar errores
   private handleError(error: HttpErrorResponse) {
