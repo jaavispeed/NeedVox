@@ -29,6 +29,7 @@
           <tr>
             <th scope="col" class="px-2 py-3 font-bold font-rubik text-center">Producto</th>
             <th scope="col" class="px-2 py-3 font-bold font-rubik text-center">Stock Total</th>
+            <th scope="col" class="px-2 py-3 font-bold font-rubik text-center">Precio Venta Reciente</th>
             <th scope="col" class="px-2 py-3 font-bold font-rubik text-center">Código de Barras</th>
             <th scope="col" class="px-2 py-3 font-bold font-rubik text-center">Fecha de Creación</th>
             <th scope="col" class="px-2 py-3 font-bold font-rubik text-center"><span class="sr-only">Acciones</span></th>
@@ -37,8 +38,13 @@
         <tbody>
           <tr *ngFor="let product of paginatedProducts" class="bg-white border-b">
             <td class="px-4 py-3 text-center font-medium text-black font-rubik">{{ product.title }}</td>
-            <td class="px-4 py-3 text-center text-black font-rubik">{{ product.stockTotal }}</td>
-            <td class="px-4 py-3 text-center text-black font-rubik">{{ product.barcode || 'Sin código de barras' }}</td>
+            <td class="px-4 py-3 text-center text-black font-rubik">
+              {{ product.stockTotal !== null && product.stockTotal !== undefined ? product.stockTotal : 0 }}
+            </td>
+                        <td class="px-4 py-3 text-center text-black font-rubik">
+              {{ product.lastLotPrice !== null ? '$' + product.lastLotPrice : 'Sin Precio' }}
+            </td>
+                        <td class="px-4 py-3 text-center text-black font-rubik">{{ product.barcode || 'Sin código de barras' }}</td>
             <td class="px-4 py-3 text-center text-black font-rubik">{{ product.fechaCreacion }}</td>
             <td class="px-4 py-3 text-center flex justify-center space-x-2">
               <button (click)="editProduct(product)" class="inline-flex items-center px-4 py-2 bg-[#76ABAE] text-white font-light font-rubik rounded-md shadow hover:bg-[#5b9892] focus:outline-none focus:ring-2 focus:ring-gray-500 transition duration-300 transform hover:scale-105">
