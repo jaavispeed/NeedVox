@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { ChangeDetectorRef, Component, OnInit } from '@angular/core';
 import { ProductService } from '../../services/product.service';
 import { CommonModule } from '@angular/common';
 import { FormControl, FormGroup, FormsModule, ReactiveFormsModule, Validators } from '@angular/forms';
@@ -34,7 +34,7 @@ export class CrudProductComponent implements OnInit {
   selectedProduct: Product | null = null; // Almacena el producto seleccionado
   totalStock: number = 0;
 
-  constructor(private productService: ProductService) {
+  constructor(private productService: ProductService, private cdr: ChangeDetectorRef) {
     this.crudForm = new FormGroup({
       title: new FormControl('', [Validators.required, Validators.minLength(3)]),
       slug: new FormControl(''),
@@ -43,8 +43,20 @@ export class CrudProductComponent implements OnInit {
   }
 
   ngOnInit(): void {
-    this.getProducts();
+    this.loadProducts();
   }
+
+    // Método para cargar productos
+    loadProducts(): void {
+      this.productService.getProducts().subscribe({
+        next: (products) => {
+          console.log('Productos recuperados:', products);
+          this.products = products; // Asegúrate de que 'products' sea la propiedad donde guardas los productos
+          this.filteredProducts = products; // Actualiza filteredProducts
+        },
+        error: (err) => console.error('Error al cargar productos:', err),
+      });
+    }
 
   getProducts(): void {
     this.productService.getProducts().subscribe({
@@ -72,12 +84,31 @@ export class CrudProductComponent implements OnInit {
   confirmDelete(): void {
     if (this.productIdToDelete) {
       this.productService.deleteProduct(this.productIdToDelete).subscribe({
-        next: () => this.onSuccess('Producto eliminado con éxito.', 'success'),
-        error: () => this.showAlert('Error al eliminar el producto.', 'error')
+        next: () => {
+          console.log(`Producto ${this.productIdToDelete} eliminado con éxito`);
+
+          // Eliminar el producto de la lista localmente
+          this.products = this.products.filter(product => product.id !== this.productIdToDelete);
+          this.filteredProducts = this.filteredProducts.filter(product => product.id !== this.productIdToDelete);
+
+          this.showAlert('Producto eliminado con éxito.', 'success');
+        },
+        error: () => this.showAlert('Error al eliminar el producto.', 'error'),
+        complete: () => this.resetConfirmation() // Reinicia la confirmación solo después de que la eliminación ha sido procesada
       });
-      this.resetConfirmation();
+    } else {
+      this.resetConfirmation(); // Si no hay ID, también reinicia
     }
   }
+
+
+
+
+
+
+
+
+
 
   cancelDelete(): void {
     this.resetConfirmation();
