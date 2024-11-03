@@ -5,9 +5,6 @@ import { FormControl, FormGroup, FormsModule, ReactiveFormsModule, Validators } 
 import { Product } from '../../models/product.model';
 import { NgxPaginationModule } from 'ngx-pagination';
 import { AlertComponent } from '../../../shared/pages/alert/alert.component';
-// Eliminar importaciones relacionadas con lotes
-// import { Lote, LoteCreate } from '../../../compras/models/lotes.models';
-// import { LotesService } from '../../../compras/services/compras.service';
 
 @Component({
   selector: 'app-crud-product',
@@ -43,20 +40,8 @@ export class CrudProductComponent implements OnInit {
   }
 
   ngOnInit(): void {
-    this.loadProducts();
+    this.getProducts();
   }
-
-    // Método para cargar productos
-    loadProducts(): void {
-      this.productService.getProducts().subscribe({
-        next: (products) => {
-          console.log('Productos recuperados:', products);
-          this.products = products; // Asegúrate de que 'products' sea la propiedad donde guardas los productos
-          this.filteredProducts = products; // Actualiza filteredProducts
-        },
-        error: (err) => console.error('Error al cargar productos:', err),
-      });
-    }
 
   getProducts(): void {
     this.productService.getProducts().subscribe({
@@ -100,15 +85,6 @@ export class CrudProductComponent implements OnInit {
       this.resetConfirmation(); // Si no hay ID, también reinicia
     }
   }
-
-
-
-
-
-
-
-
-
 
   cancelDelete(): void {
     this.resetConfirmation();

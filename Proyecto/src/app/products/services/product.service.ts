@@ -42,13 +42,22 @@ export class ProductService {
               return {
                 ...product,
                 lastLotPrice: lastLotPrice, // Añadir el precioVenta del último lote
+                fechaCreacion: new Date(product.fechaCreacion) // Convierte a objeto Date
               };
             })
           )
         );
 
         // Esperar a que todos los observables de lotes se completen
-        return forkJoin(productObservables); // Devolver un Observable<any[]> con los productos
+        return forkJoin(productObservables).pipe(
+          map(productsWithDates => {
+            // Asegúrate de que todos los productos tengan la fecha como Date
+            return productsWithDates.map(product => ({
+              ...product,
+              fechaCreacion: new Date(product.fechaCreacion) // Asegúrate de que se esté convirtiendo
+            }));
+          })
+        );
       }),
       tap((finalProducts) => console.log('Productos después de agregar precios de lotes:', finalProducts)), // Log de productos finales
       catchError((error) => {
@@ -57,6 +66,8 @@ export class ProductService {
       })
     );
   }
+
+
 
 
 
