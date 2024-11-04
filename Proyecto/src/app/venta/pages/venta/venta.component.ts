@@ -60,6 +60,20 @@ export class VentaComponent {
   cargarProductos() {
     this.ventaService.getProducts().subscribe(
       (productos: Product[]) => {
+        // Asegúrate de que los lotes estén inicializados y ordenados
+        productos.forEach(producto => {
+          // Inicializa lotes si es undefined
+          producto.lotes = producto.lotes || [];
+
+          // Ordena los lotes solo si hay lotes disponibles
+          if (producto.lotes.length > 0) {
+            producto.lotes.sort((a, b) => {
+              const fechaA = new Date(a.fechaCreacion).getTime();
+              const fechaB = new Date(b.fechaCreacion).getTime();
+              return fechaA - fechaB; // Ordenar de más antiguo a más reciente
+            });
+          }
+        });
         this.productosFiltrados = productos;
       },
       (error) => {
@@ -68,6 +82,8 @@ export class VentaComponent {
       }
     );
   }
+
+
 
   filtrarProductos() {
     if (this.searchTerm.trim() === '') {
