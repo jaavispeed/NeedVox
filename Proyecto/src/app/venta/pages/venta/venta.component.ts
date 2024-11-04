@@ -4,6 +4,7 @@ import { Product } from '../../../products/models/product.model';
 import { VentaService } from '../../service/venta.service';
 import { CommonModule } from '@angular/common';
 import { v4 as uuidv4 } from 'uuid';
+import { Lote } from '../../../compras/models/lotes.models';
 
 @Component({
   selector: 'app-ventas',
@@ -89,12 +90,6 @@ export class VentaComponent {
       }
     );
   }
-
-
-
-
-
-
 
   filtrarProductos() {
     if (this.searchTerm.trim() === '') {
@@ -264,4 +259,20 @@ export class VentaComponent {
       this.errorMessage = "Por favor, ingresa un monto válido.";
     }
   }
+
+  hayLotesDisponibles(producto: Product): boolean {
+    return producto.lotes?.some(lote => lote.stock > 0) || false;
+  }
+
+  obtenerLoteDisponible(producto: Product): Lote | undefined {
+    return producto.lotes?.find(lote => lote.stock > 0);
+  }
+
+  formatPrecio(precio: number): string {
+    return precio.toLocaleString('es-ES', { minimumFractionDigits: 0, maximumFractionDigits: 0 });
+}
+
+
+
+
 }
