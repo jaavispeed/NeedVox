@@ -30,7 +30,6 @@
             <td class="px-4 py-3 text-center">
               {{ producto.oldestLotPrice !== null ? ('$' + producto.oldestLotPrice) : 'No disponible' }}
             </td>
-
             <td class="px-4 py-3 text-center">{{ producto.stockTotal }}</td>
             <td class="px-4 py-3 text-center">
               <ng-container *ngFor="let lote of producto.lotes">

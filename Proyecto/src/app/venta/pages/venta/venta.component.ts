@@ -60,12 +60,14 @@ export class VentaComponent {
   cargarProductos() {
     this.ventaService.getProducts().subscribe(
       (productos: Product[]) => {
-        // Asegúrate de que los lotes estén inicializados y ordenados
+        console.log('Productos obtenidos:', productos); // Log de productos obtenidos
+
         productos.forEach(producto => {
           // Inicializa lotes si es undefined
           producto.lotes = producto.lotes || [];
+          console.log('Lotes del producto:', producto.title, producto.lotes); // Log de lotes del producto
 
-          // Ordena los lotes solo si hay lotes disponibles
+          // Si hay lotes, ordenarlos por fecha de creación
           if (producto.lotes.length > 0) {
             producto.lotes.sort((a, b) => {
               const fechaA = new Date(a.fechaCreacion).getTime();
@@ -73,15 +75,24 @@ export class VentaComponent {
               return fechaA - fechaB; // Ordenar de más antiguo a más reciente
             });
           }
+
+          // Asignar el precio del lote más antiguo a oldestLotePrice
+          const oldestLote = producto.lotes[0] || null; // Obtener el lote más antiguo
+          producto.oldestLotPrice = oldestLote ? oldestLote.precioVenta : null; // Asignar el precio del lote más antiguo
         });
-        this.productosFiltrados = productos;
+
+        this.productosFiltrados = productos; // Guardar los productos filtrados
       },
       (error) => {
-        console.error("Error al obtener los productos:", error);
-        this.errorMessage = "Error al cargar los productos. Intenta de nuevo más tarde.";
+        console.error("Error al obtener los productos:", error); // Log de error
+        this.errorMessage = "Error al cargar los productos. Intenta de nuevo más tarde."; // Mensaje de error
       }
     );
   }
+
+
+
+
 
 
 

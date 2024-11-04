@@ -59,7 +59,6 @@ export class LotesService {
     );
   }
 
-  // Obtener lotes por producto
 // Obtener lotes por producto con stock total
 getLotesByProduct(productId: string): Observable<{ lotes: Lote[]; stockTotal: number }> {
   return this.http.get<{ lotes: Lote[]; stockTotal: number }>(`${this.apiUrl}/producto/${productId}`, {
