@@ -131,4 +131,16 @@ export class HistorialComponent {
   obtenerProductoPorId(productId: string) {
     return this.productos.find(producto => producto.id === productId);
   }
+
+  formatCurrency(value: any): string {
+    if (typeof value === 'number') {
+      return `$${value.toFixed(0)}`;
+    } else if (typeof value === 'string') {
+      const numberValue = parseFloat(value); // Convierte la cadena a número
+      return isNaN(numberValue) ? '$0' : `$${numberValue.toFixed(0)}`;
+    }
+    return '$0'; // Valor por defecto si no es un número ni una cadena válida
+  }
+
+
 }
