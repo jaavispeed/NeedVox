@@ -67,7 +67,7 @@
           <li *ngFor="let producto of ventaSeleccionada.productos" class="border-b py-2">
             <p class="text-black"><strong>Producto:</strong> {{ producto.product.title}}</p>
             <p class="text-black"><strong>Cantidad:</strong> {{ producto.cantidad }}</p>
-            <p class="text-black"><strong>Precio de Venta:</strong> {{ producto.ventaPrice | currency:'USD':'symbol':'1.0-0' }}</p>
+            <p class="text-black"><strong>Precio de Venta:</strong> {{ formatCurrency(producto.ventaPrice) }}</p>
           </li>
         </ul>
         <button (click)="cerrarModal()" class="mt-4 bg-red-500 text-white px-4 py-2 rounded flex items-center">
