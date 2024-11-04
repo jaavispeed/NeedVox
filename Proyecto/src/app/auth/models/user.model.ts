@@ -1,5 +1,6 @@
 // src/app/auth/models/user.model.ts
 export interface User {
+  isActive: any;
   id: string;       // Cambia 'uid' por 'id' si es necesario
   email: string;
   username: string;

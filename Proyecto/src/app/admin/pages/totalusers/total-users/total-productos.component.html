@@ -7,10 +7,9 @@
   <table class="w-full text-sm text-center text-gray-700">
     <thead class="text-xs uppercase bg-gray-200 text-gray-700">
       <tr>
-        <th class="px-6 py-3 font-bold text-center">Título</th>
-        <th class="px-6 py-3 font-bold text-center">Precio de Compra</th>
-        <th class="px-6 py-3 font-bold text-center">Precio de Venta</th>
+        <th class="px-6 py-3 font-bold text-center">Nombre</th>
         <th class="px-6 py-3 font-bold text-center">Stock</th>
+        <th class="px-6 py-3 font-bold text-center">Codigo de barra (Opcional)</th>
         <th class="px-6 py-3 font-bold text-center">Fecha de Creación</th>
         <th class="px-6 py-3 font-bold text-center">Creado por</th>
       </tr>
@@ -20,9 +19,8 @@
         class="bg-white border-b hover:bg-gray-100 hover:shadow-md hover:-translate-y-1 transition-all duration-200 ease-in-out transform" 
         *ngFor="let producto of productos">
         <td class="px-6 py-3 text-center font-medium text-gray-900">{{ producto.title }}</td>
-        <td class="px-6 py-3 text-center text-gray-900">{{ producto.compraPrice }}</td>
-        <td class="px-6 py-3 text-center text-gray-900">{{ producto.ventaPrice }}</td>
-        <td class="px-6 py-3 text-center text-gray-900">{{ producto.stock }}</td>
+        <td class="px-6 py-3 text-center text-gray-900">{{ producto.stockTotal }}</td>
+        <td class="px-6 py-3 text-center text-gray-900">{{ producto.barcode }}</td>
         <td class="px-6 py-3 text-center text-gray-900">{{ producto.fechaCreacion | date }}</td>
         <td class="px-6 py-3 text-center text-gray-900">
           <span class="px-2 py-1 rounded-full text-xs bg-green-200 text-green-700">
