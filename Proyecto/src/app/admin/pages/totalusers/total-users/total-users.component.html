@@ -10,18 +10,31 @@
         <th class="px-6 py-3 font-bold text-center">Nombre</th>
         <th class="px-6 py-3 font-bold text-center">Correo</th>
         <th class="px-6 py-3 font-bold text-center">Rol</th>
+        <th class="px-6 py-3 font-bold text-center">Estado</th> <!-- Nueva columna -->
+        <th class="px-6 py-3 font-bold text-center">Acciones</th> <!-- Para botones -->
       </tr>
     </thead>
     <tbody>
       <tr 
         class="bg-white border-b hover:bg-gray-100 hover:shadow-md hover:-translate-y-1 transition-all duration-200 ease-in-out transform" 
-        *ngFor="let usuario of usuarios">
+        *ngFor="let usuario of usuariosFiltrados"> <!-- Cambiar usuariosFiltrados a usuarios -->
         <td class="px-6 py-3 text-center font-medium text-gray-900">{{ usuario.username }}</td>
         <td class="px-6 py-3 text-center text-gray-900">{{ usuario.email }}</td>
         <td class="px-6 py-3 text-center text-gray-900">
           <span class="px-2 py-1 rounded-full text-xs bg-green-200 text-green-700">
-            {{ usuario.roles }}
+            {{ usuario.roles.join(', ') }}
           </span>
+        </td>
+        <td class="px-6 py-3 text-center text-gray-900">
+          <span class="px-2 py-1 rounded-full text-xs" [ngClass]="{ 'bg-red-200 text-red-700': !usuario.isActive, 'bg-green-200 text-green-700': usuario.isActive }">
+            {{ usuario.isActive ? 'Activo' : 'Inactivo' }}
+          </span>
+        </td>
+        <td class="px-6 py-3 text-center">
+          <button (click)="toggleUsuario(usuario)" 
+                  class="px-4 py-2 text-white bg-blue-500 hover:bg-blue-600 rounded">
+            {{ usuario.isActive ? 'Desactivar' : 'Activar' }}
+          </button>
         </td>
       </tr>
     </tbody>
