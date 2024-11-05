@@ -16,7 +16,7 @@ export class HistorialComponent {
   ventaSeleccionada: any | null = null; // Cambiado a any para incluir los detalles del producto
   productos: any[] = []; // Lista de productos
   fechaSeleccionada: string = ''; // Fecha seleccionada para filtrar
-  ventasPorPagina: number = 5;
+  ventasPorPagina: number = 10;
   paginaActual: number = 1;
 
   constructor(private historialService: HistorialService) {}

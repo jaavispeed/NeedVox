@@ -29,7 +29,7 @@ export class ComprasComponent implements OnInit {
 
   // Paginación
   currentPage: number = 1;
-  itemsPerPage: number = 5; // Ajusta la cantidad de productos por página
+  itemsPerPage: number = 10; // Ajusta la cantidad de productos por página
 
   // FormGroup para el formulario de lotes
   loteForm: FormGroup;

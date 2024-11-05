@@ -17,7 +17,7 @@ export class CrudProductComponent implements OnInit {
   products: Product[] = [];
   filteredProducts: Product[] = [];
   currentPage = 1;
-  itemsPerPage = 5;
+  itemsPerPage = 10;
   product: Product = { title: '', stockTotal: 0, slug: '', user: { id: '' }, barcode: null };
   isEditing: boolean = false;
   isModalOpen: boolean = false;
@@ -59,6 +59,32 @@ export class CrudProductComponent implements OnInit {
       },
       error: () => this.showAlert('Error al obtener los productos.', 'error')
     });
+  }
+
+  // Métodos de paginación
+  get paginatedProducts(): Product[] {
+    const startIndex = (this.currentPage - 1) * this.itemsPerPage;
+    return this.filteredProducts.slice(startIndex, startIndex + this.itemsPerPage);
+  }
+
+  nextPage(): void {
+    if (this.hasMorePages()) {
+      this.currentPage++;
+    }
+  }
+
+  previousPage(): void {
+    if (this.currentPage > 1) {
+      this.currentPage--;
+    }
+  }
+
+  hasMorePages(): boolean {
+    return this.currentPage * this.itemsPerPage < this.filteredProducts.length;
+  }
+
+  totalPages(): number {
+    return Math.ceil(this.filteredProducts.length / this.itemsPerPage);
   }
 
   promptDelete(id: string): void {
@@ -147,7 +173,6 @@ export class CrudProductComponent implements OnInit {
     }
   }
 
-
   private onSuccess(message: string, type: 'success' | 'error'): void {
     this.showAlert(message, type);
     this.getProducts(); // Refresca la lista de productos
@@ -200,11 +225,6 @@ export class CrudProductComponent implements OnInit {
   openModal(): void {
     this.resetForm(); // Resetea el formulario antes de abrir el modal
     this.isModalOpen = true; // Cambia el estado para abrir el modal
-  }
-
-  get paginatedProducts(): Product[] {
-    const startIndex = (this.currentPage - 1) * this.itemsPerPage;
-    return this.filteredProducts.slice(startIndex, startIndex + this.itemsPerPage);
   }
 
   closeModal(): void {
