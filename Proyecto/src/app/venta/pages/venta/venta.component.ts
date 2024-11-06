@@ -5,13 +5,14 @@ import { VentaService } from '../../service/venta.service';
 import { CommonModule } from '@angular/common';
 import { v4 as uuidv4 } from 'uuid';
 import { Lote } from '../../../compras/models/lotes.models';
+import { AlertComponent } from '../../../shared/pages/alert/alert.component';
 
 @Component({
   selector: 'app-ventas',
   templateUrl: './venta.component.html',
   styleUrls: ['./venta.component.css'],
   standalone: true,
-  imports: [FormsModule, CommonModule],
+  imports: [FormsModule, CommonModule,AlertComponent],
 })
 export class VentaComponent {
   @ViewChild('codigoBarraInput') codigoBarraInput!: ElementRef;
@@ -23,6 +24,9 @@ export class VentaComponent {
   userID: string = '';
   errorMessage: string = '';
   horaCarrito: string | null = null;
+  alertVisible: boolean = false;
+  alertMessage: string = '';
+  alertType: 'success' | 'error' = 'success';
 
   // Propiedades para el modal
   modalAbierto: boolean = false;
@@ -196,10 +200,16 @@ export class VentaComponent {
         this.reiniciarCarrito();
         this.horaCarrito = null;
         this.errorMessage = '';
+
+        // Mostrar la alerta de éxito
+        this.showAlert('Venta realizada con éxito.', 'success');
       },
       error => {
         this.errorMessage = "Error al crear la venta. Verifica los detalles e intenta de nuevo.";
         console.error("Error al crear la venta:", error);
+
+        // Mostrar la alerta de error
+        this.showAlert('Error al realizar la venta. Intenta nuevamente.', 'error');
       }
     );
   }
@@ -270,6 +280,21 @@ export class VentaComponent {
 
   formatPrecio(precio: number): string {
     return precio.toLocaleString('es-ES', { minimumFractionDigits: 0, maximumFractionDigits: 0 });
+}
+
+private onSuccess(message: string, type: 'success' | 'error'): void {
+  this.showAlert(message, type);
+
+}
+
+private showAlert(message: string, type: 'success' | 'error'): void {
+  this.alertMessage = message;
+  this.alertType = type;
+  this.alertVisible = true;
+
+  setTimeout(() => {
+    this.alertVisible = false;
+  }, 3000); // Ocultar el mensaje después de 3 segundos
 }
 
 
