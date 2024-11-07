@@ -15,6 +15,7 @@ export class UsuariosService {
     return this.http.get<User[]>(this.apiUrl);
   }
 
+
   // Método para actualizar el estado de un usuario
   updateEstado(id: string, isActive: boolean): Observable<User> {
     return this.http.patch<User>(`${this.apiUrl}/${id}/estado`, { isActive });

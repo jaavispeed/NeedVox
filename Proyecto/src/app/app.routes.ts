@@ -10,6 +10,7 @@ import { UsuariosComponent } from './admin/pages/totalusers/total-users/usuarios
 import { HistorialComponent } from './historial/pages/historial/historial.component';
 import { TotalProductosComponent } from './admin/pages/totalusers/total-users/total-productos.component'; // Verifica que la ruta sea correcta
 import { ComprasComponent } from './compras/pages/compras/compras.component';
+import { PerfilComponent } from './perfil/perfil.component';
 
 export const routes: Routes = [
   {
@@ -70,6 +71,11 @@ export const routes: Routes = [
         path:'compras',
         component: ComprasComponent,
         canActivate: [AuthGuard]
+      },
+      {
+        path: 'perfil',
+        component: PerfilComponent,
+        canActivate: [AuthGuard] // Protegemos la ruta para usuarios autenticados
       }
     ]
   },
