@@ -39,7 +39,18 @@ export class AuthService {
       Authorization: `Bearer ${token}`
     });
 
-    return this.http.get<User>(`${this.apiUrl}/perfil`, { headers }); // Cambia 'profile' por 'perfil'
+    return this.http.get<User>(`${this.apiUrl}/perfil`, { headers }); 
+  }
+  
+  updateProfile(updatedData: { username: string; email: string }): Observable<User> {
+    const token = localStorage.getItem('token');
+    
+    // Configuramos los headers para enviar el token de autenticación
+    const headers = new HttpHeaders({
+      Authorization: `Bearer ${token}`
+    });
+  
+    return this.http.patch<User>(`${this.apiUrl}/update-profile`, updatedData, { headers });
   }
   
 }

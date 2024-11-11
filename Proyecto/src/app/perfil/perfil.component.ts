@@ -28,18 +28,21 @@ export class PerfilComponent implements OnInit {
     );
   }
 
-  onSubmit() {
+  onUpdateProfile(): void {
     if (this.user) {
-      this.usuariosService.updateEstado(this.user.id, true).subscribe(
-        response => {
-          alert('Usuario actualizado con éxito.');
+      this.authService.updateProfile({ username: this.user.username, email: this.user.email }).subscribe(
+        (updatedUser) => {
+          // Actualiza los datos de usuario en el componente después de la actualización exitosa
+          this.user = updatedUser;
+          alert('Perfil actualizado exitosamente');
         },
-        error => {
-          console.error('Error al actualizar el usuario:', error);
-          alert('No se pudo actualizar el usuario.');
+        (error) => {
+          console.error('Error al actualizar el perfil del usuario:', error);
+          alert('Hubo un error al actualizar el perfil');
         }
       );
     }
   }
+  
 
 }
