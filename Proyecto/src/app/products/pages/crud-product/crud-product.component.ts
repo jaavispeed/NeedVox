@@ -1,13 +1,10 @@
-import { Component, OnInit } from '@angular/core';
+import { ChangeDetectorRef, Component, OnInit } from '@angular/core';
 import { ProductService } from '../../services/product.service';
 import { CommonModule } from '@angular/common';
 import { FormControl, FormGroup, FormsModule, ReactiveFormsModule, Validators } from '@angular/forms';
 import { Product } from '../../models/product.model';
 import { NgxPaginationModule } from 'ngx-pagination';
 import { AlertComponent } from '../../../shared/pages/alert/alert.component';
-// Eliminar importaciones relacionadas con lotes
-// import { Lote, LoteCreate } from '../../../compras/models/lotes.models';
-// import { LotesService } from '../../../compras/services/compras.service';
 
 @Component({
   selector: 'app-crud-product',
@@ -20,7 +17,7 @@ export class CrudProductComponent implements OnInit {
   products: Product[] = [];
   filteredProducts: Product[] = [];
   currentPage = 1;
-  itemsPerPage = 5;
+  itemsPerPage = 10;
   product: Product = { title: '', stockTotal: 0, slug: '', user: { id: '' }, barcode: null };
   isEditing: boolean = false;
   isModalOpen: boolean = false;
@@ -34,7 +31,7 @@ export class CrudProductComponent implements OnInit {
   selectedProduct: Product | null = null; // Almacena el producto seleccionado
   totalStock: number = 0;
 
-  constructor(private productService: ProductService) {
+  constructor(private productService: ProductService, private cdr: ChangeDetectorRef) {
     this.crudForm = new FormGroup({
       title: new FormControl('', [Validators.required, Validators.minLength(3)]),
       slug: new FormControl(''),
@@ -64,6 +61,32 @@ export class CrudProductComponent implements OnInit {
     });
   }
 
+  // Métodos de paginación
+  get paginatedProducts(): Product[] {
+    const startIndex = (this.currentPage - 1) * this.itemsPerPage;
+    return this.filteredProducts.slice(startIndex, startIndex + this.itemsPerPage);
+  }
+
+  nextPage(): void {
+    if (this.hasMorePages()) {
+      this.currentPage++;
+    }
+  }
+
+  previousPage(): void {
+    if (this.currentPage > 1) {
+      this.currentPage--;
+    }
+  }
+
+  hasMorePages(): boolean {
+    return this.currentPage * this.itemsPerPage < this.filteredProducts.length;
+  }
+
+  totalPages(): number {
+    return Math.ceil(this.filteredProducts.length / this.itemsPerPage);
+  }
+
   promptDelete(id: string): void {
     this.productIdToDelete = id;
     this.showConfirm = true;
@@ -72,10 +95,20 @@ export class CrudProductComponent implements OnInit {
   confirmDelete(): void {
     if (this.productIdToDelete) {
       this.productService.deleteProduct(this.productIdToDelete).subscribe({
-        next: () => this.onSuccess('Producto eliminado con éxito.', 'success'),
-        error: () => this.showAlert('Error al eliminar el producto.', 'error')
+        next: () => {
+          console.log(`Producto ${this.productIdToDelete} eliminado con éxito`);
+
+          // Eliminar el producto de la lista localmente
+          this.products = this.products.filter(product => product.id !== this.productIdToDelete);
+          this.filteredProducts = this.filteredProducts.filter(product => product.id !== this.productIdToDelete);
+
+          this.showAlert('Producto eliminado con éxito.', 'success');
+        },
+        error: () => this.showAlert('Error al eliminar el producto.', 'error'),
+        complete: () => this.resetConfirmation() // Reinicia la confirmación solo después de que la eliminación ha sido procesada
       });
-      this.resetConfirmation();
+    } else {
+      this.resetConfirmation(); // Si no hay ID, también reinicia
     }
   }
 
@@ -140,7 +173,6 @@ export class CrudProductComponent implements OnInit {
     }
   }
 
-
   private onSuccess(message: string, type: 'success' | 'error'): void {
     this.showAlert(message, type);
     this.getProducts(); // Refresca la lista de productos
@@ -193,11 +225,6 @@ export class CrudProductComponent implements OnInit {
   openModal(): void {
     this.resetForm(); // Resetea el formulario antes de abrir el modal
     this.isModalOpen = true; // Cambia el estado para abrir el modal
-  }
-
-  get paginatedProducts(): Product[] {
-    const startIndex = (this.currentPage - 1) * this.itemsPerPage;
-    return this.filteredProducts.slice(startIndex, startIndex + this.itemsPerPage);
   }
 
   closeModal(): void {

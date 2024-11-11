@@ -25,13 +25,16 @@ export class ComprasComponent implements OnInit {
   alertVisible: boolean = false;
   alertMessage: string = '';
   alertType: 'success' | 'error' = 'success';
-  viewMode: 'form' | 'historial' | 'default' = 'default'; // Nueva propiedad para controlar la vista
+  viewMode: 'form' | 'historial' | 'default' = 'default';
+
+  // Paginación
+  currentPage: number = 1;
+  itemsPerPage: number = 10; // Ajusta la cantidad de productos por página
 
   // FormGroup para el formulario de lotes
   loteForm: FormGroup;
 
   constructor(private productService: ProductService, private loteService: LotesService) {
-    // Inicialización del formulario de lotes
     this.loteForm = new FormGroup({
       precioCompra: new FormControl(0, Validators.required),
       precioVenta: new FormControl(0, Validators.required),
@@ -50,16 +53,54 @@ export class ComprasComponent implements OnInit {
     this.productService.getProducts().subscribe({
       next: (data) => {
         this.products = data;
-        this.filteredProducts = this.products;
+        this.filteredProducts = this.products; // Inicializa los productos filtrados
       },
       error: () => this.showAlert('Error al obtener los productos.', 'error')
     });
   }
 
+  filterProducts(): void {
+    if (this.searchTerm) {
+      this.filteredProducts = this.products.filter(product =>
+        product.title.toLowerCase().includes(this.searchTerm.toLowerCase())
+      );
+    } else {
+      this.filteredProducts = this.products; // Restablece la lista si no hay término de búsqueda
+    }
+    this.currentPage = 1; // Reinicia la página actual al filtrar
+  }
+
+  // Métodos de paginación
+  get paginatedProducts(): Product[] {
+    const startIndex = (this.currentPage - 1) * this.itemsPerPage;
+    return this.filteredProducts.slice(startIndex, startIndex + this.itemsPerPage);
+  }
+
+  nextPage(): void {
+    if (this.hasMorePages()) {
+      this.currentPage++;
+    }
+  }
+
+  previousPage(): void {
+    if (this.currentPage > 1) {
+      this.currentPage--;
+    }
+  }
+
+  hasMorePages(): boolean {
+    return this.currentPage * this.itemsPerPage < this.filteredProducts.length;
+  }
+
+  totalPages(): number {
+    return Math.ceil(this.filteredProducts.length / this.itemsPerPage);
+  }
+
+  // Resto del código...
   openAddLoteForm(product: Product): void {
     this.selectedProduct = product;
-    this.loteForm.patchValue({ productId: product.id }); // Establece el ID del producto en el formulario
-    this.viewMode = 'form'; // Cambia a la vista del formulario
+    this.loteForm.patchValue({ productId: product.id });
+    this.viewMode = 'form';
   }
 
   createLote(): void {
@@ -88,13 +129,10 @@ export class ComprasComponent implements OnInit {
       precioCompra: 0,
       precioVenta: 0,
       stock: 0,
-      // Convierte a string en formato yyyy-MM-dd
-      fechaCaducidad: new Date().toISOString().split('T')[0], // Esto devuelve 'yyyy-MM-dd'
+      fechaCaducidad: new Date().toISOString().split('T')[0],
       productId: ''
     });
   }
-
-
 
   private showAlert(message: string, type: 'success' | 'error'): void {
     this.alertMessage = message;
@@ -106,27 +144,16 @@ export class ComprasComponent implements OnInit {
     }, 3000);
   }
 
-  filterProducts(): void {
-    if (this.searchTerm) {
-      this.filteredProducts = this.products.filter(product =>
-        product.title.toLowerCase().includes(this.searchTerm.toLowerCase())
-      );
-    } else {
-      this.filteredProducts = this.products; // Restablece la lista si no hay término de búsqueda
-    }
-  }
-
   onHistorialCompras(product: Product): void {
     if (product.id) {
       this.viewMode = 'historial'; // Cambia a la vista de historial
-      this.mostrarLotes(product.id); // Asegúrate de que el ID se pase correctamente
+      this.mostrarLotes(product.id);
       this.selectedProduct = product; // Actualiza el producto seleccionado
     } else {
       console.error('El producto no tiene un ID válido.');
       this.showAlert('Error: Producto no válido.', 'error');
     }
   }
-
 
   mostrarLotes(productId: string): void {
     this.loteService.getLotesByProduct(productId).subscribe({
@@ -141,19 +168,14 @@ export class ComprasComponent implements OnInit {
     });
   }
 
-
-
-  // Método para regresar a la vista predeterminada
   goBack(): void {
     this.viewMode = 'default';
     this.resetLoteForm(); // Resetea el formulario al volver
   }
 
-  // Método para establecer la fecha de caducidad predeterminada
   setDefaultFechaCaducidad(): void {
     const today = new Date();
-    const defaultDate = today.toISOString().split('T')[0]; // Obtener solo la parte de la fecha
+    const defaultDate = today.toISOString().split('T')[0];
     this.loteForm.patchValue({ fechaCaducidad: defaultDate });
   }
-
 }

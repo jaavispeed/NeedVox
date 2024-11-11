@@ -1,6 +1,8 @@
 import { HttpClient, HttpHeaders, HttpParams } from '@angular/common/http';
 import { Injectable } from '@angular/core';
-import { Observable } from 'rxjs';
+import { catchError, forkJoin, map, Observable, of, switchMap, tap } from 'rxjs';
+import { LotesService } from '../../compras/services/compras.service';
+import { Lote } from '../../compras/models/lotes.models';
 
 @Injectable({
   providedIn: 'root'
@@ -8,7 +10,7 @@ import { Observable } from 'rxjs';
 export class ProductService {
   private apiUrl = 'http://localhost:3000/api/products'; // URL de tu API
 
-  constructor(private httpClient: HttpClient) {}
+  constructor(private httpClient: HttpClient, private lotesService: LotesService) {}
 
   // Configurar encabezados de autorización
   private getHeaders(): HttpHeaders {
@@ -18,15 +20,57 @@ export class ProductService {
     });
   }
 
-  // Obtener todos los productos de un usuario con paginación opcional
+
   getProducts(limit = 10, offset = 0): Observable<any[]> {
     const headers = this.getHeaders();
     const params = new HttpParams()
       .set('limit', limit.toString())
       .set('offset', offset.toString());
 
-    return this.httpClient.get<any[]>(this.apiUrl, { headers, params });
+    return this.httpClient.get<any[]>(this.apiUrl, { headers, params }).pipe(
+      tap((response) => console.log('Respuesta de productos:', response)), // Log de respuesta
+      switchMap((products) => {
+        const productObservables = products.map((product) =>
+          this.lotesService.getLotesByProduct(product.id).pipe(
+            map((response) => {
+              const lotes: Lote[] = response.lotes; // Obtenemos el arreglo de lotes
+
+              // Obtener el precio de venta más reciente
+              const lastLote = lotes.sort((a, b) => new Date(b.fechaCreacion).getTime() - new Date(a.fechaCreacion).getTime())[0];
+              const lastLotPrice = lastLote ? lastLote.precioVenta : null;
+
+              return {
+                ...product,
+                lastLotPrice: lastLotPrice, // Añadir el precioVenta del último lote
+                fechaCreacion: new Date(product.fechaCreacion) // Convierte a objeto Date
+              };
+            })
+          )
+        );
+
+        // Esperar a que todos los observables de lotes se completen
+        return forkJoin(productObservables).pipe(
+          map(productsWithDates => {
+            // Asegúrate de que todos los productos tengan la fecha como Date
+            return productsWithDates.map(product => ({
+              ...product,
+              fechaCreacion: new Date(product.fechaCreacion) // Asegúrate de que se esté convirtiendo
+            }));
+          })
+        );
+      }),
+      tap((finalProducts) => console.log('Productos después de agregar precios de lotes:', finalProducts)), // Log de productos finales
+      catchError((error) => {
+        console.error('Error al obtener productos', error);
+        return of([]); // Retornar un arreglo vacío en caso de error
+      })
+    );
   }
+
+
+
+
+
 
   // Obtener todos los productos como admin
   getProductsAdmin(limit = 10, offset = 0): Observable<any[]> {

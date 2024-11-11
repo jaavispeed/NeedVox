@@ -43,7 +43,7 @@
         <tr *ngFor="let venta of getVentasParaMostrar(); let i = index" class="bg-white border-b">
           <td class="px-4 py-3 text-center font-medium text-black font-rubik">{{ obtenerNumeroVenta(i) }}</td>
           <td class="px-4 py-3 text-center text-black font-rubik">{{ venta.productos.length }} Producto{{ venta.productos.length > 1 ? 's' : '' }}</td>
-          <td class="px-4 py-3 text-center text-black font-rubik">{{ venta.total | currency:'USD':'symbol':'1.0-0' }}</td>
+          <td class="px-4 py-3 text-center text-black font-rubik">{{ formatCurrency(venta.total) }}</td>
           <td class="px-4 py-3 text-center text-black font-rubik">
             {{ (venta.fecha ? (venta.fecha | date: 'HH:mm') : 'Hora no disponible') }}
           </td>
@@ -67,7 +67,7 @@
           <li *ngFor="let producto of ventaSeleccionada.productos" class="border-b py-2">
             <p class="text-black"><strong>Producto:</strong> {{ producto.product.title}}</p>
             <p class="text-black"><strong>Cantidad:</strong> {{ producto.cantidad }}</p>
-            <p class="text-black"><strong>Precio de Venta:</strong> {{ producto.ventaPrice | currency:'USD':'symbol':'1.0-0' }}</p>
+            <p class="text-black"><strong>Precio de Venta:</strong> {{ formatCurrency(producto.ventaPrice) }}</p>
           </li>
         </ul>
         <button (click)="cerrarModal()" class="mt-4 bg-red-500 text-white px-4 py-2 rounded flex items-center">

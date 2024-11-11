@@ -4,13 +4,15 @@ import { Product } from '../../../products/models/product.model';
 import { VentaService } from '../../service/venta.service';
 import { CommonModule } from '@angular/common';
 import { v4 as uuidv4 } from 'uuid';
+import { Lote } from '../../../compras/models/lotes.models';
+import { AlertComponent } from '../../../shared/pages/alert/alert.component';
 
 @Component({
   selector: 'app-ventas',
   templateUrl: './venta.component.html',
   styleUrls: ['./venta.component.css'],
   standalone: true,
-  imports: [FormsModule, CommonModule],
+  imports: [FormsModule, CommonModule,AlertComponent],
 })
 export class VentaComponent {
   @ViewChild('codigoBarraInput') codigoBarraInput!: ElementRef;
@@ -22,6 +24,9 @@ export class VentaComponent {
   userID: string = '';
   errorMessage: string = '';
   horaCarrito: string | null = null;
+  alertVisible: boolean = false;
+  alertMessage: string = '';
+  alertType: 'success' | 'error' = 'success';
 
   // Propiedades para el modal
   modalAbierto: boolean = false;
@@ -60,11 +65,32 @@ export class VentaComponent {
   cargarProductos() {
     this.ventaService.getProducts().subscribe(
       (productos: Product[]) => {
-        this.productosFiltrados = productos;
+        console.log('Productos obtenidos:', productos); // Log de productos obtenidos
+
+        productos.forEach(producto => {
+          // Inicializa lotes si es undefined
+          producto.lotes = producto.lotes || [];
+          console.log('Lotes del producto:', producto.title, producto.lotes); // Log de lotes del producto
+
+          // Si hay lotes, ordenarlos por fecha de creación
+          if (producto.lotes.length > 0) {
+            producto.lotes.sort((a, b) => {
+              const fechaA = new Date(a.fechaCreacion).getTime();
+              const fechaB = new Date(b.fechaCreacion).getTime();
+              return fechaA - fechaB; // Ordenar de más antiguo a más reciente
+            });
+          }
+
+          // Asignar el precio del lote más antiguo a oldestLotePrice
+          const oldestLote = producto.lotes[0] || null; // Obtener el lote más antiguo
+          producto.oldestLotPrice = oldestLote ? oldestLote.precioVenta : null; // Asignar el precio del lote más antiguo
+        });
+
+        this.productosFiltrados = productos; // Guardar los productos filtrados
       },
       (error) => {
-        console.error("Error al obtener los productos:", error);
-        this.errorMessage = "Error al cargar los productos. Intenta de nuevo más tarde.";
+        console.error("Error al obtener los productos:", error); // Log de error
+        this.errorMessage = "Error al cargar los productos. Intenta de nuevo más tarde."; // Mensaje de error
       }
     );
   }
@@ -174,10 +200,16 @@ export class VentaComponent {
         this.reiniciarCarrito();
         this.horaCarrito = null;
         this.errorMessage = '';
+
+        // Mostrar la alerta de éxito
+        this.showAlert('Venta realizada con éxito.', 'success');
       },
       error => {
         this.errorMessage = "Error al crear la venta. Verifica los detalles e intenta de nuevo.";
         console.error("Error al crear la venta:", error);
+
+        // Mostrar la alerta de error
+        this.showAlert('Error al realizar la venta. Intenta nuevamente.', 'error');
       }
     );
   }
@@ -237,4 +269,35 @@ export class VentaComponent {
       this.errorMessage = "Por favor, ingresa un monto válido.";
     }
   }
+
+  hayLotesDisponibles(producto: Product): boolean {
+    return producto.lotes?.some(lote => lote.stock > 0) || false;
+  }
+
+  obtenerLoteDisponible(producto: Product): Lote | undefined {
+    return producto.lotes?.find(lote => lote.stock > 0);
+  }
+
+  formatPrecio(precio: number): string {
+    return precio.toLocaleString('es-ES', { minimumFractionDigits: 0, maximumFractionDigits: 0 });
+}
+
+private onSuccess(message: string, type: 'success' | 'error'): void {
+  this.showAlert(message, type);
+
+}
+
+private showAlert(message: string, type: 'success' | 'error'): void {
+  this.alertMessage = message;
+  this.alertType = type;
+  this.alertVisible = true;
+
+  setTimeout(() => {
+    this.alertVisible = false;
+  }, 3000); // Ocultar el mensaje después de 3 segundos
+}
+
+
+
+
 }

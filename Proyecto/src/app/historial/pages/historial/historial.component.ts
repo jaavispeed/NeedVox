@@ -16,7 +16,7 @@ export class HistorialComponent {
   ventaSeleccionada: any | null = null; // Cambiado a any para incluir los detalles del producto
   productos: any[] = []; // Lista de productos
   fechaSeleccionada: string = ''; // Fecha seleccionada para filtrar
-  ventasPorPagina: number = 5;
+  ventasPorPagina: number = 10;
   paginaActual: number = 1;
 
   constructor(private historialService: HistorialService) {}
@@ -131,4 +131,16 @@ export class HistorialComponent {
   obtenerProductoPorId(productId: string) {
     return this.productos.find(producto => producto.id === productId);
   }
+
+  formatCurrency(value: any): string {
+    if (typeof value === 'number') {
+      return `$${value.toFixed(0)}`;
+    } else if (typeof value === 'string') {
+      const numberValue = parseFloat(value); // Convierte la cadena a número
+      return isNaN(numberValue) ? '$0' : `$${numberValue.toFixed(0)}`;
+    }
+    return '$0'; // Valor por defecto si no es un número ni una cadena válida
+  }
+
+
 }

@@ -11,4 +11,8 @@ export interface Product {
   barcode?: string | null; // Código de barras puede ser nulo
   fechaCreacion?: string; // Propiedad de fecha de creación
   lotes?: Lote[]; // Agregar la propiedad de lotes
+  lastLotPrice?: number | null; // Agregar esta línea
+  oldestLotPrice?: number | null; // Agregar esta línea
+
+
 }
