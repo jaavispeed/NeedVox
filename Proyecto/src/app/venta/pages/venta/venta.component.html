@@ -18,7 +18,6 @@
       <i class="fas fa-search absolute right-3 top-3 text-gray-500"></i>
     </div>
 
-
     <h3 class="text-lg font-semibold mb-4">Productos Disponibles</h3>
 
     <div class="overflow-x-auto shadow-md sm:rounded-lg mb-4">
@@ -52,6 +51,24 @@
       </table>
     </div>
 
+    <!-- Paginación -->
+    <div class="flex justify-between mt-4">
+      <button
+        (click)="previousPage()"
+        [disabled]="currentPage === 1"
+        class="px-4 py-2 bg-gray-500 text-white rounded-md hover:bg-gray-600 disabled:opacity-50"
+      >
+        Anterior
+      </button>
+
+      <button
+        (click)="nextPage()"
+        [disabled]="!hasMoreProducts"
+        class="px-4 py-2 bg-gray-500 text-white rounded-md hover:bg-gray-600 disabled:opacity-50"
+      >
+        Siguiente
+      </button>
+    </div>
   </div>
 
   <div class="w-px bg-gray-300 mx-4" style="height: 600px; margin-top: 50px;"></div>
@@ -107,7 +124,7 @@
         (click)="procesarVenta()"
         class="px-6 py-3 bg-blue-600 text-white font-semibold rounded-md shadow hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-gray-500"
       >
-      <i class="fas fa-shopping-cart mr-1"></i>
+        <i class="fas fa-shopping-cart mr-1"></i>
         Agregar Venta
       </button>
 
@@ -115,7 +132,7 @@
         (click)="abrirModal()"
         class="px-6 py-3 bg-gray-600 text-white font-semibold rounded-md shadow hover:bg-gray-700 focus:outline-none focus:ring-2 focus:ring-gray-500"
       >
-      <i class="fas fa-tag mr-1"></i>
+        <i class="fas fa-tag mr-1"></i>
         Otro
       </button>
     </div>

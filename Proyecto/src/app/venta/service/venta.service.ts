@@ -40,54 +40,59 @@ export class VentaService {
         catchError(this.handleError) // Manejo de errores
       );
   }
-  getProducts(limit = 10, offset = 0): Observable<any[]> {
+  getProducts(limit = 10, offset = 0): Observable<any> {
     const headers = this.getHeaders();
     const params = new HttpParams()
       .set('limit', limit.toString())
       .set('offset', offset.toString());
 
-    return this.httpClient.get<any[]>(this.apiUrl, { headers, params }).pipe(
-      tap((response) => {
-        console.log('Respuesta de productos en servicio:', response);
-      }),
-      switchMap((products) => {
-        const productObservables = products.map((product) =>
-          this.lotesService.getLotesByProduct(product.id).pipe(
-            map((response) => {
-              const lotes = response.lotes || [];
-              console.log(`Lotes para el producto ${product.title}:`, lotes);
+    return this.httpClient.get<any>(this.apiUrl, { headers, params }).pipe(
+      tap((response) => console.log('Respuesta de productos:', response)), // Log de respuesta
+      map(response => ({
+        products: response.data,  // Aquí almacenamos los productos
+        hasMore: response.hasMore // Y aquí el valor de "hasMore"
+      })),
+      switchMap((response) => {
+        const productObservables = response.products.map((product: Product) => {
+          const productId = product.id ?? ''; // Si id es undefined, asigna una cadena vacía (o algún otro valor predeterminado)
 
-              // Ordenar lotes y obtener el más antiguo
-              const oldestLote = lotes.sort(
-                (a, b) => new Date(a.fechaCreacion).getTime() - new Date(b.fechaCreacion).getTime()
-              )[0] || null;
+          return this.lotesService.getLotesByProduct(productId).pipe(
+            map((loteResponse) => {
+              const lotes: Lote[] = loteResponse.lotes; // Obtenemos el arreglo de lotes
 
-              // Asignar el precio de venta del lote más antiguo
-              const ventaPrice = oldestLote ? oldestLote.precioVenta : null;
-              console.log(`Precio de venta más antiguo para ${product.title}:`, ventaPrice);
+              // Obtener el precio de venta más reciente
+              const lastLote = lotes.sort((a, b) => new Date(b.fechaCreacion).getTime() - new Date(a.fechaCreacion).getTime())[0];
+              const lastLotPrice = lastLote ? lastLote.precioVenta : null;
+
+              // Verificar que fechaCreacion no sea undefined
+              const fechaCreacion = product.fechaCreacion ? new Date(product.fechaCreacion) : new Date(); // Usamos la fecha actual si es undefined
 
               return {
                 ...product,
-                lotes,
-                ventaPrice, // Aseguramos que ventaPrice sea asignado
-                oldestLote,
+                lastLotPrice: lastLotPrice, // Añadir el precioVenta del último lote
+                fechaCreacion: fechaCreacion // Convierte a objeto Date
               };
-            }),
-            catchError((error) => {
-              console.error(`Error obteniendo lotes para el producto ${product.title}:`, error);
-              return of({ ...product, lotes: [], ventaPrice: 'No disponible', oldestLote: null });
             })
-          )
-        );
+          );
+        });
 
-        return forkJoin(productObservables);
+        return forkJoin(productObservables).pipe(
+          map(productsWithDates => ({
+            products: productsWithDates,
+            hasMore: response.hasMore,  // Seguimos pasando el "hasMore"
+          }))
+        );
       }),
+      tap((finalResponse) => console.log('Productos con lotes:', finalResponse)),
       catchError((error) => {
-        console.error('Error obteniendo productos:', error);
-        return of([]);
+        console.error('Error al obtener productos', error);
+        return of({ products: [], hasMore: false }); // Retornar productos vacíos si hay error
       })
     );
   }
+
+
+
 
 
 

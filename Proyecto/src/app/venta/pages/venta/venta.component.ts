@@ -27,6 +27,9 @@ export class VentaComponent {
   alertVisible: boolean = false;
   alertMessage: string = '';
   alertType: 'success' | 'error' = 'success';
+  currentPage = 1;
+  itemsPerPage = 10;
+  hasMoreProducts = true;
 
   // Propiedades para el modal
   modalAbierto: boolean = false;
@@ -63,36 +66,50 @@ export class VentaComponent {
   }
 
   cargarProductos() {
-    this.ventaService.getProducts().subscribe(
-      (productos: Product[]) => {
-        console.log('Productos obtenidos:', productos); // Log de productos obtenidos
+    const offset = (this.currentPage - 1) * this.itemsPerPage;
 
-        productos.forEach(producto => {
-          // Inicializa lotes si es undefined
+    this.ventaService.getProducts(this.itemsPerPage, offset).subscribe(
+      (response) => {
+        const productos: Product[] = response.products; // Especifica el tipo de productos
+
+        productos.forEach((producto: Product) => {  // Agrega el tipo Product a producto
           producto.lotes = producto.lotes || [];
-          console.log('Lotes del producto:', producto.title, producto.lotes); // Log de lotes del producto
 
-          // Si hay lotes, ordenarlos por fecha de creación
           if (producto.lotes.length > 0) {
             producto.lotes.sort((a, b) => {
               const fechaA = new Date(a.fechaCreacion).getTime();
               const fechaB = new Date(b.fechaCreacion).getTime();
-              return fechaA - fechaB; // Ordenar de más antiguo a más reciente
+              return fechaA - fechaB;
             });
           }
 
-          // Asignar el precio del lote más antiguo a oldestLotePrice
-          const oldestLote = producto.lotes[0] || null; // Obtener el lote más antiguo
-          producto.oldestLotPrice = oldestLote ? oldestLote.precioVenta : null; // Asignar el precio del lote más antiguo
+          const oldestLote = producto.lotes[0] || null;
+          producto.oldestLotPrice = oldestLote ? oldestLote.precioVenta : null;
         });
 
-        this.productosFiltrados = productos; // Guardar los productos filtrados
+        this.productosFiltrados = productos;
+        this.hasMoreProducts = productos.length === this.itemsPerPage;
       },
       (error) => {
-        console.error("Error al obtener los productos:", error); // Log de error
-        this.errorMessage = "Error al cargar los productos. Intenta de nuevo más tarde."; // Mensaje de error
+        console.error("Error al obtener los productos:", error);
+        this.errorMessage = "Error al cargar los productos. Intenta de nuevo más tarde.";
       }
     );
+  }
+
+
+  nextPage() {
+    if (this.hasMoreProducts) {
+      this.currentPage++;
+      this.cargarProductos();
+    }
+  }
+
+  previousPage() {
+    if (this.currentPage > 1) {
+      this.currentPage--;
+      this.cargarProductos();
+    }
   }
 
   filtrarProductos() {
