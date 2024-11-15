@@ -30,6 +30,8 @@ export class CrudProductComponent implements OnInit {
   productIdToDelete: string | null = null;
   selectedProduct: Product | null = null; // Almacena el producto seleccionado
   totalStock: number = 0;
+  hasMoreProducts: boolean = true; // Flag para indicar si hay más productos disponibles
+
 
   constructor(private productService: ProductService, private cdr: ChangeDetectorRef) {
     this.crudForm = new FormGroup({
@@ -44,22 +46,39 @@ export class CrudProductComponent implements OnInit {
   }
 
   getProducts(): void {
-    this.productService.getProducts().subscribe({
+    const offset = (this.currentPage - 1) * this.itemsPerPage; // Calcular el offset según la página actual
+    this.productService.getProducts(this.itemsPerPage, offset).subscribe({
       next: (data) => {
-        this.products = data.map(product => ({
-          ...product,
-          fechaCreacion: new Date(product.fechaCreacion).toLocaleDateString('es-ES', {
-            year: 'numeric',
-            month: 'long',
-            day: 'numeric',
-            timeZone: 'America/Santiago'
-          })
-        }));
-        this.filteredProducts = this.products;
+        console.log("Datos de productos: ", data); // Verifica qué datos recibes
+        if (this.currentPage === 1) {
+          this.products = data.products.map((product: Product) => ({
+            ...product,
+            fechaCreacion: product.fechaCreacion ? new Date(product.fechaCreacion).toLocaleDateString('es-ES', {
+              year: 'numeric',
+              month: 'long',
+              day: 'numeric',
+              timeZone: 'America/Santiago'
+            }) : 'Fecha no disponible'
+          }));
+        } else {
+          this.products = [...this.products, ...data.products]; // Solo agregar productos si no estamos en la primera página
+        }
+
+        this.hasMoreProducts = data.hasMore;
+        this.filteredProducts = this.products; // Asegúrate de que filteredProducts siempre esté actualizado
       },
       error: () => this.showAlert('Error al obtener los productos.', 'error')
     });
   }
+
+
+
+
+
+
+
+
+
 
   // Métodos de paginación
   get paginatedProducts(): Product[] {
@@ -68,24 +87,25 @@ export class CrudProductComponent implements OnInit {
   }
 
   nextPage(): void {
-    if (this.hasMorePages()) {
+    if (this.hasMoreProducts) {
       this.currentPage++;
+      this.getProducts(); // Cargar productos de la nueva página
     }
   }
 
   previousPage(): void {
     if (this.currentPage > 1) {
       this.currentPage--;
+      this.getProducts(); // Cargar productos de la página anterior
     }
   }
 
-  hasMorePages(): boolean {
-    return this.currentPage * this.itemsPerPage < this.filteredProducts.length;
-  }
+
 
   totalPages(): number {
     return Math.ceil(this.filteredProducts.length / this.itemsPerPage);
   }
+
 
   promptDelete(id: string): void {
     this.productIdToDelete = id;
@@ -207,10 +227,16 @@ export class CrudProductComponent implements OnInit {
   }
 
   onSearchTermChange(): void {
-    this.filteredProducts = this.products.filter(product =>
-      product.title.toLowerCase().includes(this.searchTerm.toLowerCase())
-    );
+    if (this.searchTerm.trim()) {
+      this.filteredProducts = this.products.filter(product =>
+        product.title.toLowerCase().includes(this.searchTerm.toLowerCase())
+      );
+    } else {
+      this.filteredProducts = this.products; // Restablece los productos si no hay término de búsqueda
+    }
   }
+
+
 
   filterProducts(): void {
     if (this.searchTerm) {

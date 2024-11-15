@@ -13,6 +13,10 @@ export interface Product {
   lotes?: Lote[]; // Agregar la propiedad de lotes
   lastLotPrice?: number | null; // Agregar esta línea
   oldestLotPrice?: number | null; // Agregar esta línea
-
-
 }
+
+export interface ProductApiResponse {
+  data: Product[]; // Los productos
+  hasMore: boolean; // El campo de "hasMore"
+}
+

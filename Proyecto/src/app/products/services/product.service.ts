@@ -3,6 +3,7 @@ import { Injectable } from '@angular/core';
 import { catchError, forkJoin, map, Observable, of, switchMap, tap } from 'rxjs';
 import { LotesService } from '../../compras/services/compras.service';
 import { Lote } from '../../compras/models/lotes.models';
+import { Product } from '../models/product.model';
 
 @Injectable({
   providedIn: 'root'
@@ -21,51 +22,60 @@ export class ProductService {
   }
 
 
-  getProducts(limit = 10, offset = 0): Observable<any[]> {
+  getProducts(limit = 10, offset = 0): Observable<any> {
     const headers = this.getHeaders();
     const params = new HttpParams()
       .set('limit', limit.toString())
       .set('offset', offset.toString());
 
-    return this.httpClient.get<any[]>(this.apiUrl, { headers, params }).pipe(
+    return this.httpClient.get<any>(this.apiUrl, { headers, params }).pipe(
       tap((response) => console.log('Respuesta de productos:', response)), // Log de respuesta
-      switchMap((products) => {
-        const productObservables = products.map((product) =>
-          this.lotesService.getLotesByProduct(product.id).pipe(
-            map((response) => {
-              const lotes: Lote[] = response.lotes; // Obtenemos el arreglo de lotes
+      map(response => ({
+        products: response.data,  // Aquí almacenamos los productos
+        hasMore: response.hasMore // Y aquí el valor de "hasMore"
+      })),
+      switchMap((response) => {
+        const productObservables = response.products.map((product: Product) => {
+          const productId = product.id ?? ''; // Si id es undefined, asigna una cadena vacía (o algún otro valor predeterminado)
+
+          return this.lotesService.getLotesByProduct(productId).pipe(
+            map((loteResponse) => {
+              const lotes: Lote[] = loteResponse.lotes; // Obtenemos el arreglo de lotes
 
               // Obtener el precio de venta más reciente
               const lastLote = lotes.sort((a, b) => new Date(b.fechaCreacion).getTime() - new Date(a.fechaCreacion).getTime())[0];
               const lastLotPrice = lastLote ? lastLote.precioVenta : null;
 
+              // Verificar que fechaCreacion no sea undefined
+              const fechaCreacion = product.fechaCreacion ? new Date(product.fechaCreacion) : new Date(); // Usamos la fecha actual si es undefined
+
               return {
                 ...product,
                 lastLotPrice: lastLotPrice, // Añadir el precioVenta del último lote
-                fechaCreacion: new Date(product.fechaCreacion) // Convierte a objeto Date
+                fechaCreacion: fechaCreacion // Convierte a objeto Date
               };
             })
-          )
-        );
+          );
+        });
 
-        // Esperar a que todos los observables de lotes se completen
         return forkJoin(productObservables).pipe(
-          map(productsWithDates => {
-            // Asegúrate de que todos los productos tengan la fecha como Date
-            return productsWithDates.map(product => ({
-              ...product,
-              fechaCreacion: new Date(product.fechaCreacion) // Asegúrate de que se esté convirtiendo
-            }));
-          })
+          map(productsWithDates => ({
+            products: productsWithDates,
+            hasMore: response.hasMore,  // Seguimos pasando el "hasMore"
+          }))
         );
       }),
-      tap((finalProducts) => console.log('Productos después de agregar precios de lotes:', finalProducts)), // Log de productos finales
+      tap((finalResponse) => console.log('Productos con lotes:', finalResponse)),
       catchError((error) => {
         console.error('Error al obtener productos', error);
-        return of([]); // Retornar un arreglo vacío en caso de error
+        return of({ products: [], hasMore: false }); // Retornar productos vacíos si hay error
       })
     );
   }
+
+
+
+
 
 
 
