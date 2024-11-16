@@ -265,11 +265,6 @@ export class VentaComponent {
     }, 0);
   }
 
-  abrirModal() {
-    this.modalAbierto = true;
-    this.enfocarInputMonto();
-    this.codigoBarraInput.nativeElement.blur();
-  }
 
   enfocarInputMonto() {
     setTimeout(() => {
@@ -281,31 +276,6 @@ export class VentaComponent {
     this.modalAbierto = false;
     this.montoIngresado = 0;
     this.codigoBarraInput.nativeElement.focus();
-  }
-
-  confirmarMonto() {
-    if (this.montoIngresado > 0) {
-      const productoEspecial: Product = {
-        id: '' + Date.now(), // O utiliza un UUID
-        title: 'Otro',
-        stockTotal: 1, // Define un stock total, puede ser un valor fijo o calculado
-        slug: '', // Puedes dejarlo vacío o generarlo si lo necesitas
-        user: { id: this.userID }, // Asignar el ID del usuario
-        barcode: null, // Puede ser nulo si no es necesario
-        fechaCreacion: new Date().toISOString(), // Establecer la fecha de creación
-      };
-
-      const loteFicticio = {
-        id: uuidv4(),
-        precioVenta: this.montoIngresado,
-        stock: 1,
-      };
-
-      this.agregarAlCarrito(productoEspecial, loteFicticio); // Añadir lote ficticio
-      this.cerrarModal();
-    } else {
-      this.errorMessage = "Por favor, ingresa un monto válido.";
-    }
   }
 
   hayLotesDisponibles(producto: Product): boolean {
