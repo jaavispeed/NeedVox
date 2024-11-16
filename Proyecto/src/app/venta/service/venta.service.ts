@@ -60,21 +60,35 @@ export class VentaService {
 
           return this.lotesService.getLotesByProduct(productId).pipe(
             map((loteResponse) => {
-              const lotes: Lote[] = loteResponse.lotes; // Obtenemos el arreglo de lotes
+              let lotes: Lote[] = loteResponse.lotes; // Obtenemos el arreglo de lotes
 
               // Log de lotes obtenidos
               console.log('Lotes para el producto:', product.id, lotes);
 
-              // Si hay lotes, los asignamos y procesamos
+              // Filtrar los lotes con stock disponible
+              lotes = lotes.filter(lote => lote.stock > 0);
+
               if (lotes.length > 0) {
-                // Ordenamos los lotes por fecha de creación (descendente) para obtener el más reciente
+                // Ordenar los lotes por fecha de creación (descendente) para obtener el más reciente
                 const sortedLotesDesc = [...lotes].sort((a, b) => new Date(b.fechaCreacion).getTime() - new Date(a.fechaCreacion).getTime());
                 const lastLote = sortedLotesDesc[0]; // El más reciente
                 const lastLotPrice = lastLote ? lastLote.precioVenta : null;
 
-                // Ordenamos los lotes por fecha de creación (ascendente) para obtener el más antiguo
+                // Ordenar los lotes por fecha de creación (ascendente) para obtener el más antiguo
                 const sortedLotesAsc = [...lotes].sort((a, b) => new Date(a.fechaCreacion).getTime() - new Date(b.fechaCreacion).getTime());
-                const oldestLote = sortedLotesAsc[0]; // El más antiguo
+                let oldestLote = sortedLotesAsc[0]; // El más antiguo
+
+                // Si el lote más antiguo no tiene stock, buscamos el siguiente lote más antiguo con stock
+                if (oldestLote && oldestLote.stock <= 0) {
+                  // Buscar el siguiente lote más antiguo con stock
+                  for (let i = 1; i < sortedLotesAsc.length; i++) {
+                    if (sortedLotesAsc[i].stock > 0) {
+                      oldestLote = sortedLotesAsc[i];
+                      break;
+                    }
+                  }
+                }
+
                 const oldestLotPrice = oldestLote ? oldestLote.precioVenta : null;
 
                 // Log del lote más reciente y más antiguo y sus precios
@@ -121,6 +135,7 @@ export class VentaService {
       })
     );
   }
+
 
 
 
