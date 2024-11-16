@@ -40,6 +40,8 @@ export class VentaService {
         catchError(this.handleError) // Manejo de errores
       );
   }
+
+
   getProducts(limit = 10, offset = 0): Observable<any> {
     const headers = this.getHeaders();
     const params = new HttpParams()
@@ -60,18 +62,47 @@ export class VentaService {
             map((loteResponse) => {
               const lotes: Lote[] = loteResponse.lotes; // Obtenemos el arreglo de lotes
 
-              // Obtener el precio de venta más reciente
-              const lastLote = lotes.sort((a, b) => new Date(b.fechaCreacion).getTime() - new Date(a.fechaCreacion).getTime())[0];
-              const lastLotPrice = lastLote ? lastLote.precioVenta : null;
+              // Log de lotes obtenidos
+              console.log('Lotes para el producto:', product.id, lotes);
 
-              // Verificar que fechaCreacion no sea undefined
-              const fechaCreacion = product.fechaCreacion ? new Date(product.fechaCreacion) : new Date(); // Usamos la fecha actual si es undefined
+              // Si hay lotes, los asignamos y procesamos
+              if (lotes.length > 0) {
+                // Ordenamos los lotes por fecha de creación (descendente) para obtener el más reciente
+                const sortedLotesDesc = [...lotes].sort((a, b) => new Date(b.fechaCreacion).getTime() - new Date(a.fechaCreacion).getTime());
+                const lastLote = sortedLotesDesc[0]; // El más reciente
+                const lastLotPrice = lastLote ? lastLote.precioVenta : null;
 
-              return {
-                ...product,
-                lastLotPrice: lastLotPrice, // Añadir el precioVenta del último lote
-                fechaCreacion: fechaCreacion // Convierte a objeto Date
-              };
+                // Ordenamos los lotes por fecha de creación (ascendente) para obtener el más antiguo
+                const sortedLotesAsc = [...lotes].sort((a, b) => new Date(a.fechaCreacion).getTime() - new Date(b.fechaCreacion).getTime());
+                const oldestLote = sortedLotesAsc[0]; // El más antiguo
+                const oldestLotPrice = oldestLote ? oldestLote.precioVenta : null;
+
+                // Log del lote más reciente y más antiguo y sus precios
+                console.log('Lote más reciente para el producto', product.id, lastLote);
+                console.log('Precio del lote más reciente:', lastLotPrice);
+                console.log('Lote más antiguo para el producto', product.id, oldestLote);
+                console.log('Precio del lote más antiguo:', oldestLotPrice);
+
+                // Verificar que fechaCreacion no sea undefined
+                const fechaCreacion = product.fechaCreacion ? new Date(product.fechaCreacion) : new Date(); // Usamos la fecha actual si es undefined
+
+                return {
+                  ...product,
+                  lastLotPrice: lastLotPrice,  // Añadir el precioVenta del último lote
+                  oldestLotPrice: oldestLotPrice,  // Añadir el precioVenta del primer (más antiguo) lote
+                  fechaCreacion: fechaCreacion,  // Convierte a objeto Date
+                  lotes: lotes  // Mantener los lotes en el producto
+                };
+              } else {
+                // Si no tiene lotes, asegurarnos de asignar null a lastLotPrice y oldestLotPrice, y lotes vacíos
+                return {
+                  ...product,
+                  lastLotPrice: null,
+                  oldestLotPrice: null,
+                  fechaCreacion: product.fechaCreacion ? new Date(product.fechaCreacion) : new Date(),
+                  lotes: []  // Asegurarse de que la propiedad 'lotes' esté vacía si no tiene lotes
+                };
+              }
             })
           );
         });
@@ -90,7 +121,6 @@ export class VentaService {
       })
     );
   }
-
 
 
 
