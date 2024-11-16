@@ -42,6 +42,7 @@ export class VentaComponent {
   ngOnInit(): void {
     this.obtenerUserID();
     this.enfocarInput();
+    this.establecerHoraCarrito();
   }
 
   // Escuchar clics en el documento
@@ -332,6 +333,13 @@ private showAlert(message: string, type: 'success' | 'error'): void {
   setTimeout(() => {
     this.alertVisible = false;
   }, 3000); // Ocultar el mensaje después de 3 segundos
+}
+
+establecerHoraCarrito(): void {
+  const now = new Date();
+  const hours = now.getHours().toString().padStart(2, '0');
+  const minutes = now.getMinutes().toString().padStart(2, '0');
+  this.horaCarrito = `${hours}:${minutes}`;
 }
 
 

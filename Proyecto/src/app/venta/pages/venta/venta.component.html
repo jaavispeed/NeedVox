@@ -76,7 +76,7 @@
   <div class="flex-none w-1/2 p-4">
     <div *ngIf="carrito.length > 0" class="flex justify-between mb-2">
       <div class="text-left">
-        <span class="font-semibold">Hora:</span> 19:58
+        <span class="font-semibold">Hora:</span> {{ horaCarrito }}
       </div>
       <button
         (click)="reiniciarCarrito()"
@@ -85,6 +85,7 @@
         <i class="fas fa-trash-alt mr-1"></i> Eliminar Todo
       </button>
     </div>
+
 
     <div *ngIf="carrito.length === 0" class="flex justify-center items-center mt-32 text-gray-500 mb-4">
       <span>Aún no has agregado productos para vender.</span>
