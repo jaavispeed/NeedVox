@@ -26,6 +26,7 @@ export class ComprasComponent implements OnInit {
   alertMessage: string = '';
   alertType: 'success' | 'error' = 'success';
   viewMode: 'form' | 'historial' | 'default' = 'default';
+  hasMoreProducts: boolean = true;
 
   // Paginación
   currentPage: number = 1;
@@ -50,47 +51,71 @@ export class ComprasComponent implements OnInit {
   }
 
   getProducts(): void {
-    this.productService.getProducts().subscribe({
+    const offset = (this.currentPage - 1) * this.itemsPerPage; // Calcular el desplazamiento para la paginación
+    this.productService.getProducts(this.itemsPerPage, offset).subscribe({
       next: (data) => {
-        this.products = data;
-        this.filteredProducts = this.products; // Inicializa los productos filtrados
+        // Verifica si estamos en la primera página o cargando más productos
+        if (this.currentPage === 1) {
+          this.products = data.products;
+        } else {
+          this.products = [...this.products, ...data.products]; // Agregar productos a la lista existente
+        }
+
+        this.filteredProducts = this.products; // Actualiza los productos filtrados
+        this.hasMoreProducts = data.hasMore; // Asegúrate de que el backend esté devolviendo esta propiedad
       },
       error: () => this.showAlert('Error al obtener los productos.', 'error')
     });
   }
 
+
+
+
   filterProducts(): void {
     if (this.searchTerm) {
       this.filteredProducts = this.products.filter(product =>
-        product.title.toLowerCase().includes(this.searchTerm.toLowerCase())
+        product.title?.toLowerCase().includes(this.searchTerm.toLowerCase())
       );
     } else {
-      this.filteredProducts = this.products; // Restablece la lista si no hay término de búsqueda
+      this.filteredProducts = [...this.products]; // Restablece a una copia del array original
     }
-    this.currentPage = 1; // Reinicia la página actual al filtrar
+    console.log('Productos filtrados:', this.filteredProducts);
+    this.currentPage = 1; // Reinicia la página actual
   }
+
 
   // Métodos de paginación
   get paginatedProducts(): Product[] {
+    if (!Array.isArray(this.filteredProducts)) {
+      console.error('filteredProducts no es un array:', this.filteredProducts);
+      return [];
+    }
     const startIndex = (this.currentPage - 1) * this.itemsPerPage;
     return this.filteredProducts.slice(startIndex, startIndex + this.itemsPerPage);
   }
 
+
   nextPage(): void {
-    if (this.hasMorePages()) {
-      this.currentPage++;
+    if (this.hasMoreProducts) {
+      this.currentPage++;  // Aumenta la página actual
+      this.getProducts();  // Carga los productos de la siguiente página
     }
   }
+
 
   previousPage(): void {
     if (this.currentPage > 1) {
-      this.currentPage--;
+      this.currentPage--;  // Disminuye la página actual
+      this.getProducts();  // Recarga los productos de la página anterior
     }
   }
 
+
   hasMorePages(): boolean {
-    return this.currentPage * this.itemsPerPage < this.filteredProducts.length;
+    return this.hasMoreProducts;
   }
+
+
 
   totalPages(): number {
     return Math.ceil(this.filteredProducts.length / this.itemsPerPage);
