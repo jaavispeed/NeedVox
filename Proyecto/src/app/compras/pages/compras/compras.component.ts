@@ -183,8 +183,9 @@ export class ComprasComponent implements OnInit {
   mostrarLotes(productId: string): void {
     this.loteService.getLotesByProduct(productId).subscribe({
       next: (response) => {
-        this.selectedLotes = response.lotes; // Almacena los lotes en la propiedad
-        console.log('Lotes:', this.selectedLotes); // Opcional: Log para verificar los lotes
+        // Filtrar los lotes con stock mayor que 0
+        this.selectedLotes = response.lotes.filter(lote => lote.stock > 0);
+        console.log('Lotes con stock mayor que 0:', this.selectedLotes); // Opcional: Log para verificar los lotes
       },
       error: (error) => {
         console.error('Error al obtener lotes:', error);
@@ -192,6 +193,7 @@ export class ComprasComponent implements OnInit {
       }
     });
   }
+
 
   goBack(): void {
     this.viewMode = 'default';

@@ -188,35 +188,53 @@ export class VentaComponent {
   }
 
   procesarVenta() {
+    // Verificar si el carrito está vacío
     if (this.carrito.length === 0) {
       this.errorMessage = "No hay productos en el carrito";
       console.error(this.errorMessage);
       return;
     }
 
+    // Verificar si el ID del usuario está disponible
     if (!this.userID) {
       this.errorMessage = "El ID del usuario no está disponible.";
       console.error(this.errorMessage);
       return;
     }
 
+    // Filtrar los productos que tienen stock disponible (stock > 0)
+    const productosDisponibles = this.carrito.filter(item => item.lote.stock > 0);
+
+    // Si no hay productos con stock disponible
+    if (productosDisponibles.length === 0) {
+      this.errorMessage = "No hay productos disponibles en el carrito.";
+      console.error(this.errorMessage);
+      return;
+    }
+
+    // Crear el objeto de venta solo con los productos disponibles
     const venta = {
       userId: this.userID,
-      productos: this.carrito.map(item => ({
+      productos: productosDisponibles.map(item => ({
         productId: item.product.id || '',
         loteId: item.lote.id || '',
         cantidad: item.cantidad,
         ventaPrice: item.lote.precioVenta // Precio del lote
       }))
     };
+
     console.log("Objeto venta a enviar:", venta);
 
+    // Enviar la venta al backend
     this.ventaService.crearVenta(venta).subscribe(
       response => {
         console.log("Venta creada con éxito:", response);
         this.reiniciarCarrito();
         this.horaCarrito = null;
         this.errorMessage = '';
+
+        // Recargar la lista de productos después de realizar la venta
+        this.cargarProductos();  // Aquí recargas los productos
 
         // Mostrar la alerta de éxito
         this.showAlert('Venta realizada con éxito.', 'success');
@@ -230,6 +248,8 @@ export class VentaComponent {
       }
     );
   }
+
+
 
   reiniciarCarrito() {
     this.carrito = [];
