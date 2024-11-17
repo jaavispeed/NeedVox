@@ -142,5 +142,18 @@ export class HistorialComponent {
     return '$0'; // Valor por defecto si no es un número ni una cadena válida
   }
 
-
+  getColorMetodoPago(metodo_pago: string): string {
+    switch (metodo_pago) {
+      case 'EFECTIVO':
+        return 'bg-green-500'; // Verde para efectivo
+      case 'TRANSFERENCIA':
+        return 'bg-blue-500'; // Azul para transferencia
+      case 'TARJETA':
+        return 'bg-purple-500'; // Morado para tarjeta
+      case 'OTRO':
+        return 'bg-gray-500'; // Gris para otros
+      default:
+        return 'bg-gray-300'; // Color por defecto si no coincide
+    }
+  }
 }

@@ -33,6 +33,7 @@
           <th scope="col" class="px-4 py-3 font-bold font-rubik text-center">Número</th>
           <th scope="col" class="px-4 py-3 font-bold font-rubik text-center">Cantidad de Productos</th>
           <th scope="col" class="px-4 py-3 font-bold font-rubik text-center">Precio Total</th>
+          <th scope="col" class="px-4 py-3 font-bold font-rubik text-center">Método de Pago</th>
           <th scope="col" class="px-4 py-3 font-bold font-rubik text-center">Hora</th>
           <th scope="col" class="px-4 py-3 font-bold font-rubik text-center">
             <span class="sr-only">Acciones</span>
@@ -44,6 +45,11 @@
           <td class="px-4 py-3 text-center font-medium text-black font-rubik">{{ obtenerNumeroVenta(i) }}</td>
           <td class="px-4 py-3 text-center text-black font-rubik">{{ venta.productos.length }} Producto{{ venta.productos.length > 1 ? 's' : '' }}</td>
           <td class="px-4 py-3 text-center text-black font-rubik">{{ formatCurrency(venta.total) }}</td>
+          <td class="px-4 py-1 text-center text-black font-rubik rounded-sm capitalize" [ngClass]="getColorMetodoPago(venta.metodo_pago)">
+            {{ venta.metodo_pago }}
+          </td>
+
+
           <td class="px-4 py-3 text-center text-black font-rubik">
             {{ (venta.fecha ? (venta.fecha | date: 'HH:mm') : 'Hora no disponible') }}
           </td>
