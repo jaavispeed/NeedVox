@@ -10,9 +10,16 @@
         {{ fechaSeleccionada | date: 'dd MMMM yyyy' }}
       </span>
 
-      <button (click)="cambiarDiaSiguiente()" class="bg-black text-white rounded-full px-3 py-2 hover:bg-gray-800">
-        <i class="fas fa-chevron-right"></i>
-      </button>
+      <button (click)="cambiarDiaSiguiente()"
+        [disabled]="esDiaSiguienteNoValido()"
+        [ngClass]="{
+          'bg-gray-400 text-gray-600': esDiaSiguienteNoValido(),
+          'bg-black text-white hover:bg-gray-800': !esDiaSiguienteNoValido()
+        }"
+        class="rounded-full px-3 py-2">
+  <i class="fas fa-chevron-right"></i>
+</button>
+
     </div>
 
     <!-- Botón de calendario estilizado -->

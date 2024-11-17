@@ -89,6 +89,21 @@ export class HistorialComponent {
     }
   }
 
+// Método que verifica si el día siguiente es válido
+esDiaSiguienteNoValido(): boolean {
+  // Obtener la fecha actual
+  const fechaHoy = new Date();
+
+  // Comprobar si la fecha seleccionada es hoy o posterior
+  const fechaSeleccionada = new Date(this.fechaSeleccionada);
+
+  // Comparar si la fecha seleccionada es mayor o igual a hoy (no se puede navegar al día siguiente si aún no es ese día)
+  return fechaSeleccionada >= fechaHoy; // Si la fecha seleccionada es hoy o después, deshabilitar el botón
+}
+
+
+
+
 
 
 
