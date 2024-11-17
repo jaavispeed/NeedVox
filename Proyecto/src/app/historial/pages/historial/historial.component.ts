@@ -40,7 +40,17 @@ export class HistorialComponent {
   cargarVentas(): void {
     this.historialService.getVentas().subscribe(
       (data: Venta[]) => {
-        this.ventas = data.sort((a, b) => new Date(b.fecha).getTime() - new Date(a.fecha).getTime());
+        this.ventas = data
+          .map(venta => {
+            // Convertir la fecha UTC a hora local en Chile
+            const fechaUTC = new Date(venta.fecha);
+            fechaUTC.setHours(fechaUTC.getHours() - 3);  // Ajusta la diferencia de zona horaria manualmente
+            return {
+              ...venta,
+              fecha: fechaUTC.toISOString().split('T')[0] // Formato YYYY-MM-DD
+            };
+          })
+          .sort((a, b) => new Date(b.fecha).getTime() - new Date(a.fecha).getTime());
       },
       (error) => {
         console.error('Error al obtener ventas', error);
@@ -49,13 +59,23 @@ export class HistorialComponent {
   }
 
 
+
+
   filtrarVentasPorFecha(): void {
     if (!this.fechaSeleccionada) {
       this.cargarVentas(); // Cargar todas las ventas si no hay filtro
     } else {
-      this.historialService.getVentasPorFecha(this.fechaSeleccionada).subscribe(
+      // Convertir la fecha seleccionada a YYYY-MM-DD para comparación sin hora
+      const fechaFiltro = this.fechaSeleccionada.split('T')[0];
+
+      this.historialService.getVentas().subscribe(
         (data: Venta[]) => {
-          this.ventas = data.sort((a, b) => new Date(b.fecha).getTime() - new Date(a.fecha).getTime());
+          this.ventas = data.filter(venta => {
+            // Convertir la fecha de la venta al formato YYYY-MM-DD (sin hora)
+            const fechaVenta = new Date(venta.fecha).toISOString().split('T')[0];
+            return fechaVenta === fechaFiltro; // Compara solo la parte de la fecha
+          }).sort((a, b) => new Date(b.fecha).getTime() - new Date(a.fecha).getTime());
+
           this.paginaActual = 1; // Reiniciar a la primera página después de filtrar
         },
         (error) => {
@@ -64,6 +84,7 @@ export class HistorialComponent {
       );
     }
   }
+
 
   navegarHoy(): void {
     const hoy = new Date();
@@ -84,6 +105,7 @@ export class HistorialComponent {
     this.fechaSeleccionada = this.formatearFecha(fecha);
     this.filtrarVentasPorFecha();
   }
+
 
   abrirModal(venta: any): void {
     this.ventaSeleccionada = venta;
