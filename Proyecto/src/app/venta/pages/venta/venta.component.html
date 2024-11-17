@@ -50,22 +50,14 @@
         </tbody>
       </table>
     </div>
-
-    <!-- Paginación -->
     <div class="flex justify-between mt-4">
-      <button
-        (click)="previousPage()"
-        [disabled]="currentPage === 1"
-        class="px-4 py-2 bg-gray-500 text-white rounded-md hover:bg-gray-600 disabled:opacity-50"
-      >
+      <!-- Botón anterior en la esquina izquierda -->
+      <button (click)="previousPage()" [disabled]="currentPage === 1" class="mx-2 px-4 py-2 bg-[#76ABAE] text-white rounded-md disabled:opacity-50" aria-label="Página anterior">
         Anterior
       </button>
 
-      <button
-        (click)="nextPage()"
-        [disabled]="!hasMoreProducts"
-        class="px-4 py-2 bg-gray-500 text-white rounded-md hover:bg-gray-600 disabled:opacity-50"
-      >
+      <!-- Botón siguiente en la esquina derecha -->
+      <button (click)="nextPage()" [disabled]="!hasMoreProducts" class="mx-2 px-4 py-2 bg-[#76ABAE] text-white rounded-md disabled:opacity-50" aria-label="Siguiente página">
         Siguiente
       </button>
     </div>
