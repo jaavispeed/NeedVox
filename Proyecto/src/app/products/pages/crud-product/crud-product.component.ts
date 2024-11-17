@@ -71,15 +71,6 @@ export class CrudProductComponent implements OnInit {
     });
   }
 
-
-
-
-
-
-
-
-
-
   // Métodos de paginación
   get paginatedProducts(): Product[] {
     const startIndex = (this.currentPage - 1) * this.itemsPerPage;
