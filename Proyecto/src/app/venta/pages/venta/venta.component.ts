@@ -30,10 +30,11 @@ export class VentaComponent {
   currentPage = 1;
   itemsPerPage = 10;
   hasMoreProducts = true;
+  metodoPagoSeleccionado: 'EFECTIVO' | 'TARJETA' | 'TRANSFERENCIA' | 'OTRO' = 'EFECTIVO';
+
 
   // Propiedades para el modal
   modalAbierto: boolean = false;
-  montoIngresado: number = 0;
 
   constructor(private ventaService: VentaService) {
     this.cargarProductos();
@@ -221,7 +222,8 @@ export class VentaComponent {
         loteId: item.lote.id || '',
         cantidad: item.cantidad,
         ventaPrice: item.lote.precioVenta // Precio del lote
-      }))
+      })),
+      metodo_pago: this.metodoPagoSeleccionado // Método de pago elegido por el usuario
     };
 
     console.log("Objeto venta a enviar:", venta);
@@ -252,6 +254,7 @@ export class VentaComponent {
 
 
 
+
   reiniciarCarrito() {
     this.carrito = [];
     this.totalPrecio = 0;
@@ -274,7 +277,6 @@ export class VentaComponent {
 
   cerrarModal() {
     this.modalAbierto = false;
-    this.montoIngresado = 0;
     this.codigoBarraInput.nativeElement.focus();
   }
 
@@ -310,6 +312,17 @@ establecerHoraCarrito(): void {
   const hours = now.getHours().toString().padStart(2, '0');
   const minutes = now.getMinutes().toString().padStart(2, '0');
   this.horaCarrito = `${hours}:${minutes}`;
+}
+
+// Abrir el modal
+abrirModal() {
+  this.modalAbierto = true;
+}
+
+confirmarVenta() {
+  console.log('Método de pago seleccionado:', this.metodoPagoSeleccionado); // Verificar el valor
+  this.procesarVenta();
+  this.cerrarModal();
 }
 
 

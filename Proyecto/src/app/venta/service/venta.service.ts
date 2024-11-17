@@ -34,12 +34,23 @@ export class VentaService {
   }
 
   // En tu VentaService, actualiza el método crearVenta
-  crearVenta(venta: { userId: string; productos: { productId: string; cantidad: number; ventaPrice: number; }[] }): Observable<any> {
-    return this.httpClient.post<any>('http://localhost:3000/api/ventas', venta, { headers: this.getHeaders() })
-      .pipe(
-        catchError(this.handleError) // Manejo de errores
-      );
+  crearVenta(venta: {
+    userId: string;
+    productos: {
+      productId: string;
+      cantidad: number;
+      ventaPrice: number;
+    }[];
+    metodo_pago: 'EFECTIVO' | 'TARJETA' | 'TRANSFERENCIA' | 'OTRO'; // Añadimos el campo metodo_pago
+  }): Observable<any> {
+    return this.httpClient.post<any>('http://localhost:3000/api/ventas', venta, {
+      headers: this.getHeaders()
+    })
+    .pipe(
+      catchError(this.handleError) // Manejo de errores
+    );
   }
+
 
 
   getProducts(limit = 10, offset = 0): Observable<any> {

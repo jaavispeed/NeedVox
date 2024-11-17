@@ -122,7 +122,7 @@
 
     <div class="flex justify-center mt-4 space-x-4" *ngIf="carrito.length > 0">
       <button
-        (click)="procesarVenta()"
+        (click)="abrirModal()"
         class="px-6 py-3 bg-blue-600 text-white font-semibold rounded-md shadow hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-gray-500"
       >
         <i class="fas fa-shopping-cart mr-1"></i>
@@ -130,4 +130,41 @@
       </button>
     </div>
   </div>
+
+  <!-- Modal de selección de método de pago -->
+<div class="fixed inset-0 bg-gray-500 bg-opacity-75 flex justify-center items-center z-50" *ngIf="modalAbierto">
+  <div class="bg-white p-6 rounded-lg shadow-lg max-w-sm w-full">
+    <h3 class="text-lg font-semibold mb-4">Selecciona un Método de Pago</h3>
+    <div class="space-y-4">
+      <label class="block">
+        <input type="radio" name="metodoPago" value="EFECTIVO" [(ngModel)]="metodoPagoSeleccionado" /> Efectivo
+      </label>
+      <label class="block">
+        <input type="radio" name="metodoPago" value="TARJETA" [(ngModel)]="metodoPagoSeleccionado" /> Tarjeta
+      </label>
+      <label class="block">
+        <input type="radio" name="metodoPago" value="TRANSFERENCIA" [(ngModel)]="metodoPagoSeleccionado" /> Transferencia
+      </label>
+      <label class="block">
+        <input type="radio" name="metodoPago" value="OTRO" [(ngModel)]="metodoPagoSeleccionado" /> Otro
+      </label>
+    </div>
+
+    <div class="flex justify-between mt-6">
+      <button
+        (click)="cerrarModal()"
+        class="px-4 py-2 bg-gray-500 text-white rounded-md hover:bg-gray-600 focus:outline-none focus:ring-2 focus:ring-gray-500"
+      >
+        Cancelar
+      </button>
+      <button
+        (click)="confirmarVenta()"
+        class="px-4 py-2 bg-blue-600 text-white rounded-md hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-gray-500"
+      >
+        Confirmar Venta
+      </button>
+    </div>
+  </div>
+</div>
+
 </div>
