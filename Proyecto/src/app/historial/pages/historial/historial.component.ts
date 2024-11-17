@@ -70,11 +70,15 @@ export class HistorialComponent {
 
       this.historialService.getVentas().subscribe(
         (data: Venta[]) => {
+          // Filtrar las ventas para la fecha seleccionada
           this.ventas = data.filter(venta => {
             // Convertir la fecha de la venta al formato YYYY-MM-DD (sin hora)
             const fechaVenta = new Date(venta.fecha).toISOString().split('T')[0];
             return fechaVenta === fechaFiltro; // Compara solo la parte de la fecha
           }).sort((a, b) => new Date(b.fecha).getTime() - new Date(a.fecha).getTime());
+
+          // Mostrar un log con las ventas filtradas para la fecha seleccionada
+          console.log(`Ventas recibidas para el día ${fechaFiltro}:`, this.ventas);
 
           this.paginaActual = 1; // Reiniciar a la primera página después de filtrar
         },
@@ -86,16 +90,11 @@ export class HistorialComponent {
   }
 
 
+
+
   navegarHoy(): void {
     const hoy = new Date();
     this.fechaSeleccionada = this.formatearFecha(hoy);
-    this.filtrarVentasPorFecha();
-  }
-
-  cambiarDiaAnterior(): void {
-    const fecha = new Date(this.fechaSeleccionada);
-    fecha.setDate(fecha.getDate() - 1);
-    this.fechaSeleccionada = this.formatearFecha(fecha);
     this.filtrarVentasPorFecha();
   }
 
@@ -103,8 +102,17 @@ export class HistorialComponent {
     const fecha = new Date(this.fechaSeleccionada);
     fecha.setDate(fecha.getDate() + 1);
     this.fechaSeleccionada = this.formatearFecha(fecha);
-    this.filtrarVentasPorFecha();
+    this.filtrarVentasPorFecha();  // Llamar para obtener ventas para la nueva fecha
   }
+
+  cambiarDiaAnterior(): void {
+    const fecha = new Date(this.fechaSeleccionada);
+    fecha.setDate(fecha.getDate() - 1);
+    this.fechaSeleccionada = this.formatearFecha(fecha);
+    this.filtrarVentasPorFecha();  // Llamar para obtener ventas para la nueva fecha
+  }
+
+
 
 
   abrirModal(venta: any): void {
