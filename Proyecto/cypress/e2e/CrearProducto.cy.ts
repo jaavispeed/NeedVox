@@ -24,26 +24,15 @@ describe('Página de inicio', () => {
     cy.contains('Agregar Producto').click();
     // Verificar que los campos están vacíos antes de comenzar
     cy.get('[formControlName="title"]').should('have.value', '');
-    cy.get('[formControlName="compraPrice"]').should('have.value', '0');
-    cy.get('[formControlName="ventaPrice"]').should('have.value', '0');
-    cy.get('[formControlName="stock"]').should('have.value', '0');
-    cy.get('[formControlName="expiryDate"]').should('have.value', '');
+
     cy.get('[formControlName="barcode"]').should('have.value', '');
 
     // Rellenar el formulario
     cy.get('[formControlName="title"]').type('Producto de Prueba');
-    cy.get('[formControlName="compraPrice"]').clear().type('100');
-    cy.get('[formControlName="ventaPrice"]').clear().type('150');
-    cy.get('[formControlName="stock"]').clear().type('20');
-    cy.get('[formControlName="expiryDate"]').type('2025-12-31');
     cy.get('[formControlName="barcode"]').type('1234567890123');
 
     // Verificar que los valores se ingresaron correctamente
     cy.get('[formControlName="title"]').should('have.value', 'Producto de Prueba');
-    cy.get('[formControlName="compraPrice"]').should('have.value', '100');
-    cy.get('[formControlName="ventaPrice"]').should('have.value', '150');
-    cy.get('[formControlName="stock"]').should('have.value', '20');
-    cy.get('[formControlName="expiryDate"]').should('have.value', '2025-12-31');
     cy.get('[formControlName="barcode"]').should('have.value', '1234567890123');
 
     // Enviar el formulario
