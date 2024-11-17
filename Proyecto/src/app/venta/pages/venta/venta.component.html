@@ -131,23 +131,51 @@
     </div>
   </div>
 
-  <!-- Modal de selección de método de pago -->
+<!-- Asegúrate de tener Font Awesome en tu proyecto -->
+<link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css" rel="stylesheet">
+
+<!-- Modal de selección de método de pago -->
 <div class="fixed inset-0 bg-gray-500 bg-opacity-75 flex justify-center items-center z-50" *ngIf="modalAbierto">
   <div class="bg-white p-6 rounded-lg shadow-lg max-w-sm w-full">
-    <h3 class="text-lg font-semibold mb-4">Selecciona un Método de Pago</h3>
-    <div class="space-y-4">
-      <label class="block">
-        <input type="radio" name="metodoPago" value="EFECTIVO" [(ngModel)]="metodoPagoSeleccionado" /> Efectivo
-      </label>
-      <label class="block">
-        <input type="radio" name="metodoPago" value="TARJETA" [(ngModel)]="metodoPagoSeleccionado" /> Tarjeta
-      </label>
-      <label class="block">
-        <input type="radio" name="metodoPago" value="TRANSFERENCIA" [(ngModel)]="metodoPagoSeleccionado" /> Transferencia
-      </label>
-      <label class="block">
-        <input type="radio" name="metodoPago" value="OTRO" [(ngModel)]="metodoPagoSeleccionado" /> Otro
-      </label>
+    <h3 class="text-lg font-semibold mb-4 text-center">Selecciona un Método de Pago</h3>
+    <div class="grid grid-cols-2 gap-4 mb-6">
+
+      <!-- Botón Efectivo -->
+      <button
+        (click)="metodoPagoSeleccionado = 'EFECTIVO'"
+        [ngClass]="{'bg-green-200': metodoPagoSeleccionado === 'EFECTIVO', 'hover:bg-green-300': metodoPagoSeleccionado !== 'EFECTIVO'}"
+        class="flex items-center py-2 px-4 text-center text-sm font-medium rounded-lg shadow-md focus:outline-none focus:ring-2 focus:ring-green-500 transition duration-200"
+      >
+        <i class="fas fa-money-bill-wave mr-2 text-green-600"></i> Efectivo
+      </button>
+
+      <!-- Botón Tarjeta -->
+      <button
+        (click)="metodoPagoSeleccionado = 'TARJETA'"
+        [ngClass]="{'bg-blue-200': metodoPagoSeleccionado === 'TARJETA', 'hover:bg-blue-300': metodoPagoSeleccionado !== 'TARJETA'}"
+        class="flex items-center py-2 px-4 text-center text-sm font-medium rounded-lg shadow-md focus:outline-none focus:ring-2 focus:ring-blue-500 transition duration-200"
+      >
+        <i class="fas fa-credit-card mr-2 text-blue-600"></i> Tarjeta
+      </button>
+
+      <!-- Botón Transferencia -->
+      <button
+        (click)="metodoPagoSeleccionado = 'TRANSFERENCIA'"
+        [ngClass]="{'bg-teal-200': metodoPagoSeleccionado === 'TRANSFERENCIA', 'hover:bg-teal-300': metodoPagoSeleccionado !== 'TRANSFERENCIA'}"
+        class="flex items-center py-2 px-4 text-center text-sm font-medium rounded-lg shadow-md focus:outline-none focus:ring-2 focus:ring-teal-500 transition duration-200"
+      >
+        <i class="fas fa-exchange-alt mr-2 text-teal-600"></i> Transferencia
+      </button>
+
+      <!-- Botón Otro -->
+      <button
+        (click)="metodoPagoSeleccionado = 'OTRO'"
+        [ngClass]="{'bg-yellow-200': metodoPagoSeleccionado === 'OTRO', 'hover:bg-yellow-300': metodoPagoSeleccionado !== 'OTRO'}"
+        class="flex items-center py-2 px-4 text-center text-sm font-medium rounded-lg shadow-md focus:outline-none focus:ring-2 focus:ring-yellow-500 transition duration-200"
+      >
+        <i class="fas fa-ellipsis-h mr-2 text-yellow-600"></i> Otro
+      </button>
+
     </div>
 
     <div class="flex justify-between mt-6">
@@ -159,7 +187,7 @@
       </button>
       <button
         (click)="confirmarVenta()"
-        class="px-4 py-2 bg-blue-600 text-white rounded-md hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-gray-500"
+        class="px-4 py-2 bg-blue-600 text-white rounded-md hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-500"
       >
         Confirmar Venta
       </button>
@@ -167,4 +195,4 @@
   </div>
 </div>
 
-</div>
+
