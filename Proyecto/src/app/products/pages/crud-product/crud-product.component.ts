@@ -50,6 +50,7 @@ export class CrudProductComponent implements OnInit {
     this.productService.getProducts(this.itemsPerPage, offset).subscribe({
       next: (data) => {
         console.log("Datos de productos: ", data); // Verifica qué datos recibes
+        // Si estamos en la primera página, actualiza todos los productos
         if (this.currentPage === 1) {
           this.products = data.products.map((product: Product) => ({
             ...product,
@@ -61,7 +62,16 @@ export class CrudProductComponent implements OnInit {
             }) : 'Fecha no disponible'
           }));
         } else {
-          this.products = [...this.products, ...data.products]; // Solo agregar productos si no estamos en la primera página
+          // Si no estamos en la primera página, agrega los productos formateando las fechas
+          this.products = [...this.products, ...data.products.map((product: Product) => ({
+            ...product,
+            fechaCreacion: product.fechaCreacion ? new Date(product.fechaCreacion).toLocaleDateString('es-ES', {
+              year: 'numeric',
+              month: 'long',
+              day: 'numeric',
+              timeZone: 'America/Santiago'
+            }) : 'Fecha no disponible'
+          }))];
         }
 
         this.hasMoreProducts = data.hasMore;
@@ -70,13 +80,6 @@ export class CrudProductComponent implements OnInit {
       error: () => this.showAlert('Error al obtener los productos.', 'error')
     });
   }
-
-
-
-
-
-
-
 
 
 
