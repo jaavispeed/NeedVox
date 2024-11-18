@@ -47,7 +47,6 @@ export class ComprasComponent implements OnInit {
 
   ngOnInit(): void {
     this.getProducts();
-    this.setDefaultFechaCaducidad(); // Establece la fecha de caducidad predeterminada
   }
 
   getProducts(): void {
