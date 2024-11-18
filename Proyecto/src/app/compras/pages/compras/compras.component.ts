@@ -37,10 +37,10 @@ export class ComprasComponent implements OnInit {
 
   constructor(private productService: ProductService, private loteService: LotesService) {
     this.loteForm = new FormGroup({
-      precioCompra: new FormControl(0, Validators.required),
-      precioVenta: new FormControl(0, Validators.required),
-      stock: new FormControl(0, Validators.required),
-      fechaCaducidad: new FormControl(new Date().toISOString(), Validators.required),
+      precioCompra: new FormControl(0, [Validators.required, Validators.min(1)]),
+      precioVenta: new FormControl(0, [Validators.required, Validators.min(1)]),
+      stock: new FormControl(0, [Validators.required, Validators.min(1)]),
+      fechaCaducidad: new FormControl(new Date().toISOString()),
       productId: new FormControl('')
     });
   }
