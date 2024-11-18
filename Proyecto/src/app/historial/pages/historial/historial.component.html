@@ -91,14 +91,4 @@
   </div>
 </div>
 
-<!-- Controles de paginación centrados con respecto al contenedor -->
-<div class="flex justify-center mt-4" *ngIf="!ventaSeleccionada && ventas.length > 5">
-  <div class="flex space-x-4">
-    <button (click)="paginaAnterior()" [disabled]="!hayPaginasPrevias()" class="bg-black text-white px-4 py-2 rounded disabled:opacity-50">
-      Anterior
-    </button>
-    <button (click)="siguientePagina()" [disabled]="!hayMasVentas()" class="bg-black text-white px-4 py-2 rounded disabled:opacity-50">
-      Siguiente
-    </button>
-  </div>
-</div>
+
