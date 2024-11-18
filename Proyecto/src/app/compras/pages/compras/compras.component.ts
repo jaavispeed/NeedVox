@@ -204,4 +204,20 @@ export class ComprasComponent implements OnInit {
     const defaultDate = today.toISOString().split('T')[0];
     this.loteForm.patchValue({ fechaCaducidad: defaultDate });
   }
+
+  onSubmit() {
+    if (this.loteForm.valid) {
+      this.createLote();
+    } else {
+      console.error('Formulario no válido');
+    }
+  }
+
+
+
+
+
 }
+
+
+
