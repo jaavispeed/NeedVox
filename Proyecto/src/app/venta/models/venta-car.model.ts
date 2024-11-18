@@ -7,4 +7,5 @@ export interface Venta {
   }[]; // Array de productos
   fecha: string; // Hora de la venta
   total: number; // Total de la venta
+  metodo_pago: 'EFECTIVO' | 'TARJETA' | 'TRANSFERENCIA' | 'OTRO'; // Método de pago utilizado
 }

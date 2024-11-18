@@ -40,7 +40,17 @@ export class HistorialComponent {
   cargarVentas(): void {
     this.historialService.getVentas().subscribe(
       (data: Venta[]) => {
-        this.ventas = data.sort((a, b) => new Date(b.fecha).getTime() - new Date(a.fecha).getTime());
+        this.ventas = data
+          .map(venta => {
+            // Convertir la fecha UTC a hora local en Chile
+            const fechaUTC = new Date(venta.fecha);
+            fechaUTC.setHours(fechaUTC.getHours() - 3);  // Ajusta la diferencia de zona horaria manualmente
+            return {
+              ...venta,
+              fecha: fechaUTC.toISOString().split('T')[0] // Formato YYYY-MM-DD
+            };
+          })
+          .sort((a, b) => new Date(b.fecha).getTime() - new Date(a.fecha).getTime());
       },
       (error) => {
         console.error('Error al obtener ventas', error);
@@ -49,13 +59,27 @@ export class HistorialComponent {
   }
 
 
+
+
   filtrarVentasPorFecha(): void {
     if (!this.fechaSeleccionada) {
       this.cargarVentas(); // Cargar todas las ventas si no hay filtro
     } else {
-      this.historialService.getVentasPorFecha(this.fechaSeleccionada).subscribe(
+      // Convertir la fecha seleccionada a YYYY-MM-DD para comparación sin hora
+      const fechaFiltro = this.fechaSeleccionada.split('T')[0];
+
+      this.historialService.getVentas().subscribe(
         (data: Venta[]) => {
-          this.ventas = data.sort((a, b) => new Date(b.fecha).getTime() - new Date(a.fecha).getTime());
+          // Filtrar las ventas para la fecha seleccionada
+          this.ventas = data.filter(venta => {
+            // Convertir la fecha de la venta al formato YYYY-MM-DD (sin hora)
+            const fechaVenta = new Date(venta.fecha).toISOString().split('T')[0];
+            return fechaVenta === fechaFiltro; // Compara solo la parte de la fecha
+          }).sort((a, b) => new Date(b.fecha).getTime() - new Date(a.fecha).getTime());
+
+          // Mostrar un log con las ventas filtradas para la fecha seleccionada
+          console.log(`Ventas recibidas para el día ${fechaFiltro}:`, this.ventas);
+
           this.paginaActual = 1; // Reiniciar a la primera página después de filtrar
         },
         (error) => {
@@ -65,16 +89,27 @@ export class HistorialComponent {
     }
   }
 
+// Método que verifica si el día siguiente es válido
+esDiaSiguienteNoValido(): boolean {
+  // Obtener la fecha actual
+  const fechaHoy = new Date();
+
+  // Comprobar si la fecha seleccionada es hoy o posterior
+  const fechaSeleccionada = new Date(this.fechaSeleccionada);
+
+  // Comparar si la fecha seleccionada es mayor o igual a hoy (no se puede navegar al día siguiente si aún no es ese día)
+  return fechaSeleccionada >= fechaHoy; // Si la fecha seleccionada es hoy o después, deshabilitar el botón
+}
+
+
+
+
+
+
+
   navegarHoy(): void {
     const hoy = new Date();
     this.fechaSeleccionada = this.formatearFecha(hoy);
-    this.filtrarVentasPorFecha();
-  }
-
-  cambiarDiaAnterior(): void {
-    const fecha = new Date(this.fechaSeleccionada);
-    fecha.setDate(fecha.getDate() - 1);
-    this.fechaSeleccionada = this.formatearFecha(fecha);
     this.filtrarVentasPorFecha();
   }
 
@@ -82,8 +117,18 @@ export class HistorialComponent {
     const fecha = new Date(this.fechaSeleccionada);
     fecha.setDate(fecha.getDate() + 1);
     this.fechaSeleccionada = this.formatearFecha(fecha);
-    this.filtrarVentasPorFecha();
+    this.filtrarVentasPorFecha();  // Llamar para obtener ventas para la nueva fecha
   }
+
+  cambiarDiaAnterior(): void {
+    const fecha = new Date(this.fechaSeleccionada);
+    fecha.setDate(fecha.getDate() - 1);
+    this.fechaSeleccionada = this.formatearFecha(fecha);
+    this.filtrarVentasPorFecha();  // Llamar para obtener ventas para la nueva fecha
+  }
+
+
+
 
   abrirModal(venta: any): void {
     this.ventaSeleccionada = venta;
@@ -142,5 +187,18 @@ export class HistorialComponent {
     return '$0'; // Valor por defecto si no es un número ni una cadena válida
   }
 
-
+  getColorMetodoPago(metodo_pago: string): string {
+    switch (metodo_pago) {
+      case 'EFECTIVO':
+        return 'bg-green-500'; // Verde para efectivo
+      case 'TRANSFERENCIA':
+        return 'bg-blue-500'; // Azul para transferencia
+      case 'TARJETA':
+        return 'bg-purple-500'; // Morado para tarjeta
+      case 'OTRO':
+        return 'bg-gray-500'; // Gris para otros
+      default:
+        return 'bg-gray-300'; // Color por defecto si no coincide
+    }
+  }
 }
