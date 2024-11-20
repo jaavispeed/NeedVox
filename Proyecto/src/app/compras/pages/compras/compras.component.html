@@ -154,49 +154,51 @@
   </div>
 
   <!-- Historial de Compras -->
-<div *ngIf="viewMode === 'historial'" class="w-full max-w-6xl mx-auto mt-6">
+  <div *ngIf="viewMode === 'historial'" class="w-full max-w-6xl mx-auto mt-6">
 
-  <!-- Título (fuera del contenedor) -->
-  <h2 class="text-xl font-bold mb-4 font-rubik text-center">Historial de Compras para {{ selectedProduct?.title }}</h2>
+    <!-- Título (fuera del contenedor) -->
+    <h2 class="text-xl font-bold mb-4 font-rubik text-center">Historial de Compras para {{ selectedProduct?.title }}</h2>
 
-  <!-- Botón (fuera del contenedor, alineado a la izquierda) -->
-  <div class="flex justify-start mb-4">
-    <button
-      (click)="goBack()"
-      class="bg-[#76ABAE] text-white py-2 px-4 rounded hover:bg-[#437c80] transition duration-300"
-    >
-      <i class="fas fa-chevron-left mr-2"></i>
-      Volver
-    </button>
-  </div>
-
-  <!-- Contenedor del historial -->
-  <div class="bg-white p-6 rounded-md shadow-md">
-    <table class="w-full text-sm text-left text-black shadow-md sm:rounded-lg">
-      <thead class="text-xs uppercase bg-gray-50 font-bold font-rubik">
-        <tr>
-          <th class="px-2 py-3 text-center">Precio de Compra</th>
-          <th class="px-2 py-3 text-center">Precio de Venta</th>
-          <th class="px-2 py-3 text-center">Stock</th>
-          <th class="px-2 py-3 text-center">Fecha de Caducidad</th>
-        </tr>
-      </thead>
-      <tbody>
-        <tr *ngFor="let lote of selectedLotes" class="bg-white border-b">
-          <td class="px-4 py-3 text-center font-medium text-black font-rubik">{{ lote.precioCompra }}</td>
-          <td class="px-4 py-3 text-center font-medium text-black font-rubik">{{ lote.precioVenta }}</td>
-          <td class="px-4 py-3 text-center font-medium text-black font-rubik">{{ lote.stock }}</td>
-          <td class="px-4 py-3 text-center font-medium text-black font-rubik">
-            {{ lote.fechaCaducidad | date:'d \'de\' MMMM \'del\' y' }}
-          </td>
-        </tr>
-      </tbody>
-    </table>
-    <div *ngIf="selectedLotes.length === 0" class="mt-4 text-gray-600 text-center font-rubik">
-      No hay lotes registrados para este producto.
+    <!-- Contenedor del historial -->
+    <div class="bg-white p-6 rounded-md shadow-md">
+      <table class="w-full text-sm text-left text-black shadow-md sm:rounded-lg">
+        <thead class="text-xs uppercase bg-gray-50 font-bold font-rubik">
+          <tr>
+            <th class="px-2 py-3 text-center">Precio de Compra</th>
+            <th class="px-2 py-3 text-center">Precio de Venta</th>
+            <th class="px-2 py-3 text-center">Stock</th>
+            <th class="px-2 py-3 text-center">Fecha de Caducidad</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr *ngFor="let lote of selectedLotes" class="bg-white border-b">
+            <td class="px-4 py-3 text-center font-medium text-black font-rubik">{{ lote.precioCompra }}</td>
+            <td class="px-4 py-3 text-center font-medium text-black font-rubik">{{ lote.precioVenta }}</td>
+            <td class="px-4 py-3 text-center font-medium text-black font-rubik">{{ lote.stock }}</td>
+            <td class="px-4 py-3 text-center font-medium text-black font-rubik">
+              {{ lote.fechaCaducidad | date:'d \'de\' MMMM \'del\' y' }}
+            </td>
+          </tr>
+        </tbody>
+      </table>
+      <div *ngIf="selectedLotes.length === 0" class="mt-4 text-gray-600 text-center font-rubik">
+        No hay lotes registrados para este producto.
+      </div>
     </div>
+
+    <!-- Botón (ahora fuera del contenedor y alineado a la izquierda debajo) -->
+    <div class="flex justify-start mt-4">
+      <button
+        (click)="goBack()"
+        class="bg-[#76ABAE] text-white py-2 px-4 rounded hover:bg-[#437c80] transition duration-300"
+      >
+        <i class="fas fa-chevron-left mr-2"></i>
+        Volver
+      </button>
+    </div>
+
   </div>
-</div>
+
 
 
 </div>
