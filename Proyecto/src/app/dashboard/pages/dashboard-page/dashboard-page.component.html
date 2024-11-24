@@ -129,8 +129,8 @@ class="absolute top-4 left-1/2 transform -translate-x-1/2 z-50"
           </div>
           <div class="flex flex-col items-center justify-center">
               <p class="font-dm text-sm font-medium text-gray-600">Gastos Mensuales</p>
-              <h4 class="text-xl font-bold text-black">{{ gastosMensuales }}</h4>
-          </div>
+              <h4 class="text-xl font-bold text-black">${{ gastosMensuales | number: '1.0-2' }}</h4>
+            </div>
       </div>
 
       <div class="relative flex flex-col items-center rounded-[10px] border-[1px] border-gray-200 bg-white bg-clip-border shadow-md shadow-[#F3F3F3] transform transition-transform duration-200 hover:shadow-lg hover:-translate-y-1 p-4 w-60">
@@ -146,8 +146,8 @@ class="absolute top-4 left-1/2 transform -translate-x-1/2 z-50"
           </div>
           <div class="flex flex-col items-center justify-center">
               <p class="font-dm text-sm font-medium text-gray-600">Gastos Diarios</p>
-              <h4 class="text-xl font-bold text-black">{{ gastosDiarios }}</h4>
-          </div>
+              <h4 class="text-xl font-bold text-black">${{ gastosDiarios | number: '1.0-2' }}</h4>
+            </div>
       </div>
 
       <div class="relative flex flex-col items-center rounded-[10px] border-[1px] border-gray-200 bg-white bg-clip-border shadow-md shadow-[#F3F3F3] transform transition-transform duration-200 hover:shadow-lg hover:-translate-y-1 p-4 w-60">
@@ -163,8 +163,8 @@ class="absolute top-4 left-1/2 transform -translate-x-1/2 z-50"
           </div>
           <div class="flex flex-col items-center justify-center">
               <p class="font-dm text-sm font-medium text-gray-600">Gastos Anuales</p>
-              <h4 class="text-xl font-bold text-black">{{ gastosAnuales }}</h4>
-          </div>
+              <h4 class="text-xl font-bold text-black">${{ gastosAnuales | number: '1.0-2' }}</h4>
+            </div>
       </div>
   </div>
 </div>
