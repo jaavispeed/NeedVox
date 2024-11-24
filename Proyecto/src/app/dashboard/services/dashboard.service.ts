@@ -47,4 +47,15 @@ export class DashboardService {
   }
 
 
+  getVentasResumen(): Observable<any> {
+    const token = localStorage.getItem('token'); // Asegúrate de usar el token si es necesario
+    const headers = new HttpHeaders({
+      'Authorization': `Bearer ${token}`
+    });
+
+    return this.http.get<any>('http://localhost:3000/api/ventas/resumen', { headers });
+  }
+
+
+
 }

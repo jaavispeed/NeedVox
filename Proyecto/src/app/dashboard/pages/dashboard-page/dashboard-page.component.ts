@@ -20,6 +20,12 @@ export default class DashboardPageComponent implements OnInit {
   gastosDiarios: number = 0;
   gastosAnuales: number = 0;
 
+  ventasResumen = {
+    ventasDiarias: 0,
+    ventasMensuales: 0,
+    ventasAnuales: 0
+  };
+
 
   constructor(private dashboardService: DashboardService) {}
 
@@ -28,7 +34,9 @@ export default class DashboardPageComponent implements OnInit {
     const storedMessage = localStorage.getItem('welcomeMessage');
     this.welcomeMessage = storedMessage || ''; // Asigna una cadena vacía si es null
     localStorage.removeItem('welcomeMessage');
-    this.obtenerGastos()
+    this.obtenerGastos();
+    this.obtenerVentasResumen(); // Llamar al nuevo método
+
   }
 
   obtenerNombreUsuario(): void {
@@ -90,6 +98,17 @@ export default class DashboardPageComponent implements OnInit {
     );
   }
 
+  obtenerVentasResumen(): void {
+    this.dashboardService.getVentasResumen().subscribe(
+      (response) => {
+        console.log('Resumen de ventas:', response); // Depuración
+        this.ventasResumen = response; // Asignar los datos del resumen
+      },
+      (error) => {
+        console.error('Error al obtener el resumen de ventas:', error);
+      }
+    );
+  }
 
 
 }
