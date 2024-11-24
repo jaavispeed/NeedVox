@@ -15,6 +15,11 @@ export default class DashboardPageComponent implements OnInit {
   totalProducts: number = 0; // Propiedad para almacenar el conteo
   welcomeMessage: string | null = null;
 
+  // Variables para mostrar los gastos
+  gastosMensuales: number = 0;
+  gastosDiarios: number = 0;
+  gastosAnuales: number = 0;
+
 
   constructor(private dashboardService: DashboardService) {}
 
@@ -23,6 +28,7 @@ export default class DashboardPageComponent implements OnInit {
     const storedMessage = localStorage.getItem('welcomeMessage');
     this.welcomeMessage = storedMessage || ''; // Asigna una cadena vacía si es null
     localStorage.removeItem('welcomeMessage');
+    this.obtenerGastos()
   }
 
   obtenerNombreUsuario(): void {
@@ -47,4 +53,43 @@ export default class DashboardPageComponent implements OnInit {
       }
     );
   }
+
+
+
+  obtenerGastos(): void {
+    console.log('Llamando a obtener gastos...');
+
+    this.dashboardService.getGastos('dia').subscribe(
+      (response) => {
+        console.log('Respuesta de gastos diarios:', response);
+        this.gastosDiarios = response.estadisticas?.[0]?.totalcompra || 0;
+      },
+      (error) => {
+        console.error('Error al obtener los gastos diarios:', error);
+      }
+    );
+
+    this.dashboardService.getGastos('mes').subscribe(
+      (response) => {
+        console.log('Respuesta de gastos mensuales:', response);
+        this.gastosMensuales = response.estadisticas?.[0]?.totalcompra || 0;
+      },
+      (error) => {
+        console.error('Error al obtener los gastos mensuales:', error);
+      }
+    );
+
+    this.dashboardService.getGastos('año').subscribe(
+      (response) => {
+        console.log('Respuesta de gastos anuales:', response);
+        this.gastosAnuales = response.estadisticas?.[0]?.totalcompra || 0;
+      },
+      (error) => {
+        console.error('Error al obtener los gastos anuales:', error);
+      }
+    );
+  }
+
+
+
 }

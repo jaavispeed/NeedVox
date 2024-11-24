@@ -1,6 +1,6 @@
 import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { Injectable } from '@angular/core';
-import { Observable } from 'rxjs';
+import { Observable, tap } from 'rxjs';
 
 @Injectable({
   providedIn: 'root'
@@ -8,6 +8,8 @@ import { Observable } from 'rxjs';
 export class DashboardService {
   private apiUrl = 'http://localhost:3000/api/auth';
   private apiUrlprod = 'http://localhost:3000/api/products';
+  private apiUrlStats = 'http://localhost:3000/api/lotes/estadisticas';
+
 
   constructor(private http: HttpClient) {}
 
@@ -28,5 +30,21 @@ export class DashboardService {
 
     return this.http.get<number>(`${this.apiUrlprod}/count/${userId}`, { headers });
   }
+
+  getGastos(tipo: 'dia' | 'mes' | 'año'): Observable<any> {
+    const token = localStorage.getItem('token'); // Obtener el token del localStorage
+    const headers = new HttpHeaders({
+      'Authorization': `Bearer ${token}` // Añadir el encabezado de autorización
+    });
+
+    console.log(`Llamando a la API para gastos de tipo: ${tipo}`);  // Log para saber que se hace la solicitud
+
+    return this.http.get<any>(`${this.apiUrlStats}?tipo=${tipo}`, { headers }).pipe(  // Usar apiUrlStats
+      tap((response) => {
+        console.log(`Respuesta de la API para ${tipo}:`, response);
+      })
+    );
+  }
+
 
 }
