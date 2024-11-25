@@ -107,11 +107,12 @@ esDiaSiguienteNoValido(): boolean {
 
 
 
-  navegarHoy(): void {
-    const hoy = new Date();
-    this.fechaSeleccionada = this.formatearFecha(hoy);
-    this.filtrarVentasPorFecha();
-  }
+navegarHoy(): void {
+  const hoy = new Date();
+  this.fechaSeleccionada = this.formatearFecha(hoy);
+  this.filtrarVentasPorFecha();
+}
+
 
   cambiarDiaSiguiente(): void {
     const fecha = new Date(this.fechaSeleccionada);

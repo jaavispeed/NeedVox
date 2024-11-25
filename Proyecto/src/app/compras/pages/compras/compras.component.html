@@ -26,33 +26,67 @@
         </tr>
       </thead>
       <tbody>
-        <tr *ngFor="let product of paginatedProducts" class="bg-white border-b">
-          <td class="px-4 py-3 text-center font-medium text-black font-rubik">{{ product.title }}</td>
-          <td class="px-4 py-3 text-center text-black font-rubik">{{ product.barcode || 'Sin código de barras' }}</td>
-          <td class="px-4 py-3 text-center flex justify-center space-x-2">
-            <button (click)="openAddLoteForm(product)" class="inline-flex items-center px-4 py-2 bg-[#31363F] text-white font-light font-rubik rounded-md shadow hover:bg-gray-700 transition duration-300 transform hover:scale-105">
-              <i class="fas fa-shopping-cart mr-1"></i>
-              Agregar Compra
-            </button>
-            <button (click)="onHistorialCompras(product)" class="px-4 py-2 bg-[#76ABAE] text-white font-light font-rubik rounded-md shadow hover:bg-[#5b9892] transition duration-300 transform hover:scale-105 ml-2">
-              <i class="fas fa-calendar-alt"></i>
-              Historial de Compras
-            </button>
-          </td>
-        </tr>
+        <!-- Verificar si hay productos para paginar -->
+        <ng-container *ngIf="paginatedProducts.length > 0; else noProducts">
+          <tr *ngFor="let product of paginatedProducts" class="bg-white border-b">
+            <td class="px-4 py-3 text-center font-medium text-black font-rubik">
+              {{ product.title }}
+            </td>
+            <td class="px-4 py-3 text-center text-black font-rubik">
+              {{ product.barcode || 'Sin código de barras' }}
+            </td>
+            <td class="px-4 py-3 text-center flex justify-center space-x-2">
+              <button
+                (click)="openAddLoteForm(product)"
+                class="inline-flex items-center px-4 py-2 bg-[#31363F] text-white font-light font-rubik rounded-md shadow hover:bg-gray-700 transition duration-300 transform hover:scale-105"
+              >
+                <i class="fas fa-shopping-cart mr-1"></i>
+                Agregar Compra
+              </button>
+              <button
+                (click)="onHistorialCompras(product)"
+                class="px-4 py-2 bg-[#76ABAE] text-white font-light font-rubik rounded-md shadow hover:bg-[#5b9892] transition duration-300 transform hover:scale-105 ml-2"
+              >
+                <i class="fas fa-calendar-alt"></i>
+                Historial de Compras
+              </button>
+            </td>
+          </tr>
+        </ng-container>
+
+        <!-- Mensaje cuando no hay productos -->
+        <ng-template #noProducts>
+          <tr>
+            <td colspan="3" class="px-4 py-6 text-center text-gray-500 font-rubik">
+              Aún no has agregado ningún producto.
+            </td>
+          </tr>
+        </ng-template>
       </tbody>
     </table>
 
-    <!-- Componente de paginación -->
-    <div class="flex justify-between mt-4">
-      <button (click)="previousPage()" [disabled]="currentPage === 1" class="mx-2 px-4 py-2 bg-[#76ABAE] text-white rounded-md disabled:opacity-50" aria-label="Página anterior">
-        Anterior
-      </button>
 
-      <button (click)="nextPage()" [disabled]="!hasMorePages()" class="mx-2 px-4 py-2 bg-[#76ABAE] text-white rounded-md disabled:opacity-50" aria-label="Siguiente página">
-        Siguiente
-      </button>
-    </div>
+   <!-- Componente de paginación -->
+
+  <div class="flex justify-between mt-4">
+  <button
+    (click)="previousPage()"
+    [disabled]="currentPage === 1 || filteredProducts.length === 0"
+    class="mx-2 px-4 py-2 bg-[#76ABAE] text-white rounded-md disabled:opacity-50"
+    aria-label="Página anterior">
+    Anterior
+  </button>
+
+  <button
+    (click)="nextPage()"
+    [disabled]="!hasMorePages() || filteredProducts.length === 0"
+    class="mx-2 px-4 py-2 bg-[#76ABAE] text-white rounded-md disabled:opacity-50"
+    aria-label="Siguiente página">
+    Siguiente
+  </button>
+  </div>
+
+
   </div>
 
 <!-- Contenedor Principal -->

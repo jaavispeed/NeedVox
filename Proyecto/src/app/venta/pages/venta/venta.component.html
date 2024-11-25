@@ -36,42 +36,67 @@
         </tr>
       </thead>
       <tbody>
+        <!-- Mostrar mensaje si no hay productos -->
+        <tr *ngIf="productosFiltrados.length === 0" class="border-t hover:bg-gray-50">
+          <td colspan="4" class="p-3 text-center text-gray-500 font-rubik">
+            No hay productos disponibles.
+          </td>
+        </tr>
+
+        <!-- Listar productos si hay -->
         <tr
           *ngFor="let producto of productosFiltrados"
           class="border-t hover:bg-gray-50"
         >
           <td class="p-3">{{ producto.title }}</td>
-          <td class="p-3">$ {{ producto.oldestLotPrice | currency:'CLP':'symbol':'1.0-0' }}</td>
-          <td class="p-3">{{ producto.stockTotal }}</td>
+          <td class="p-3">
+            <!-- Verificar si hay precio y stock -->
+            <ng-container *ngIf="producto.oldestLotPrice && producto.stockTotal; else sinDatos">
+              $ {{ producto.oldestLotPrice | number:'1.0-0' }}
+            </ng-container>
+            <!-- Mensaje alternativo -->
+            <ng-template #sinDatos>
+              <span *ngIf="!producto.stockTotal && !producto.oldestLotPrice">Sin stock y sin precio</span>
+              <span *ngIf="!producto.oldestLotPrice && producto.stockTotal">Sin precio</span>
+            </ng-template>
+          </td>
+          <td class="p-3">{{ producto.stockTotal || 'Sin stock' }}</td>
           <td class="p-3 text-center">
             <button
-            *ngIf="hayLotesDisponibles(producto)"
-            (click)="agregarAlCarrito(producto, obtenerLoteDisponible(producto))"
-            [disabled]="!hayLotesDisponibles(producto)"
-            class="px-4 py-2 bg-green-500 text-white rounded-lg  disabled:bg-gray-400 disabled:text-gray-800 disabled:cursor-not-allowed font-rubik "
-          >
-            <i class="fas fa-plus mr-1"></i>
-            Agregar
-          </button>
+              *ngIf="hayLotesDisponibles(producto)"
+              (click)="agregarAlCarrito(producto, obtenerLoteDisponible(producto))"
+              [disabled]="!hayLotesDisponibles(producto)"
+              class="px-4 py-2 bg-green-500 text-white rounded-lg disabled:bg-gray-400 disabled:text-gray-800 disabled:cursor-not-allowed font-rubik"
+            >
+              <i class="fas fa-plus mr-1"></i>
+              Agregar
+            </button>
           </td>
         </tr>
       </tbody>
     </table>
 
-    <!-- Botones de paginación -->
-    <div class="flex justify-between items-center mt-6 font-rubik">
-      <button (click)="previousPage()" [disabled]="currentPage === 1" class="mx-2 px-4 py-2 bg-[#76ABAE] text-white rounded-md disabled:opacity-50" aria-label="Página anterior">
 
 
-        Anterior
-      </button>
-      <button
-       (click)="nextPage()" [disabled]="!hasMoreProducts" class="mx-2 px-4 py-2 bg-[#76ABAE] text-white rounded-md disabled:opacity-50" aria-label="Siguiente página">
+<!-- Botones de paginación -->
+<div class="flex justify-between items-center mt-6 font-rubik">
+  <button
+    (click)="previousPage()"
+    [disabled]="currentPage === 1 || productosFiltrados.length === 0"
+    class="mx-2 px-4 py-2 bg-[#76ABAE] text-white rounded-md disabled:opacity-50"
+    aria-label="Página anterior">
+    Anterior
+  </button>
 
-        Siguiente
-      </button>
-    </div>
-  </div>
+  <button
+    (click)="nextPage()"
+    [disabled]="!hasMoreProducts || productosFiltrados.length === 0"
+    class="mx-2 px-4 py-2 bg-[#76ABAE] text-white rounded-md disabled:opacity-50"
+    aria-label="Siguiente página">
+    Siguiente
+  </button>
+</div>
+
 
   <!-- Columna derecha: Carrito -->
   <div
