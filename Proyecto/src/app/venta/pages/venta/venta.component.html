@@ -56,7 +56,7 @@
             </ng-container>
             <!-- Mensaje alternativo -->
             <ng-template #sinDatos>
-              <span *ngIf="!producto.stockTotal && !producto.oldestLotPrice">Sin stock y sin precio</span>
+              <span *ngIf="!producto.stockTotal && !producto.oldestLotPrice">Sin stock</span>
               <span *ngIf="!producto.oldestLotPrice && producto.stockTotal">Sin precio</span>
             </ng-template>
           </td>
