@@ -4,12 +4,13 @@ import { catchError, forkJoin, map, Observable, of, switchMap, tap } from 'rxjs'
 import { LotesService } from '../../compras/services/compras.service';
 import { Lote } from '../../compras/models/lotes.models';
 import { Product } from '../models/product.model';
+import { environment } from '../../../enviroments/enviroment.prod';
 
 @Injectable({
   providedIn: 'root'
 })
 export class ProductService {
-  private apiUrl = 'http://localhost:3000/api/products'; // URL de tu API
+  private apiUrl = `${environment.apiUrl}/products`; // URL de tu API
 
   constructor(private httpClient: HttpClient, private lotesService: LotesService) {}
 
