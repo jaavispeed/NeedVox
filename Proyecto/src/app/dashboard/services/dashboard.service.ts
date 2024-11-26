@@ -1,14 +1,15 @@
 import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { Observable, tap } from 'rxjs';
+import { environment } from '../../../enviroments/enviroment.prod';
 
 @Injectable({
   providedIn: 'root'
 })
 export class DashboardService {
-  private apiUrl = 'http://localhost:3000/api/auth';
-  private apiUrlprod = 'http://localhost:3000/api/products';
-  private apiUrlStats = 'http://localhost:3000/api/lotes/estadisticas';
+  private apiUrl = `${environment.apiUrl}/auth`;
+  private apiUrlprod = `${environment.apiUrl}/products`;
+  private apiUrlStats = `${environment.apiUrl}/lotes/estadisticas`;
 
 
   constructor(private http: HttpClient) {}
@@ -53,7 +54,7 @@ export class DashboardService {
       'Authorization': `Bearer ${token}`
     });
 
-    return this.http.get<any>('http://localhost:3000/api/ventas/resumen', { headers });
+    return this.http.get<any>(`${environment.apiUrl}/ventas/resumen`, { headers });
   }
 
 

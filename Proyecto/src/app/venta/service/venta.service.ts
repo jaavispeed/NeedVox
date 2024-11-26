@@ -5,14 +5,15 @@ import { catchError, map, switchMap, tap } from 'rxjs/operators';
 import { Product } from '../../products/models/product.model';
 import { Lote } from '../../compras/models/lotes.models';
 import { LotesService } from '../../compras/services/compras.service';
+import { environment } from '../../../enviroments/enviroment.prod';
 
 @Injectable({
   providedIn: 'root',
 })
 export class VentaService {
-  private apiUrl = 'http://localhost:3000/api/products'; // URL para obtener productos
-  private loteApiUrl = 'http://localhost:3000/api/lotes'; // URL para obtener lotes
-  private authApiUrl = 'http://localhost:3000/api/auth'; // URL para autenticación
+  private apiUrl = `${environment.apiUrl}/products`; // URL para obtener productos
+  private loteApiUrl = `${environment.apiUrl}/lotes`; // URL para obtener lotes
+  private authApiUrl = `${environment.apiUrl}/auth`; // URL para autenticación
 
   constructor(private httpClient: HttpClient, private lotesService: LotesService) {}
 
