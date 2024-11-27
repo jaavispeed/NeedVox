@@ -171,17 +171,19 @@
     <button
       type="submit"
       (click)="onSubmit()"
-      class="bg-[#76ABAE] text-white py-2 px-4 rounded hover:bg-[#437c80] transition duration-300"
+      class="py-2 px-4 rounded transition duration-300"
+      [ngClass]="{
+        'bg-gray-400 text-gray-700 cursor-not-allowed': !loteForm.valid,
+        'bg-[#76ABAE] text-white hover:bg-[#437c80]': loteForm.valid
+      }"
       [disabled]="!loteForm.valid"
     >
-      <i class="fas fa-box mr-2"></i>
-      Crear Lote
+      <i class="fas fa-cart-plus mr-2"></i>
+      Agregar Compra
     </button>
+
   </div>
 </div>
-
-
-
 
   <!-- Mensajes de alerta -->
   <div class="fixed top-14 left-1/2 transform -translate-x-1/2 m-4">
