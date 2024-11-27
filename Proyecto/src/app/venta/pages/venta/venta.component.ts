@@ -149,24 +149,42 @@ export class VentaComponent {
     }
   }
 
-  agregarAlCarrito(producto: Product, lote: any, ) {
-    const itemEnCarrito = this.carrito.find(item => item.product.id === producto.id && item.lote.id === lote.id);
+  agregarAlCarrito(producto: Product, lote: any) {
+    let loteAgregado = false;
 
-    if (itemEnCarrito) {
-      if (itemEnCarrito.cantidad < lote.stock) {
-        itemEnCarrito.cantidad++;
-      } else {
-        alert('No puedes agregar más de este lote. Stock máximo alcanzado.');
-      }
-    } else {
-      if (lote.stock > 0) {
-        this.carrito.push({ product: producto, lote: lote, cantidad: 1 });
-      } else {
-        alert('No puedes agregar este lote. Stock agotado.');
+    // Verificar explícitamente que 'lotes' no es undefined
+    if (producto.lotes && producto.lotes.length > 0) {
+      for (let i = 0; i < producto.lotes.length; i++) {
+        const loteActual = producto.lotes[i];
+
+        const itemEnCarrito = this.carrito.find(item => item.product.id === producto.id && item.lote.id === loteActual.id);
+        if (itemEnCarrito) {
+          if (itemEnCarrito.cantidad < loteActual.stock) {
+            itemEnCarrito.cantidad++;
+            loteAgregado = true;
+            break;
+          }
+        } else {
+          if (loteActual.stock > 0) {
+            this.carrito.push({ product: producto, lote: loteActual, cantidad: 1 });
+            loteAgregado = true;
+            break;
+          }
+        }
       }
     }
+
+    if (!loteAgregado) {
+      alert('No puedes agregar más productos. Stock máximo alcanzado o agotado.');
+    }
+
     this.actualizarTotal();
   }
+
+
+
+
+
 
   eliminarDelCarrito(item: { product: Product; lote: any; cantidad: number }) {
     const existingItem = this.carrito.find(carritoItem => carritoItem.product.id === item.product.id && carritoItem.lote.id === item.lote.id);
@@ -185,7 +203,7 @@ export class VentaComponent {
 
   actualizarTotal() {
     this.totalPrecio = this.carrito.reduce((total, item) => {
-      return total + (item.lote.precioVenta * item.cantidad); // Usar el precio de venta del lote
+      return total + (item.lote.precioVenta * item.cantidad); // Precio específico de cada lote
     }, 0);
   }
 
