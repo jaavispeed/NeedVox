@@ -4,7 +4,7 @@ import { catchError, forkJoin, map, Observable, of, switchMap, tap } from 'rxjs'
 import { LotesService } from '../../compras/services/compras.service';
 import { Lote } from '../../compras/models/lotes.models';
 import { Product } from '../models/product.model';
-import { environment } from '../../../enviroments/enviroment.prod';
+import { environment } from '../../../environments/environment.prod';
 
 @Injectable({
   providedIn: 'root'

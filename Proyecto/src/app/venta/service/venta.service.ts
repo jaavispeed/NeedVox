@@ -5,7 +5,7 @@ import { catchError, map, switchMap, tap } from 'rxjs/operators';
 import { Product } from '../../products/models/product.model';
 import { Lote } from '../../compras/models/lotes.models';
 import { LotesService } from '../../compras/services/compras.service';
-import { environment } from '../../../enviroments/enviroment.prod';
+import { environment } from '../../../environments/environment.prod';
 
 @Injectable({
   providedIn: 'root',
@@ -44,7 +44,7 @@ export class VentaService {
     }[];
     metodo_pago: 'EFECTIVO' | 'TARJETA' | 'TRANSFERENCIA' | 'OTRO'; // Añadimos el campo metodo_pago
   }): Observable<any> {
-    return this.httpClient.post<any>('http://localhost:3000/api/ventas', venta, {
+    return this.httpClient.post<any>(`${environment.apiUrl}/ventas`, venta, {
       headers: this.getHeaders()
     })
     .pipe(
