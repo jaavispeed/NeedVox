@@ -2,9 +2,17 @@
   "version": 2,
   "builds": [
     {
-      "src": "proyecto/package.json",
+      "src": "Proyecto/package.json",
       "use": "@vercel/static-build",
-      "config": { "distDir": "proyecto/build" }
+      "config": {
+        "distDir": "dist/needvox"
+      }
+    }
+  ],
+  "rewrites": [
+    {
+      "source": "/(.*)",
+      "destination": "/index.html"
     }
   ]
 }
