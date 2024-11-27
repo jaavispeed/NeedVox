@@ -7,7 +7,7 @@
       "config": { "distDir": "dist/needvox" }
     }
   ],
-  "routes": [
+  "rewrites": [
     {
       "source": "/(.*)",
       "destination": "/index.html"
