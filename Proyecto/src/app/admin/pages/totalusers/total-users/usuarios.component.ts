@@ -20,9 +20,10 @@ export class UsuariosComponent implements OnInit {
   ngOnInit(): void {
     this.usuariosService.getUsuarios().subscribe(
       (data: User[]) => {
+        console.log(data); // Verifica que los datos sean correctos
         this.usuarios = data;
-        // Filtrar los usuarios para excluir administradores
-        this.usuariosFiltrados = this.usuarios.filter(usuario => !usuario.roles.includes('admin'));
+        // this.usuariosFiltrados = this.usuarios.filter(usuario => !usuario.roles.includes('admin'));
+        this.usuariosFiltrados = this.usuarios;  // Mostrar todos los usuarios, incluyendo administradores
       },
       (error: any) => {
         this.error = 'Error al obtener usuarios';
@@ -30,6 +31,8 @@ export class UsuariosComponent implements OnInit {
       }
     );
   }
+
+
 
   // Método para activar/desactivar un usuario
   toggleUsuario(usuario: User) {
