@@ -40,7 +40,7 @@ export class ComprasComponent implements OnInit {
       precioCompra: new FormControl(0, [Validators.required, Validators.min(1)]),
       precioVenta: new FormControl(0, [Validators.required, Validators.min(1)]),
       stock: new FormControl(0, [Validators.required, Validators.min(1)]),
-      fechaCaducidad: new FormControl(new Date().toISOString()),
+      fechaCaducidad: new FormControl(null), // Valor inicial como null
       productId: new FormControl('')
     });
   }
@@ -128,18 +128,41 @@ export class ComprasComponent implements OnInit {
   }
 
   createLote(): void {
+    const formValue = this.loteForm.value;
+
+    // Verifica si la fechaCaducidad es un objeto Date y conviértelo a cadena (YYYY-MM-DD)
+    if (formValue.fechaCaducidad instanceof Date) {
+      formValue.fechaCaducidad = formValue.fechaCaducidad.toISOString().split('T')[0];
+    }
+
+    console.log('Fecha de caducidad antes de enviar:', formValue.fechaCaducidad);
+
+    // Verifica que el producto esté seleccionado y que tenga un ID válido
     if (this.selectedProduct && this.selectedProduct.id) {
-      this.loteService.createLote(this.loteForm.value).subscribe({
-        next: () => this.onLoteSuccess('Lote creado con éxito.'),
+      // Asegúrate de que el objeto formValue esté en el formato correcto
+      console.log('Datos del lote antes de enviarlos:', formValue);
+
+      this.loteService.createLote(formValue).subscribe({
+        next: () => {
+          this.onLoteSuccess('Lote creado con éxito.');
+        },
         error: (error) => {
           console.error('Error al crear el lote:', error);
-          this.showAlert('Error al crear el lote.', 'error');
+
+          // Muestra un mensaje de error detallado
+          this.showAlert('Error al crear el lote. Detalles: ' + error.message, 'error');
         }
       });
     } else {
+      // Si no hay producto seleccionado, muestra un mensaje de alerta
       this.showAlert('Producto no seleccionado.', 'error');
     }
   }
+
+
+
+
+
 
   private onLoteSuccess(message: string): void {
     this.showAlert(message, 'success');
@@ -153,7 +176,7 @@ export class ComprasComponent implements OnInit {
       precioCompra: 0,
       precioVenta: 0,
       stock: 0,
-      fechaCaducidad: new Date().toISOString().split('T')[0],
+      fechaCaducidad: null,
       productId: ''
     });
   }

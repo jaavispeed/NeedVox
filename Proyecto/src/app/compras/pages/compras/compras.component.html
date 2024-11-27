@@ -148,8 +148,9 @@
         <label class="block text-sm font-medium text-gray-700">Fecha de Caducidad:</label>
         <input
           id="fechaCaducidad"
+          formControlName="fechaCaducidad"
           type="date"
-          required
+
           class="mt-1 block w-full p-2 border border-gray-300 rounded-md focus:ring-blue-500 focus:border-blue-500 font-rubik text-black shadow-sm"
         />
       </div>
@@ -209,9 +210,11 @@
             <td class="px-4 py-3 text-center font-medium text-black font-rubik">{{ lote.precioCompra }}</td>
             <td class="px-4 py-3 text-center font-medium text-black font-rubik">{{ lote.precioVenta }}</td>
             <td class="px-4 py-3 text-center font-medium text-black font-rubik">{{ lote.stock }}</td>
+            <!-- Historial de Compras -->
             <td class="px-4 py-3 text-center font-medium text-black font-rubik">
-              {{ lote.fechaCaducidad | date:'d \'de\' MMMM \'del\' y' }}
+              {{ lote.fechaCaducidad ? (lote.fechaCaducidad | date:'d \'de\' MMMM \'del\' y') : 'Sin fecha de caducidad' }}
             </td>
+
           </tr>
         </tbody>
       </table>
