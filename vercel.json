@@ -5,7 +5,7 @@
       "src": "Proyecto/package.json",
       "use": "@vercel/static-build",
       "config": {
-        "distDir": "dist/needvox/browser"
+        "distDir": "Proyecto/dist/needvox/browser"
       }
     }
   ],
