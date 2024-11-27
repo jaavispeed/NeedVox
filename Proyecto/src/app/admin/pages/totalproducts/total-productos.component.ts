@@ -1,6 +1,5 @@
 import { Component, OnInit } from '@angular/core';
 import { TotalProductosService } from './total-productos.service';
-import { Product } from '../../../../products/models/product.model'; // Verifica que la ruta sea correcta
 import { CommonModule } from '@angular/common';
 
 @Component({
@@ -8,7 +7,7 @@ import { CommonModule } from '@angular/common';
   standalone: true,
   imports: [CommonModule],
   templateUrl: './total-productos.component.html',
-  
+
 })
 export class TotalProductosComponent implements OnInit {
   productos: any= [];

@@ -1,8 +1,9 @@
 import { Injectable } from '@angular/core';
 import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { Observable } from 'rxjs';
-import { Product } from '../../../../products/models/product.model'; // Verifica que la ruta sea correcta
-import { environment } from '../../../../../environments/environment.prod';
+import { environment } from '../../../../environments/environment.prod';
+import { Product } from '../../../products/models/product.model';
+
 
 @Injectable({
   providedIn: 'root',

@@ -58,7 +58,7 @@ export const routes: Routes = [
       },
       {
         path: 'total-productos', // Ruta para TotalProductosComponent
-        loadComponent: () => import('./admin/pages/totalusers/total-users/total-productos.component').then(m=>m.TotalProductosComponent),
+        loadComponent: () => import('./admin/pages/totalproducts/total-productos.component').then(m=>m.TotalProductosComponent),
         canActivate: [AuthGuard] // Protege la ruta con AuthGuard
       },
       {
