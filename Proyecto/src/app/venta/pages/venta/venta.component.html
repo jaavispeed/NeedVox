@@ -2,10 +2,10 @@
   <div class="fixed top-14 left-1/2 transform -translate-x-1/2 m-4">
     <app-alert [message]="alertMessage" [isVisible]="alertVisible" [type]="alertType"></app-alert>
   </div>
-
   <!-- Columna izquierda: Productos -->
   <div class="col-span-7 bg-white shadow-md rounded-lg p-6 border border-gray-200">
     <h2 class="text-2xl font-bold mb-6 text-gray-700 font-rubik">Código de barra</h2>
+
 
     <!-- Buscador de productos -->
     <div class="mb-4">
@@ -23,6 +23,7 @@
     <!-- Productos disponibles -->
     <div class="mb-4">
       <h3 class="text-sm font-bold text-gray-600 font-rubik">Productos Disponibles</h3>
+
     </div>
 
     <table class="w-full text-left border-collapse">
@@ -35,58 +36,38 @@
         </tr>
       </thead>
       <tbody>
-        <!-- Mostrar mensaje si no hay productos -->
-        <tr *ngIf="productosFiltrados.length === 0" class="border-t hover:bg-gray-50">
-          <td colspan="4" class="p-3 text-center text-gray-500 font-rubik">
-            No hay productos disponibles.
-          </td>
-        </tr>
-
-        <!-- Listar productos si hay -->
-        <tr *ngFor="let producto of productosFiltrados" class="border-t hover:bg-gray-50">
+        <tr
+          *ngFor="let producto of productosFiltrados"
+          class="border-t hover:bg-gray-50"
+        >
           <td class="p-3">{{ producto.title }}</td>
-          <td class="p-3">
-            <ng-container *ngIf="producto.oldestLotPrice && producto.stockTotal; else sinDatos">
-              $ {{ producto.oldestLotPrice | number:'1.0-0' }}
-            </ng-container>
-            <ng-template #sinDatos>
-              <span *ngIf="!producto.stockTotal && !producto.oldestLotPrice">Sin precio</span>
-            </ng-template>
-          </td>
-          <td class="p-3">{{ producto.stockTotal || 'Sin stock' }}</td>
+          <td class="p-3">$ {{ producto.oldestLotPrice | currency:'CLP':'symbol':'1.0-0' }}</td>
+          <td class="p-3">{{ producto.stockTotal }}</td>
           <td class="p-3 text-center">
             <button
-              *ngIf="hayLotesDisponibles(producto)"
-              (click)="agregarAlCarrito(producto, obtenerLoteDisponible(producto))"
-              [disabled]="!hayLotesDisponibles(producto)"
-              class="px-4 py-2 bg-green-500 text-white rounded-lg disabled:bg-gray-400 disabled:text-gray-800 disabled:cursor-not-allowed font-rubik"
-            >
-              <i class="fas fa-plus mr-1"></i>
-              Agregar
-            </button>
+            *ngIf="hayLotesDisponibles(producto)"
+            (click)="agregarAlCarrito(producto, obtenerLoteDisponible(producto))"
+            [disabled]="!hayLotesDisponibles(producto)"
+            class="px-4 py-2 bg-green-500 text-white rounded-lg  disabled:bg-gray-400 disabled:text-gray-800 disabled:cursor-not-allowed font-rubik "
+          >
+            <i class="fas fa-plus mr-1"></i>
+            Agregar
+          </button>
           </td>
         </tr>
       </tbody>
     </table>
 
-    <!-- Paginación -->
+    <!-- Botones de paginación -->
     <div class="flex justify-between items-center mt-6 font-rubik">
-      <button
-        (click)="previousPage()"
-        [disabled]="currentPage === 1 || productosFiltrados.length === 0"
-        class="mx-2 px-4 py-2 bg-[#76ABAE] text-white rounded-md disabled:opacity-50"
-        aria-label="Página anterior"
-      >
+      <button (click)="previousPage()" [disabled]="currentPage === 1" class="mx-2 px-4 py-2 bg-[#76ABAE] text-white rounded-md disabled:opacity-50" aria-label="Página anterior">
+
+
         Anterior
       </button>
-
-
       <button
-        (click)="nextPage()"
-        [disabled]="!hasMoreProducts || productosFiltrados.length === 0"
-        class="mx-2 px-4 py-2 bg-[#76ABAE] text-white rounded-md disabled:opacity-50"
-        aria-label="Siguiente página"
-      >
+       (click)="nextPage()" [disabled]="!hasMoreProducts" class="mx-2 px-4 py-2 bg-[#76ABAE] text-white rounded-md disabled:opacity-50" aria-label="Siguiente página">
+
         Siguiente
       </button>
     </div>
@@ -94,66 +75,133 @@
 
   <!-- Columna derecha: Carrito -->
   <div
-    *ngIf="carrito.length > 0"
-    class="col-span-5 bg-gray-50 shadow-md rounded-lg p-6 border border-gray-200"
-  >
-    <div class="flex justify-between items-center mb-4">
-      <!-- Hora -->
-      <div class="text-left">
-        <span class="font-semibold">Hora:</span> {{ horaCarrito }}
-      </div>
-
-      <!-- Botón Eliminar Todo -->
-      <button
-        (click)="reiniciarCarrito()"
-        class="px-2 py-1 bg-red-600 text-white font-semibold rounded-md shadow hover:bg-red-700 focus:outline-none focus:ring-2 focus:ring-gray-500 text-xs"
-      >
-        <i class="fas fa-trash-alt mr-1 "></i> Eliminar Todo
-      </button>
+  *ngIf="carrito.length > 0"
+  class="col-span-5 bg-gray-50 shadow-md rounded-lg p-6 border border-gray-200"
+>
+  <div class="flex justify-between items-center mb-4">
+    <!-- Hora -->
+    <div class="text-left">
+      <span class="font-semibold">Hora:</span> {{ horaCarrito }}
     </div>
 
-    <h2 class="text-2xl font-bold mb-6 text-gray-700 font-rubik">Tu Carrito</h2>
+    <!-- Botón Eliminar Todo -->
+    <button
+      (click)="reiniciarCarrito()"
+      class="px-2 py-1 bg-red-600 text-white font-semibold rounded-md shadow hover:bg-red-700 focus:outline-none focus:ring-2 focus:ring-gray-500 text-xs"
+    >
+      <i class="fas fa-trash-alt mr-1 font-rubik"></i> Eliminar Todo
+    </button>
+  </div>
 
-    <table class="w-full text-left border-collapse">
-      <thead class="bg-gray-100 sticky top-0">
-        <tr>
-          <th class="p-3 text-sm font-bold font-rubik">Producto</th>
-          <th class="p-3 text-sm font-bold font-rubik">Cantidad</th>
-          <th class="p-3 text-sm font-bold font-rubik text-center">Acción</th>
-        </tr>
-      </thead>
-      <tbody>
-        <tr *ngFor="let item of carrito" class="border-t hover:bg-gray-50">
-          <td class="p-3">{{ item.product.title }}</td>
-          <td class="p-3">{{ item.cantidad }}</td>
-          <td class="p-3 text-center">
-            <button
-              (click)="eliminarDelCarrito(item)"
-              class="px-4 py-2 bg-red-500 text-white rounded-lg hover:bg-red-600 inline-flex items-center justify-center"
-            >
-              <i class="fas fa-minus mr-1 "></i>Eliminar
-            </button>
-          </td>
-        </tr>
-      </tbody>
-    </table>
+  <h2 class="text-2xl font-bold mb-6 text-gray-700 font-rubik">Tu Carrito</h2>
 
-    <div class="mt-4">
-      <!-- Total de Compra -->
-      <div class="mt-6 flex justify-between items-center border-t pt-4">
-        <span class="text-sm text-gray-800 font-semibold flex items-center">
-          <i class="fas fa-credit-card mr-2 text-gray-800 font-bold "></i> Total de Compra
-        </span>
-        <h3 class="text-lg font-semibold text-gray-800">$ {{ totalPrecio | currency: 'CLP' : 'symbol' }}</h3>
-      </div>
+  <table class="w-full text-left border-collapse">
+    <thead class="bg-gray-100 sticky top-0">
+      <tr>
+        <th class="p-3 text-sm font-bold font-rubik">Producto</th>
+        <th class="p-3 text-sm font-bold font-rubik">Cantidad</th>
+        <th class="p-3 text-sm font-bold font-rubik text-center">Acción</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr *ngFor="let item of carrito" class="border-t hover:bg-gray-50">
+        <td class="p-3">{{ item.product.title }}</td>
+        <td class="p-3">{{ item.cantidad }}</td>
+        <td class="p-3 text-center">
+          <button
+            (click)="eliminarDelCarrito(item)"
+            class="px-4 py-2 bg-red-500 text-white rounded-lg hover:bg-red-600 inline-flex items-center justify-center"
+          >
+            <i class="fas fa-minus mr-1 font-rubik"></i>Eliminar
+          </button>
+        </td>
+      </tr>
+    </tbody>
+  </table>
 
-      <!-- Botón Finalizar Compra -->
+  <div class="mt-4">
+    <!-- Total de Compra -->
+    <div class="mt-6 flex justify-between items-center border-t pt-4">
+      <span class="text-sm text-gray-800 font-semibold flex items-center">
+        <i class="fas fa-credit-card mr-2 text-gray-800 font-bold font-rubik"></i> Total de Compra
+      </span>
+      <h3 class="text-lg font-semibold text-gray-800">$ {{ totalPrecio | currency: 'CLP' : 'symbol' }}</h3>
+    </div>
+
+    <!-- Botón Finalizar Compra -->
+    <button
+      (click)="abrirModal()"
+      class="mt-4 w-full px-4 py-3 bg-[#1E3A8A] text-white rounded-lg hover:bg-blue-700 text-lg font-semibold"
+    >
+      <i class="fas fa-check-circle mr-2"></i> Finalizar Compra
+    </button>
+  </div>
+</div>
+
+
+
+<!-- Asegúrate de tener Font Awesome en tu proyecto -->
+<link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css" rel="stylesheet">
+
+<!-- Modal de selección de método de pago -->
+<div class="fixed inset-0 bg-gray-500 bg-opacity-75 flex justify-center items-center z-50" *ngIf="modalAbierto">
+  <div class="bg-white p-6 rounded-lg shadow-lg max-w-sm w-full">
+    <h3 class="text-lg font-semibold mb-4 text-center">Selecciona un Método de Pago</h3>
+    <div class="grid grid-cols-2 gap-4 mb-6">
+
+      <!-- Botón Efectivo -->
       <button
-        (click)="abrirModal()"
-        class="mt-4 w-full px-4 py-3 bg-[#1E3A8A] text-white rounded-lg hover:bg-blue-700 text-lg font-semibold"
+        (click)="metodoPagoSeleccionado = 'EFECTIVO'"
+        [ngClass]="{'bg-green-200': metodoPagoSeleccionado === 'EFECTIVO', 'hover:bg-green-300': metodoPagoSeleccionado !== 'EFECTIVO'}"
+        class="flex items-center py-2 px-4 text-center text-sm font-medium rounded-lg shadow-md focus:outline-none focus:ring-2 focus:ring-green-500 transition duration-200"
       >
-        <i class="fas fa-check-circle mr-2"></i> Finalizar Compra
+        <i class="fas fa-money-bill-wave mr-2 text-green-600"></i> Efectivo
+      </button>
+
+      <!-- Botón Tarjeta -->
+      <button
+        (click)="metodoPagoSeleccionado = 'TARJETA'"
+        [ngClass]="{'bg-blue-200': metodoPagoSeleccionado === 'TARJETA', 'hover:bg-blue-300': metodoPagoSeleccionado !== 'TARJETA'}"
+        class="flex items-center py-2 px-4 text-center text-sm font-medium rounded-lg shadow-md focus:outline-none focus:ring-2 focus:ring-blue-500 transition duration-200"
+      >
+        <i class="fas fa-credit-card mr-2 text-blue-600"></i> Tarjeta
+      </button>
+
+      <!-- Botón Transferencia -->
+      <button
+        (click)="metodoPagoSeleccionado = 'TRANSFERENCIA'"
+        [ngClass]="{'bg-teal-200': metodoPagoSeleccionado === 'TRANSFERENCIA', 'hover:bg-teal-300': metodoPagoSeleccionado !== 'TRANSFERENCIA'}"
+        class="flex items-center py-2 px-4 text-center text-sm font-medium rounded-lg shadow-md focus:outline-none focus:ring-2 focus:ring-teal-500 transition duration-200"
+      >
+        <i class="fas fa-exchange-alt mr-2 text-teal-600"></i> Transferencia
+      </button>
+
+      <!-- Botón Otro -->
+      <button
+        (click)="metodoPagoSeleccionado = 'OTRO'"
+        [ngClass]="{'bg-yellow-200': metodoPagoSeleccionado === 'OTRO', 'hover:bg-yellow-300': metodoPagoSeleccionado !== 'OTRO'}"
+        class="flex items-center py-2 px-4 text-center text-sm font-medium rounded-lg shadow-md focus:outline-none focus:ring-2 focus:ring-yellow-500 transition duration-200"
+      >
+        <i class="fas fa-ellipsis-h mr-2 text-yellow-600"></i> Otro
+      </button>
+
+    </div>
+
+    <div class="flex justify-between mt-6">
+      <button
+        (click)="cerrarModal()"
+        class="px-4 py-2 bg-gray-500 text-white rounded-md hover:bg-gray-600 focus:outline-none focus:ring-2 focus:ring-gray-500"
+      >
+        Cancelar
+      </button>
+      <button
+        (click)="confirmarVenta()"
+        class="px-4 py-2 bg-blue-600 text-white rounded-md hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-500"
+      >
+        Confirmar Venta
       </button>
     </div>
   </div>
 </div>
+
+
