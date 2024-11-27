@@ -44,44 +44,40 @@ export const routes: Routes = [
       },
       {
         path: 'crud-productos',
-        component: CrudProductComponent,
+        loadComponent: () => import('./products/pages/crud-product/crud-product.component').then(m => m.CrudProductComponent),
         canActivate: [AuthGuard]
       },
       {
         path: 'venta',
-        component: VentaComponent,
+        loadComponent: () => import('./venta/pages/venta/venta.component').then(m =>m.VentaComponent),
         canActivate: [AuthGuard]
       },
       {
         path: 'historial',
-        component: HistorialComponent,
+        loadComponent: () => import('./historial/pages/historial/historial.component').then(m=>m.HistorialComponent),
         canActivate: [AuthGuard]
       },
       {
         path: 'total-users',
-        component: UsuariosComponent,
+        loadComponent: () => import('./admin/pages/totalusers/total-users/usuarios.component').then(m=>m.UsuariosComponent),
         canActivate: [AuthGuard]
       },
       {
         path: 'total-productos', // Ruta para TotalProductosComponent
-        component: TotalProductosComponent,
+        loadComponent: () => import('./admin/pages/totalusers/total-users/total-productos.component').then(m=>m.TotalProductosComponent),
         canActivate: [AuthGuard] // Protege la ruta con AuthGuard
       },
       {
         path:'compras',
-        component: ComprasComponent,
+        loadComponent: () => import('./compras/pages/compras/compras.component').then(m=>m.ComprasComponent),
         canActivate: [AuthGuard]
       },
       {
         path: 'perfil',
-        component: PerfilComponent,
+        loadComponent: () => import('./perfil/perfil.component').then(m=>m.PerfilComponent),
         canActivate: [AuthGuard] // Protegemos la ruta para usuarios autenticados
       }
     ]
-  },
-  {
-    path: 'navbar',
-    loadComponent: () => import('./shared/pages/navbar/navbar.component')
   },
   {
     path: '404',
