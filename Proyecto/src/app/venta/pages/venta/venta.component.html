@@ -36,13 +36,26 @@
         </tr>
       </thead>
       <tbody>
+          <!-- Mostrar mensaje si no hay productos -->
+          <tr *ngIf="productosFiltrados.length === 0" class="border-t hover:bg-gray-50">
+            <td colspan="4" class="p-3 text-center text-gray-500 font-rubik">
+              No hay productos disponibles.
+            </td>
+          </tr>
         <tr
           *ngFor="let producto of productosFiltrados"
           class="border-t hover:bg-gray-50"
         >
           <td class="p-3">{{ producto.title }}</td>
-          <td class="p-3">$ {{ producto.oldestLotPrice | currency:'CLP':'symbol':'1.0-0' }}</td>
-          <td class="p-3">{{ producto.stockTotal }}</td>
+          <td class="p-3">
+            <ng-container *ngIf="producto.oldestLotPrice && producto.stockTotal; else sinDatos">
+              $ {{ producto.oldestLotPrice | number:'1.0-0' }}
+            </ng-container>
+            <ng-template #sinDatos>
+              <span *ngIf="!producto.stockTotal && !producto.oldestLotPrice">Sin precio</span>
+            </ng-template>
+          </td>
+          <td class="p-3">{{ producto.stockTotal || 'Sin stock' }}</td>
           <td class="p-3 text-center">
             <button
             *ngIf="hayLotesDisponibles(producto)"
@@ -100,6 +113,7 @@
       <tr>
         <th class="p-3 text-sm font-bold font-rubik">Producto</th>
         <th class="p-3 text-sm font-bold font-rubik">Cantidad</th>
+        <th class="p-3 text-sm font-bold font-rubik">Precio</th>
         <th class="p-3 text-sm font-bold font-rubik text-center">Acción</th>
       </tr>
     </thead>
@@ -107,6 +121,7 @@
       <tr *ngFor="let item of carrito" class="border-t hover:bg-gray-50">
         <td class="p-3">{{ item.product.title }}</td>
         <td class="p-3">{{ item.cantidad }}</td>
+        <td class="p-3">{{ item.product.oldestLotPrice }}</td>
         <td class="p-3 text-center">
           <button
             (click)="eliminarDelCarrito(item)"
