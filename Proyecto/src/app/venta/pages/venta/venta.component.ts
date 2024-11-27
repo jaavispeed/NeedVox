@@ -3,16 +3,16 @@ import { FormsModule } from '@angular/forms';
 import { Product } from '../../../products/models/product.model';
 import { VentaService } from '../../service/venta.service';
 import { CommonModule } from '@angular/common';
-import { v4 as uuidv4 } from 'uuid';
 import { Lote } from '../../../compras/models/lotes.models';
 import { AlertComponent } from '../../../shared/pages/alert/alert.component';
+import { SpinnerComponent } from '../../../shared/pages/spinner/spinner.component';
 
 @Component({
   selector: 'app-ventas',
   templateUrl: './venta.component.html',
   styleUrls: ['./venta.component.css'],
   standalone: true,
-  imports: [FormsModule, CommonModule,AlertComponent],
+  imports: [FormsModule, CommonModule,AlertComponent, SpinnerComponent],
 })
 export class VentaComponent {
   @ViewChild('codigoBarraInput') codigoBarraInput!: ElementRef;
@@ -31,6 +31,9 @@ export class VentaComponent {
   itemsPerPage = 10;
   hasMoreProducts = true;
   metodoPagoSeleccionado: 'EFECTIVO' | 'TARJETA' | 'TRANSFERENCIA' | 'OTRO' = 'EFECTIVO';
+
+  isLoading: boolean = false; // Para controlar la visualización del spinner
+
 
 
   // Propiedades para el modal
@@ -244,6 +247,8 @@ export class VentaComponent {
       metodo_pago: this.metodoPagoSeleccionado // Método de pago elegido por el usuario
     };
 
+    this.isLoading = true;
+
     console.log("Objeto venta a enviar:", venta);
 
     // Enviar la venta al backend
@@ -258,6 +263,7 @@ export class VentaComponent {
         this.cargarProductos();  // Aquí recargas los productos
 
         // Mostrar la alerta de éxito
+        this.isLoading = false;
         this.showAlert('Venta realizada con éxito.', 'success');
       },
       error => {
@@ -265,6 +271,7 @@ export class VentaComponent {
         console.error("Error al crear la venta:", error);
 
         // Mostrar la alerta de error
+        this.isLoading = false;
         this.showAlert('Error al realizar la venta. Intenta nuevamente.', 'error');
       }
     );
