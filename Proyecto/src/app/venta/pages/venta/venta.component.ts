@@ -325,6 +325,10 @@ confirmarVenta() {
   this.cerrarModal();
 }
 
+cantidadEnCarrito(producto: any): number {
+  const item = this.carrito.find((p: any) => p.product.id === producto.id);
+  return item ? item.cantidad : 0;
+}
 
 
 
