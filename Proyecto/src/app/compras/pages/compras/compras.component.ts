@@ -140,17 +140,17 @@ export class ComprasComponent implements OnInit {
     // Verifica que el producto esté seleccionado y que tenga un ID válido
     if (this.selectedProduct && this.selectedProduct.id) {
       // Asegúrate de que el objeto formValue esté en el formato correcto
-      console.log('Datos del lote antes de enviarlos:', formValue);
+      console.log('Datos de la compra antes de enviarlos:', formValue);
 
       this.loteService.createLote(formValue).subscribe({
         next: () => {
-          this.onLoteSuccess('Lote creado con éxito.');
+          this.onLoteSuccess('Compra agregada con éxito.');
         },
         error: (error) => {
-          console.error('Error al crear el lote:', error);
+          console.error('Error al crear la compra:', error);
 
           // Muestra un mensaje de error detallado
-          this.showAlert('Error al crear el lote. Detalles: ' + error.message, 'error');
+          this.showAlert('Error al crear la compra. Detalles: ' + error.message, 'error');
         }
       });
     } else {
