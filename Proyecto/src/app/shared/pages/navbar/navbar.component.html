@@ -15,20 +15,20 @@
         <!-- Menú para usuarios regulares -->
         <div *ngIf="userRole.includes('user')" class="hidden sm:ml-6 sm:block">
           <div class="flex space-x-4">
-            <a href="/index/dashboard" class="rounded-md px-3 py-2 text-sm font-medium text-[#EEEEEE] hover:bg-gray-700 hover:text-white">Dashboard</a>
-            <a href="/index/crud-productos" class="rounded-md px-3 py-2 text-sm font-medium text-[#EEEEEE] hover:bg-gray-700 hover:text-white">Productos</a>
-            <a href="/index/venta" class="rounded-md px-3 py-2 text-sm font-medium text-[#EEEEEE] hover:bg-gray-700 hover:text-white">Venta</a>
-            <a href="/index/historial" class="rounded-md px-3 py-2 text-sm font-medium text-[#EEEEEE] hover:bg-gray-700 hover:text-white">Historial</a>
-            <a href="/index/compras" class="rounded-md px-3 py-2 text-sm font-medium text-[#EEEEEE] hover:bg-gray-700 hover:text-white">Compras</a>
+            <a routerLink="/index/dashboard" class="rounded-md px-3 py-2 text-sm font-medium text-[#EEEEEE] hover:bg-gray-700 hover:text-white">Dashboard</a>
+            <a routerLink="/index/crud-productos" class="rounded-md px-3 py-2 text-sm font-medium text-[#EEEEEE] hover:bg-gray-700 hover:text-white">Productos</a>
+            <a routerLink="/index/venta" class="rounded-md px-3 py-2 text-sm font-medium text-[#EEEEEE] hover:bg-gray-700 hover:text-white">Venta</a>
+            <a routerLink="/index/historial" class="rounded-md px-3 py-2 text-sm font-medium text-[#EEEEEE] hover:bg-gray-700 hover:text-white">Historial</a>
+            <a routerLink="/index/compras" class="rounded-md px-3 py-2 text-sm font-medium text-[#EEEEEE] hover:bg-gray-700 hover:text-white">Compras</a>
           </div>
         </div>
 
         <!-- Sección exclusiva para el rol admin -->
         <div *ngIf="userRole.includes('admin')" class="hidden sm:ml-6 sm:block">
           <div class="flex space-x-4">
-            <a href="" class="rounded-md px-3 py-2 text-sm font-medium text-[#EEEEEE] hover:bg-gray-700 hover:text-white">Admin Dashboard</a>
-            <a href="/index/total-users" class="rounded-md px-3 py-2 text-sm font-medium text-[#EEEEEE] hover:bg-gray-700 hover:text-white">Usuarios</a>
-            <a href="/index/total-productos" class="rounded-md px-3 py-2 text-sm font-medium text-[#EEEEEE] hover:bg-gray-700 hover:text-white">Productos</a>
+            <a routerLink="" class="rounded-md px-3 py-2 text-sm font-medium text-[#EEEEEE] hover:bg-gray-700 hover:text-white">Admin Dashboard</a>
+            <a routerLink="/index/total-users" class="rounded-md px-3 py-2 text-sm font-medium text-[#EEEEEE] hover:bg-gray-700 hover:text-white">Usuarios</a>
+            <a routerLink="/index/total-productos" class="rounded-md px-3 py-2 text-sm font-medium text-[#EEEEEE] hover:bg-gray-700 hover:text-white">Productos</a>
           </div>
         </div>
       </div>
@@ -52,7 +52,7 @@
           <!-- Menú de usuario -->
           <div id="user-menu" class="absolute right-0 z-10 mt-2 w-48 origin-top-right rounded-md bg-white py-1 shadow-lg ring-1 ring-black ring-opacity-5 focus:outline-none"
                [ngClass]="{'hidden': !isUserMenuOpen}" role="menu" aria-orientation="vertical" aria-labelledby="user-menu-button">
-            <a href="/index/perfil" class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-200" role="menuitem" tabindex="-1">Perfil</a>
+            <a routerLink="/index/perfil" class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-200" role="menuitem" tabindex="-1">Perfil</a>
             <button (click)="logout()" class="block w-full text-left px-4 py-2 text-sm text-gray-700 hover:bg-gray-200" role="menuitem" tabindex="-1" id="user-menu-item-2">Cerrar sesión</button>
           </div>
         </div>
@@ -63,15 +63,15 @@
   <!-- Menú móvil -->
   <div class="sm:hidden" id="mobile-menu">
     <div class="space-y-1 px-2 pb-3 pt-2">
-      <a *ngIf="userRole.includes('user')" href="/index/dashboard" class="block rounded-md bg-gray-900 px-3 py-2 text-base font-medium text-[#EEEEEE] hover:bg-gray-700 hover:text-white">Dashboard</a>
-      <a *ngIf="userRole.includes('user')" href="/index/crud-productos" class="block rounded-md px-3 py-2 text-base font-medium text-[#EEEEEE] hover:bg-gray-700 hover:text-white">Productos</a>
-      <a *ngIf="userRole.includes('user')" href="/index/venta" class="block rounded-md px-3 py-2 text-base font-medium text-[#EEEEEE] hover:bg-gray-700 hover:text-white">Venta</a>
-      <a *ngIf="userRole.includes('user')" href="/index/calendario" class="block rounded-md px-3 py-2 text-base font-medium text-[#EEEEEE] hover:bg-gray-700 hover:text-white">Historial</a>
+      <a *ngIf="userRole.includes('user')" routerLink="/index/dashboard" class="block rounded-md bg-gray-900 px-3 py-2 text-base font-medium text-[#EEEEEE] hover:bg-gray-700 hover:text-white">Dashboard</a>
+      <a *ngIf="userRole.includes('user')" routerLink="/index/crud-productos" class="block rounded-md px-3 py-2 text-base font-medium text-[#EEEEEE] hover:bg-gray-700 hover:text-white">Productos</a>
+      <a *ngIf="userRole.includes('user')" routerLink="/index/venta" class="block rounded-md px-3 py-2 text-base font-medium text-[#EEEEEE] hover:bg-gray-700 hover:text-white">Venta</a>
+      <a *ngIf="userRole.includes('user')" routerLink="/index/calendario" class="block rounded-md px-3 py-2 text-base font-medium text-[#EEEEEE] hover:bg-gray-700 hover:text-white">Historial</a>
 
       <!-- Opciones del admin en móvil -->
-      <a *ngIf="userRole.includes('admin')" href="/admin-dashboard" class="block rounded-md px-3 py-2 text-base font-medium text-[#EEEEEE] hover:bg-gray-700 hover:text-white">Admin Dashboard</a>
-      <a *ngIf="userRole.includes('admin')" href="/total-users" class="block rounded-md px-3 py-2 text-base font-medium text-[#EEEEEE] hover:bg-gray-700 hover:text-white">Total Users</a>
-      <a *ngIf="userRole.includes('admin')" href="/total-products" class="block rounded-md px-3 py-2 text-base font-medium text-[#EEEEEE] hover:bg-gray-700 hover:text-white">Total Products</a>
+      <a *ngIf="userRole.includes('admin')" routerLink="/admin-dashboard" class="block rounded-md px-3 py-2 text-base font-medium text-[#EEEEEE] hover:bg-gray-700 hover:text-white">Admin Dashboard</a>
+      <a *ngIf="userRole.includes('admin')" routerLink="/total-users" class="block rounded-md px-3 py-2 text-base font-medium text-[#EEEEEE] hover:bg-gray-700 hover:text-white">Total Users</a>
+      <a *ngIf="userRole.includes('admin')" routerLink="/total-products" class="block rounded-md px-3 py-2 text-base font-medium text-[#EEEEEE] hover:bg-gray-700 hover:text-white">Total Products</a>
     </div>
   </div>
 </nav>
