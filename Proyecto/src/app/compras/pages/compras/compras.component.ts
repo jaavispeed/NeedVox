@@ -28,6 +28,10 @@ export class ComprasComponent implements OnInit {
   viewMode: 'form' | 'historial' | 'default' = 'default';
   hasMoreProducts: boolean = true;
 
+  lotesPerPage: number = 10; // Puedes ajustarlo según el número de lotes por página
+  currentLotesPage: number = 1;
+  totalLotes: number = 0; // Total de lotes para el producto seleccionado
+
   // Paginación
   currentPage: number = 1;
   itemsPerPage: number = 10; // Ajusta la cantidad de productos por página
@@ -207,6 +211,8 @@ export class ComprasComponent implements OnInit {
       next: (response) => {
         // Filtrar los lotes con stock mayor que 0
         this.selectedLotes = response.lotes.filter(lote => lote.stock > 0);
+        this.totalLotes = this.selectedLotes.length; // Actualiza el total de lotes
+        this.currentLotesPage = 1; // Resetea la página a la primera cuando se muestran los lotes
         console.log('Lotes con stock mayor que 0:', this.selectedLotes); // Opcional: Log para verificar los lotes
       },
       error: (error) => {
@@ -215,6 +221,35 @@ export class ComprasComponent implements OnInit {
       }
     });
   }
+
+
+
+   // Paginación para los lotes
+   get paginatedLotes(): Lote[] {
+    const startIndex = (this.currentLotesPage - 1) * this.lotesPerPage;
+    return this.selectedLotes.slice(startIndex, startIndex + this.lotesPerPage);
+  }
+
+  nextLotesPage(): void {
+    if (this.currentLotesPage * this.lotesPerPage < this.totalLotes) {
+      this.currentLotesPage++;
+    }
+  }
+
+  previousLotesPage(): void {
+    if (this.currentLotesPage > 1) {
+      this.currentLotesPage--;
+    }
+  }
+
+  hasMoreLotes(): boolean {
+    return this.currentLotesPage * this.lotesPerPage < this.totalLotes;
+  }
+
+  totalLotesPages(): number {
+    return Math.ceil(this.totalLotes / this.lotesPerPage);
+  }
+
 
 
   goBack(): void {
