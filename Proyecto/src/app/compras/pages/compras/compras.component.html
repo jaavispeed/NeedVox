@@ -1,12 +1,8 @@
 <div class="container mx-auto p-10 bg-white flex flex-col items-center mt-6">
   <!-- Mensajes de alerta -->
   <div class="fixed top-14 left-1/2 transform -translate-x-1/2 m-4">
-    <app-alert
-  *ngIf="alertVisible"
-  [message]="alertMessage"
-  [type]="alertType"
-></app-alert>
-    </div>
+    <app-alert [message]="alertMessage" [isVisible]="alertVisible" [type]="alertType"></app-alert>
+  </div>
   <h1 class="text-2xl font-bold mb-4 font-rubik">Gestión de Compras</h1>
   <!-- Campo de búsqueda -->
   <div class="w-full max-w-6xl mb-2">
