@@ -4,13 +4,15 @@
     {
       "src": "Proyecto/package.json",
       "use": "@vercel/static-build",
-      "config": { "distDir": "Proyecto/browser" }
+      "config": {
+        "distDir": "dist/needvox"
+      }
     }
   ],
   "rewrites": [
     {
       "source": "/(.*)",
-      "destination": "/"
+      "destination": "/index.html"
     }
   ]
 }
