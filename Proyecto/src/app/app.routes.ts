@@ -1,16 +1,10 @@
 import { Routes } from '@angular/router';
 import IndexComponent from './index/pages/index/index.component';
 import DashboardPageComponent from './dashboard/pages/dashboard-page/dashboard-page.component';
-import { CrudProductComponent } from './products/pages/crud-product/crud-product.component';
 import LoginPageComponent from './auth/pages/login-page/login-page.component';
 import { AuthGuard } from './auth/guards/auth.guard';
 import { NoAuthGuard } from './auth/guards/noAuth.guard';
-import { VentaComponent } from './venta/pages/venta/venta.component';
-import { UsuariosComponent } from './admin/pages/totalusers/total-users/usuarios.component';
-import { HistorialComponent } from './historial/pages/historial/historial.component';
-import { TotalProductosComponent } from './admin/pages/totalusers/total-users/total-productos.component'; // Verifica que la ruta sea correcta
-import { ComprasComponent } from './compras/pages/compras/compras.component';
-import { PerfilComponent } from './perfil/perfil.component';
+
 
 export const routes: Routes = [
   {
