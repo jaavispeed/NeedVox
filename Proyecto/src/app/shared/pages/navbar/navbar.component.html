@@ -66,7 +66,8 @@
       <a *ngIf="userRole.includes('user')" routerLink="/index/dashboard" class="block rounded-md bg-gray-900 px-3 py-2 text-base font-medium text-[#EEEEEE] hover:bg-gray-700 hover:text-white">Dashboard</a>
       <a *ngIf="userRole.includes('user')" routerLink="/index/crud-productos" class="block rounded-md px-3 py-2 text-base font-medium text-[#EEEEEE] hover:bg-gray-700 hover:text-white">Productos</a>
       <a *ngIf="userRole.includes('user')" routerLink="/index/venta" class="block rounded-md px-3 py-2 text-base font-medium text-[#EEEEEE] hover:bg-gray-700 hover:text-white">Venta</a>
-      <a *ngIf="userRole.includes('user')" routerLink="/index/calendario" class="block rounded-md px-3 py-2 text-base font-medium text-[#EEEEEE] hover:bg-gray-700 hover:text-white">Historial</a>
+      <a *ngIf="userRole.includes('user')" routerLink="/index/historial" class="block rounded-md px-3 py-2 text-base font-medium text-[#EEEEEE] hover:bg-gray-700 hover:text-white">Historial</a>
+      <a *ngIf="userRole.includes('user')" routerLink="/index/compras" class="block rounded-md px-3 py-2 text-base font-medium text-[#EEEEEE] hover:bg-gray-700 hover:text-white">Compras</a>
 
       <!-- Opciones del admin en móvil -->
       <a *ngIf="userRole.includes('admin')" routerLink="/admin-dashboard" class="block rounded-md px-3 py-2 text-base font-medium text-[#EEEEEE] hover:bg-gray-700 hover:text-white">Admin Dashboard</a>
