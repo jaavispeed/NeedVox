@@ -6,18 +6,14 @@
   <div class="w-full max-w-6xl flex flex-col items-start mb-2">
     <div class="mb-2 w-full flex justify-between">
       <div class="relative w-full max-w-md">
-        <input
-          type="text"
-          [(ngModel)]="searchTerm"
-          (input)="filterProducts()"
-          placeholder="Buscar producto..."
-          class="block w-full p-2 border border-gray-300 rounded-md focus:ring-blue-500 focus:border-blue-500 font-rubik text-black"
-        />
+        <input type="text" [(ngModel)]="searchTerm" (input)="filterProducts()" placeholder="Buscar producto..."
+          class="block w-full p-2 border border-gray-300 rounded-md focus:ring-blue-500 focus:border-blue-500 font-rubik text-black" />
         <i class="fas fa-search absolute right-3 top-3 text-gray-500"></i>
       </div>
 
       <div class="ml-2">
-        <button (click)="openModal()" class="inline-flex items-center px-4 py-2 bg-[#31363F] text-[#EEEEEE] text-sm font-light font-rubik rounded-md shadow hover:bg-gray-700 focus:outline-none focus:ring-2 focus:ring-gray-500 transition duration-300 transform hover:scale-105">
+        <button (click)="openModal()"
+          class="inline-flex items-center px-4 py-2 bg-[#31363F] text-[#EEEEEE] text-sm font-light font-rubik rounded-md shadow hover:bg-gray-700 focus:outline-none focus:ring-2 focus:ring-gray-500 transition duration-300 transform hover:scale-105">
           Agregar Producto
         </button>
       </div>
@@ -32,22 +28,27 @@
             <th scope="col" class="px-2 py-3 font-bold font-rubik text-center">Precio Venta Reciente</th>
             <th scope="col" class="px-2 py-3 font-bold font-rubik text-center">Código de Barras</th>
             <th scope="col" class="px-2 py-3 font-bold font-rubik text-center">Fecha de Creación</th>
-            <th scope="col" class="px-2 py-3 font-bold font-rubik text-center"><span class="sr-only">Acciones</span></th>
+            <th scope="col" class="px-2 py-3 font-bold font-rubik text-center"><span class="sr-only">Acciones</span>
+            </th>
           </tr>
         </thead>
         <tbody>
           <tr *ngFor="let product of paginatedProducts" class="bg-white border-b">
             <td class="px-4 py-3 text-center font-medium text-black font-rubik">{{ product.title }}</td>
-            <td class="px-4 py-3 text-center text-black font-rubik">{{ product.stockTotal !== null && product.stockTotal !== undefined ? product.stockTotal : 0 }}</td>
-            <td class="px-4 py-3 text-center text-black font-rubik">{{ product.lastLotPrice !== null ? '$' + product.lastLotPrice : 'Sin Precio' }}</td>
+            <td class="px-4 py-3 text-center text-black font-rubik">{{ product.stockTotal !== null && product.stockTotal
+              !== undefined ? product.stockTotal : 0 }}</td>
+            <td class="px-4 py-3 text-center text-black font-rubik">{{ product.lastLotPrice !== null ? '$' +
+              product.lastLotPrice : 'Sin Precio' }}</td>
             <td class="px-4 py-3 text-center text-black font-rubik">{{ product.barcode || 'Sin código de barras' }}</td>
             <td class="px-4 py-3 text-center text-black font-rubik">{{ product.fechaCreacion }}</td>
             <td class="px-4 py-3 text-center flex justify-center space-x-2">
-              <button (click)="editProduct(product)" class="inline-flex items-center px-4 py-2 bg-[#76ABAE] text-white font-light font-rubik rounded-md shadow hover:bg-[#5b9892] focus:outline-none focus:ring-2 focus:ring-gray-500 transition duration-300 transform hover:scale-105">
+              <button (click)="editProduct(product)"
+                class="inline-flex items-center px-4 py-2 bg-[#76ABAE] text-white font-light font-rubik rounded-md shadow hover:bg-[#5b9892] focus:outline-none focus:ring-2 focus:ring-gray-500 transition duration-300 transform hover:scale-105">
                 <i class="fas fa-edit mr-1"></i>
                 Editar
               </button>
-              <button (click)="promptDelete(product.id ?? '')" class="inline-flex items-center px-4 py-2 bg-red-600 text-white font-light font-rubik rounded-md shadow hover:bg-red-700 focus:outline-none focus:ring-2 focus:ring-gray-500 transition duration-300 transform hover:scale-105">
+              <button (click)="promptDelete(product.id ?? '')"
+                class="inline-flex items-center px-4 py-2 bg-red-600 text-white font-light font-rubik rounded-md shadow hover:bg-red-700 focus:outline-none focus:ring-2 focus:ring-gray-500 transition duration-300 transform hover:scale-105">
                 <i class="fas fa-trash-alt mr-1"></i> Eliminar
               </button>
             </td>
@@ -62,21 +63,15 @@
 
       <div class="flex justify-between mt-4">
         <!-- Botón anterior en la esquina izquierda -->
-        <button
-          (click)="previousPage()"
-          [disabled]="currentPage === 1 || !paginatedProducts.length"
-          class="mx-2 px-4 py-2 bg-[#76ABAE] text-white rounded-md disabled:opacity-50"
-          aria-label="Página anterior">
-          Anterior
+        <button (click)="previousPage()" [disabled]="currentPage === 1 || !paginatedProducts.length"
+          class="mx-2 px-4 py-2 bg-[#76ABAE] text-white rounded-md disabled:opacity-50" aria-label="Página anterior">
+          <i class="fas fa-chevron-left mr-2"></i> Anterior
         </button>
 
         <!-- Botón siguiente en la esquina derecha -->
-        <button
-          (click)="nextPage()"
-          [disabled]="!hasMoreProducts || !paginatedProducts.length"
-          class="mx-2 px-4 py-2 bg-[#76ABAE] text-white rounded-md disabled:opacity-50"
-          aria-label="Siguiente página">
-          Siguiente
+        <button (click)="nextPage()" [disabled]="!hasMoreProducts || !paginatedProducts.length"
+          class="mx-2 px-4 py-2 bg-[#76ABAE] text-white rounded-md disabled:opacity-50" aria-label="Siguiente página">
+          Siguiente <i class="fas fa-chevron-right ml-2"></i>
         </button>
       </div>
 
@@ -87,10 +82,12 @@
       <div class="bg-white p-8 rounded-md shadow-md w-full max-w-md">
         <p class="text-lg font-light font-rubik text-center">¿Estás seguro de que deseas eliminar este producto?</p>
         <div class="flex justify-between mt-4">
-          <button (click)="confirmDelete()" class="inline-flex items-center px-4 py-2 bg-green-600 text-white font-light font-rubik rounded-md shadow hover:bg-green-700 focus:outline-none focus:ring-2 focus:ring-gray-500 transition duration-300 transform hover:scale-105">
+          <button (click)="confirmDelete()"
+            class="inline-flex items-center px-4 py-2 bg-green-600 text-white font-light font-rubik rounded-md shadow hover:bg-green-700 focus:outline-none focus:ring-2 focus:ring-gray-500 transition duration-300 transform hover:scale-105">
             <i class="fas fa-check mr-1"></i> Sí
           </button>
-          <button (click)="cancelDelete()" class="inline-flex items-center px-4 py-2 bg-red-600 text-white font-light font-rubik rounded-md shadow hover:bg-red-700 focus:outline-none focus:ring-2 focus:ring-gray-500 transition duration-300 transform hover:scale-105">
+          <button (click)="cancelDelete()"
+            class="inline-flex items-center px-4 py-2 bg-red-600 text-white font-light font-rubik rounded-md shadow hover:bg-red-700 focus:outline-none focus:ring-2 focus:ring-gray-500 transition duration-300 transform hover:scale-105">
             <i class="fas fa-times mr-1"></i> No
           </button>
         </div>
@@ -105,30 +102,28 @@
         <form [formGroup]="crudForm" (ngSubmit)="createOrUpdateProduct()" class="mb-6">
           <div class="mb-4">
             <label class="block text-sm font-medium text-gray-700">Producto:</label>
-            <input
-              formControlName="title"
-              placeholder="Nombre del producto"
-              class="mt-1 block w-full p-2 border border-gray-300 rounded-md focus:ring-blue-500 focus:border-blue-500 font-rubik text-black"
-            />
-            <div *ngIf="crudForm.get('title')?.invalid && (crudForm.get('title')?.touched || crudForm.get('title')?.dirty)">
-              <div *ngIf="crudForm.get('title')?.errors?.['required']" class="text-red-600">El nombre es obligatorio.</div>
-              <div *ngIf="crudForm.get('title')?.errors?.['minlength']" class="text-red-600">El nombre debe tener al menos 3 caracteres.</div>
+            <input formControlName="title" placeholder="Nombre del producto"
+              class="mt-1 block w-full p-2 border border-gray-300 rounded-md focus:ring-blue-500 focus:border-blue-500 font-rubik text-black" />
+            <div
+              *ngIf="crudForm.get('title')?.invalid && (crudForm.get('title')?.touched || crudForm.get('title')?.dirty)">
+              <div *ngIf="crudForm.get('title')?.errors?.['required']" class="text-red-600">El nombre es obligatorio.
+              </div>
+              <div *ngIf="crudForm.get('title')?.errors?.['minlength']" class="text-red-600">El nombre debe tener al
+                menos 3 caracteres.</div>
             </div>
           </div>
           <div class="mb-4">
             <label class="block text-sm font-medium text-gray-700">Código de Barras:</label>
-            <input
-              type="text"
-              formControlName="barcode"
-              placeholder="Código de barras (opcional)"
-              class="mt-1 block w-full p-2 border border-gray-300 rounded-md focus:ring-blue-500 focus:border-blue-500 font-rubik text-black"
-            />
+            <input type="text" formControlName="barcode" placeholder="Código de barras (opcional)"
+              class="mt-1 block w-full p-2 border border-gray-300 rounded-md focus:ring-blue-500 focus:border-blue-500 font-rubik text-black" />
           </div>
           <div class="flex justify-end">
-            <button type="submit" class="inline-flex items-center px-4 py-2 bg-blue-600 text-white font-light font-rubik rounded-md shadow hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-gray-500 transition duration-300 transform hover:scale-105">
+            <button type="submit"
+              class="inline-flex items-center px-4 py-2 bg-blue-600 text-white font-light font-rubik rounded-md shadow hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-gray-500 transition duration-300 transform hover:scale-105">
               <i class="fas fa-save mr-1"></i> {{ isEditing ? 'Actualizar' : 'Crear' }}
             </button>
-            <button (click)="closeModal()" type="button" class="inline-flex items-center px-4 py-2 bg-gray-300 text-black font-light font-rubik rounded-md shadow hover:bg-gray-400 focus:outline-none focus:ring-2 focus:ring-gray-500 transition duration-300 transform hover:scale-105 ml-2">
+            <button (click)="closeModal()" type="button"
+              class="inline-flex items-center px-4 py-2 bg-gray-300 text-black font-light font-rubik rounded-md shadow hover:bg-gray-400 focus:outline-none focus:ring-2 focus:ring-gray-500 transition duration-300 transform hover:scale-105 ml-2">
               <i class="fas fa-times mr-1"></i> Cancelar
             </button>
           </div>
@@ -137,4 +132,3 @@
     </div>
   </div>
 </div>
-
