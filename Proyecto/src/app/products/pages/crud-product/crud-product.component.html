@@ -14,8 +14,9 @@
       <div class="ml-2">
         <button (click)="openModal()"
           class="inline-flex items-center px-4 py-2 bg-[#31363F] text-[#EEEEEE] text-sm font-light font-rubik rounded-md shadow hover:bg-gray-700 focus:outline-none focus:ring-2 focus:ring-gray-500 transition duration-300 transform hover:scale-105">
-          Agregar Producto
+          <i class="fas fa-plus mr-2"></i> Agregar Producto
         </button>
+
       </div>
     </div>
 
@@ -119,9 +120,10 @@
           </div>
           <div class="flex justify-end">
             <button type="submit"
-              class="inline-flex items-center px-4 py-2 bg-blue-600 text-white font-light font-rubik rounded-md shadow hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-gray-500 transition duration-300 transform hover:scale-105">
+              class="inline-flex items-center px-4 py-2 bg-green-600 text-white font-light font-rubik rounded-md shadow hover:bg-green-700 focus:outline-none focus:ring-2 focus:ring-gray-500 transition duration-300 transform hover:scale-105">
               <i class="fas fa-save mr-1"></i> {{ isEditing ? 'Actualizar' : 'Crear' }}
             </button>
+
             <button (click)="closeModal()" type="button"
               class="inline-flex items-center px-4 py-2 bg-gray-300 text-black font-light font-rubik rounded-md shadow hover:bg-gray-400 focus:outline-none focus:ring-2 focus:ring-gray-500 transition duration-300 transform hover:scale-105 ml-2">
               <i class="fas fa-times mr-1"></i> Cancelar
