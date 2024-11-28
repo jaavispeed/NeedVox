@@ -33,6 +33,8 @@ export class VentaComponent {
   metodoPagoSeleccionado: 'EFECTIVO' | 'TARJETA' | 'TRANSFERENCIA' | 'OTRO' = 'EFECTIVO';
 
   isLoading: boolean = false; // Para controlar la visualización del spinner
+  isLoadingList: boolean = false; // Para controlar la visualización del spinner
+
 
 
 
@@ -71,6 +73,8 @@ export class VentaComponent {
   }
 
   cargarProductos() {
+    this.isLoadingList = true; // Activar el spinner antes de la carga
+
     const offset = (this.currentPage - 1) * this.itemsPerPage;
 
     this.ventaService.getProducts(this.itemsPerPage, offset).subscribe(
@@ -99,8 +103,11 @@ export class VentaComponent {
         console.error("Error al obtener los productos:", error);
         this.errorMessage = "Error al cargar los productos. Intenta de nuevo más tarde.";
       }
-    );
+    ).add(() => {
+      this.isLoadingList = false; // Desactivar el spinner cuando termina de cargar
+    });
   }
+
 
 
   nextPage() {
