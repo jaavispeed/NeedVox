@@ -5,11 +5,12 @@ import { FormControl, FormGroup, FormsModule, ReactiveFormsModule, Validators } 
 import { Product } from '../../models/product.model';
 import { NgxPaginationModule } from 'ngx-pagination';
 import { AlertComponent } from '../../../shared/pages/alert/alert.component';
+import { SpinnerComponent } from '../../../shared/pages/spinner/spinner.component';
 
 @Component({
   selector: 'app-crud-product',
   standalone: true,
-  imports: [CommonModule, FormsModule, NgxPaginationModule, ReactiveFormsModule, AlertComponent],
+  imports: [CommonModule, FormsModule, NgxPaginationModule, ReactiveFormsModule, AlertComponent, SpinnerComponent],
   templateUrl: './crud-product.component.html',
   styleUrls: ['./crud-product.component.css']
 })
@@ -32,6 +33,10 @@ export class CrudProductComponent implements OnInit {
   totalStock: number = 0;
   hasMoreProducts: boolean = true; // Flag para indicar si hay más productos disponibles
 
+  isLoading: boolean = false; // Para controlar la visualización del spinner
+  isLoadingList: boolean = false;
+
+
 
   constructor(private productService: ProductService, private cdr: ChangeDetectorRef) {
     this.crudForm = new FormGroup({
@@ -46,10 +51,14 @@ export class CrudProductComponent implements OnInit {
   }
 
   getProducts(): void {
+    // Mostrar el spinner
+    this.isLoadingList = true;
+
     const offset = (this.currentPage - 1) * this.itemsPerPage; // Calcular el offset según la página actual
     this.productService.getProducts(this.itemsPerPage, offset).subscribe({
       next: (data) => {
         console.log("Datos de productos: ", data); // Verifica qué datos recibes
+
         // Si estamos en la primera página, actualiza todos los productos
         if (this.currentPage === 1) {
           this.products = data.products.map((product: Product) => ({
@@ -77,9 +86,16 @@ export class CrudProductComponent implements OnInit {
         this.hasMoreProducts = data.hasMore;
         this.filteredProducts = this.products; // Asegúrate de que filteredProducts siempre esté actualizado
       },
-      error: () => this.showAlert('Error al obtener los productos.', 'error')
+      error: () => {
+        this.showAlert('Error al obtener los productos.', 'error');
+      },
+      // Finalmente ocultamos el spinner, ya sea con éxito o error
+      complete: () => {
+      this.isLoadingList = false; // Ocultar el spinner después de la carga
+      }
     });
   }
+
 
 
   // Métodos de paginación
@@ -116,6 +132,7 @@ export class CrudProductComponent implements OnInit {
 
   confirmDelete(): void {
     if (this.productIdToDelete) {
+      this.isLoading = true;
       this.productService.deleteProduct(this.productIdToDelete).subscribe({
         next: () => {
           console.log(`Producto ${this.productIdToDelete} eliminado con éxito`);
@@ -127,8 +144,11 @@ export class CrudProductComponent implements OnInit {
           this.showAlert('Producto eliminado con éxito.', 'success');
         },
         error: () => this.showAlert('Error al eliminar el producto.', 'error'),
-        complete: () => this.resetConfirmation() // Reinicia la confirmación solo después de que la eliminación ha sido procesada
-      });
+        complete: () => {
+          // Ocultar el spinner después de la eliminación
+          this.isLoading = false;
+          this.resetConfirmation(); // Reinicia la confirmación solo después de que la eliminación ha sido procesada
+        }      });
     } else {
       this.resetConfirmation(); // Si no hay ID, también reinicia
     }
@@ -149,6 +169,8 @@ export class CrudProductComponent implements OnInit {
       return;
     }
 
+    this.isLoading = true; // Mostrar el spinner antes de iniciar la operación
+
     const productToSend = {
       ...this.crudForm.value,
       barcode: this.crudForm.value.barcode === '' ? null : this.crudForm.value.barcode
@@ -160,7 +182,8 @@ export class CrudProductComponent implements OnInit {
           this.onSuccess('Producto actualizado con éxito.', 'success');
           this.closeModal(); // Cerrar el modal después de actualizar
         },
-        error: (error) => this.handleError(error, 'actualizar')
+        error: (error) => this.handleError(error, 'actualizar'),
+        complete: () => this.isLoading = false // Ocultar el spinner
       });
     } else {
       this.productService.createProduct(productToSend).subscribe({
@@ -168,10 +191,12 @@ export class CrudProductComponent implements OnInit {
           this.onSuccess('Producto creado con éxito.', 'success');
           this.closeModal(); // Cerrar el modal después de crear
         },
-        error: (error) => this.handleError(error, 'crear')
+        error: (error) => this.handleError(error, 'crear'),
+        complete: () => this.isLoading = false // Ocultar el spinner
       });
     }
   }
+
 
   private handleError(error: any, action: 'crear' | 'actualizar'): void {
     const errorMessage = error.error?.message || 'Error desconocido';

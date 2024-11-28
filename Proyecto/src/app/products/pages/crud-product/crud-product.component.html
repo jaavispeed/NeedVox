@@ -1,4 +1,8 @@
 <div class="container mx-auto p-10 bg-white flex flex-col items-center relative mt-8">
+  <div *ngIf="isLoading" class="fixed inset-0 flex items-center justify-center z-[1000] bg-white bg-opacity-50">
+    <app-spinner></app-spinner>
+  </div>
+
   <div class="fixed top-14 left-1/2 transform -translate-x-1/2 m-4">
     <app-alert [message]="alertMessage" [isVisible]="alertVisible" [type]="alertType"></app-alert>
   </div>
@@ -22,6 +26,9 @@
 
     <div class="w-full max-w-6xl">
       <table class="w-full text-sm text-left text-black shadow-md sm:rounded-lg">
+    <div *ngIf="isLoadingList" class="absolute inset-0 flex items-center justify-center z-10 bg-white bg-opacity-50">
+      <app-spinner></app-spinner>
+    </div>
         <thead class="text-xs uppercase bg-gray-50">
           <tr>
             <th scope="col" class="px-2 py-3 font-bold font-rubik text-center">Producto</th>
