@@ -2,18 +2,23 @@ import { Component, OnInit } from '@angular/core';
 import { DashboardService } from '../../services/dashboard.service';
 import { CommonModule } from '@angular/common';
 import { AlertComponent } from '../../../shared/pages/alert/alert.component';
+import { SpinnerComponent } from '../../../shared/pages/spinner/spinner.component';
 
 @Component({
   selector: 'app-dashboard-page',
   standalone: true,
   templateUrl: './dashboard-page.component.html',
   styleUrl: './dashboard-page.component.css',
-  imports: [CommonModule, AlertComponent], // Importa el CommonModule aquí
+  imports: [CommonModule, AlertComponent, SpinnerComponent], // Importa el CommonModule aquí
 })
 export default class DashboardPageComponent implements OnInit {
   userName: string = '';
   totalProducts: number = 0; // Propiedad para almacenar el conteo
   welcomeMessage: string | null = null;
+
+  isLoading: boolean = false; // Para controlar la visualización del spinner
+
+
 
   // Variables para mostrar los gastos
   gastosMensuales: number = 0;
@@ -39,7 +44,13 @@ export default class DashboardPageComponent implements OnInit {
 
   }
 
+  setLoadingState(isLoading: boolean): void {
+    this.isLoading = isLoading;
+  }
+
   obtenerNombreUsuario(): void {
+    this.setLoadingState(true); // Activar el spinner
+
     this.dashboardService.checkStatus().subscribe(
       (response) => {
         this.userName = response.username; // Obtener el nombre del usuario
@@ -47,17 +58,24 @@ export default class DashboardPageComponent implements OnInit {
       },
       (error) => {
         console.error('Error al verificar el estado del usuario:', error);
+        this.setLoadingState(false); // Desactivar el spinner
+
       }
     );
   }
 
   obtenerConteoProductos(userId: string): void {
+
     this.dashboardService.getProductCount(userId).subscribe(
       (count) => {
         this.totalProducts = count; // Asigna el conteo a la propiedad
+        this.setLoadingState(false); // Desactivar el spinner
+
       },
       (error) => {
         console.error('Error al obtener el conteo de productos:', error);
+        this.setLoadingState(false); // Desactivar el spinner
+
       }
     );
   }
@@ -65,6 +83,8 @@ export default class DashboardPageComponent implements OnInit {
 
 
   obtenerGastos(): void {
+    this.setLoadingState(true); // Activar el spinner
+
     console.log('Llamando a obtener gastos...');
 
     this.dashboardService.getGastos('dia').subscribe(
@@ -91,21 +111,31 @@ export default class DashboardPageComponent implements OnInit {
       (response) => {
         console.log('Respuesta de gastos anuales:', response);
         this.gastosAnuales = response.estadisticas?.[0]?.totalcompra || 0;
+        this.setLoadingState(false); // Desactivar el spinner después de obtener los gastos anuales
+
       },
       (error) => {
         console.error('Error al obtener los gastos anuales:', error);
+        this.setLoadingState(false); // Desactivar el spinner después de obtener los gastos anuales
+
       }
     );
   }
 
   obtenerVentasResumen(): void {
+    this.setLoadingState(true); // Activar el spinner
+
     this.dashboardService.getVentasResumen().subscribe(
       (response) => {
         console.log('Resumen de ventas:', response); // Depuración
         this.ventasResumen = response; // Asignar los datos del resumen
+        this.setLoadingState(false); // Desactivar el spinner después de obtener las ventas
+
       },
       (error) => {
         console.error('Error al obtener el resumen de ventas:', error);
+        this.setLoadingState(false); // Desactivar el spinner después de obtener las ventas
+
       }
     );
   }

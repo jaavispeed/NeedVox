@@ -177,11 +177,6 @@ export class ComprasComponent implements OnInit {
     }
   }
 
-
-
-
-
-
   private onLoteSuccess(message: string): void {
     this.showAlert(message, 'success');
     this.resetLoteForm();
