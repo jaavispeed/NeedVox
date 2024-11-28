@@ -7,11 +7,12 @@ import { Product } from '../../../products/models/product.model';
 import { Lote } from '../../models/lotes.models';
 import { ProductService } from '../../../products/services/product.service';
 import { LotesService } from '../../services/compras.service';
+import { SpinnerComponent } from '../../../shared/pages/spinner/spinner.component';
 
 @Component({
   selector: 'app-compras',
   standalone: true,
-  imports: [CommonModule, FormsModule, NgxPaginationModule, ReactiveFormsModule, AlertComponent],
+  imports: [CommonModule, FormsModule, NgxPaginationModule, ReactiveFormsModule, AlertComponent, SpinnerComponent],
   templateUrl: './compras.component.html',
   styleUrls: ['./compras.component.css']
 })
@@ -27,6 +28,9 @@ export class ComprasComponent implements OnInit {
   alertType: 'success' | 'error' = 'success';
   viewMode: 'form' | 'historial' | 'default' = 'default';
   hasMoreProducts: boolean = true;
+
+  isLoading: boolean = false; // Para controlar la visualización del spinner
+
 
   lotesPerPage: number = 10; // Puedes ajustarlo según el número de lotes por página
   currentLotesPage: number = 1;
@@ -54,6 +58,7 @@ export class ComprasComponent implements OnInit {
   }
 
   getProducts(): void {
+    this.isLoading = true; // Activar el spinner antes de la solicitud
     const offset = (this.currentPage - 1) * this.itemsPerPage; // Calcular el desplazamiento para la paginación
     this.productService.getProducts(this.itemsPerPage, offset).subscribe({
       next: (data) => {
@@ -66,8 +71,13 @@ export class ComprasComponent implements OnInit {
 
         this.filteredProducts = this.products; // Actualiza los productos filtrados
         this.hasMoreProducts = data.hasMore; // Asegúrate de que el backend esté devolviendo esta propiedad
+        this.isLoading = false; // Desactivar el spinner cuando los datos sean recibidos
+
       },
-      error: () => this.showAlert('Error al obtener los productos.', 'error')
+      error: () => {
+        this.showAlert('Error al obtener los productos.', 'error');
+        this.isLoading = false; // Desactivar el spinner en caso de error
+      }
     });
   }
 
@@ -132,6 +142,8 @@ export class ComprasComponent implements OnInit {
   }
 
   createLote(): void {
+    this.isLoading = true; // Activar el spinner
+
     const formValue = this.loteForm.value;
 
     // Verifica si la fechaCaducidad es un objeto Date y conviértelo a cadena (YYYY-MM-DD)
@@ -149,10 +161,11 @@ export class ComprasComponent implements OnInit {
       this.loteService.createLote(formValue).subscribe({
         next: () => {
           this.onLoteSuccess('Compra agregada con éxito.');
+          this.isLoading = false; // Desactivar el spinner al finalizar
         },
         error: (error) => {
           console.error('Error al crear la compra:', error);
-
+          this.isLoading = false; // Desactivar el spinner al finalizar
           // Muestra un mensaje de error detallado
           this.showAlert('Error al crear la compra. Detalles: ' + error.message, 'error');
         }
@@ -160,6 +173,7 @@ export class ComprasComponent implements OnInit {
     } else {
       // Si no hay producto seleccionado, muestra un mensaje de alerta
       this.showAlert('Producto no seleccionado.', 'error');
+      this.isLoading = false; // Desactivar el spinner si no hay producto seleccionado
     }
   }
 
@@ -207,6 +221,7 @@ export class ComprasComponent implements OnInit {
   }
 
   mostrarLotes(productId: string): void {
+    this.isLoading = true; // Activar el spinner
     this.loteService.getLotesByProduct(productId).subscribe({
       next: (response) => {
         // Filtrar los lotes con stock mayor que 0
@@ -214,10 +229,14 @@ export class ComprasComponent implements OnInit {
         this.totalLotes = this.selectedLotes.length; // Actualiza el total de lotes
         this.currentLotesPage = 1; // Resetea la página a la primera cuando se muestran los lotes
         console.log('Lotes con stock mayor que 0:', this.selectedLotes); // Opcional: Log para verificar los lotes
+        this.isLoading = false; // Desactivar el spinner
+
       },
       error: (error) => {
         console.error('Error al obtener lotes:', error);
         this.showAlert('Error al obtener los lotes.', 'error');
+        this.isLoading = false; // Desactivar el spinner
+
       }
     });
   }
