@@ -117,6 +117,8 @@ esDiaSiguienteNoValido(): boolean {
 
 
 navegarHoy(): void {
+  this.isLoading = true; // Activar spinner
+
   const hoy = new Date();
   this.fechaSeleccionada = this.formatearFecha(hoy);
   this.filtrarVentasPorFecha();
