@@ -20,15 +20,17 @@
           class="inline-flex items-center px-4 py-2 bg-[#31363F] text-[#EEEEEE] text-sm font-light font-rubik rounded-md shadow hover:bg-gray-700 focus:outline-none focus:ring-2 focus:ring-gray-500 transition duration-300 transform hover:scale-105">
           <i class="fas fa-plus mr-2"></i> Agregar Producto
         </button>
-
       </div>
     </div>
+    <!-- Tabla de productos -->
+    <div class="w-full max-w-6xl relative">
+      <!-- Contenedor de la tabla con el spinner dentro -->
+      <div *ngIf="isLoadingList" class="absolute inset-0 flex items-center justify-center ">
+        <app-spinner></app-spinner>
+      </div>
 
-    <div class="w-full max-w-6xl">
-      <table class="w-full text-sm text-left text-black shadow-md sm:rounded-lg">
-    <div *ngIf="isLoadingList" class="absolute inset-0 flex items-center justify-center z-10 bg-white bg-opacity-50">
-      <app-spinner></app-spinner>
-    </div>
+      <!-- Tabla de productos, visible solo cuando no se está cargando -->
+      <table *ngIf="!isLoadingList"  class="w-full text-sm text-left text-black shadow-md sm:rounded-lg">
         <thead class="text-xs uppercase bg-gray-50">
           <tr>
             <th scope="col" class="px-2 py-3 font-bold font-rubik text-center">Producto</th>
@@ -65,11 +67,13 @@
 
       </table>
 
-      <div *ngIf="products.length === 0" class="mt-4 flex items-center justify-center p-2">
-        <p class="text-base font-light text-black font-rubik">No hay productos agregados aún.</p>
-      </div>
+      <!-- Condición para mostrar el mensaje de "No hay productos" solo cuando no haya productos y no se esté cargando -->
+<div *ngIf="!isLoadingList && products.length === 0" class="mt-4 flex items-center justify-center p-2">
+  <p class="text-base font-light text-black font-rubik">No hay productos agregados aún.</p>
+</div>
 
-      <div class="flex justify-between mt-4">
+
+      <div class="flex justify-between mt-4 ">
         <!-- Botón anterior en la esquina izquierda -->
         <button (click)="previousPage()" [disabled]="currentPage === 1 || !paginatedProducts.length"
           class="mx-2 px-4 py-2 bg-[#76ABAE] text-white rounded-md disabled:opacity-50" aria-label="Página anterior">
