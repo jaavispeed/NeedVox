@@ -3,11 +3,12 @@ import { HistorialService } from '../../services/historial.service';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { Venta } from '../../../venta/models/venta-car.model';
+import { SpinnerComponent } from '../../../shared/pages/spinner/spinner.component';
 
 @Component({
   selector: 'app-historial',
   standalone: true,
-  imports: [CommonModule, FormsModule],
+  imports: [CommonModule, FormsModule, SpinnerComponent],
   templateUrl: './historial.component.html',
   styleUrls: ['./historial.component.css']
 })
@@ -18,6 +19,8 @@ export class HistorialComponent {
   fechaSeleccionada: string = ''; // Fecha seleccionada para filtrar
   ventasPorPagina: number = 10;
   paginaActual: number = 1;
+  isLoading: boolean = false; // Para controlar la visualización del spinner
+
 
   constructor(private historialService: HistorialService) {}
 
@@ -38,6 +41,7 @@ export class HistorialComponent {
   }
 
   cargarVentas(): void {
+    this.isLoading = true; // Activar el spinner antes de la carga
     this.historialService.getVentas().subscribe(
       (data: Venta[]) => {
         this.ventas = data
@@ -51,9 +55,13 @@ export class HistorialComponent {
             };
           })
           .sort((a, b) => new Date(b.fecha).getTime() - new Date(a.fecha).getTime());
+          this.isLoading = false; // Desactivar el spinner cuando termine de cargar
+
       },
       (error) => {
         console.error('Error al obtener ventas', error);
+        this.isLoading = false; // Desactivar el spinner cuando termine de cargar
+
       }
     );
   }
@@ -63,6 +71,8 @@ export class HistorialComponent {
 
   filtrarVentasPorFecha(): void {
     if (!this.fechaSeleccionada) {
+      this.isLoading = true; // Activar el spinner antes de la carga
+
       this.cargarVentas(); // Cargar todas las ventas si no hay filtro
     } else {
       // Convertir la fecha seleccionada a YYYY-MM-DD para comparación sin hora
@@ -81,9 +91,13 @@ export class HistorialComponent {
           console.log(`Ventas recibidas para el día ${fechaFiltro}:`, this.ventas);
 
           this.paginaActual = 1; // Reiniciar a la primera página después de filtrar
+          this.isLoading = false; // Desactivar el spinner después de filtrar
+
         },
         (error) => {
           console.error('Error al obtener ventas por fecha', error);
+          this.isLoading = false; // Desactivar el spinner después de filtrar
+
         }
       );
     }
@@ -102,11 +116,6 @@ esDiaSiguienteNoValido(): boolean {
 }
 
 
-
-
-
-
-
 navegarHoy(): void {
   const hoy = new Date();
   this.fechaSeleccionada = this.formatearFecha(hoy);
@@ -115,6 +124,7 @@ navegarHoy(): void {
 
 
   cambiarDiaSiguiente(): void {
+    this.isLoading = true; // Activar spinner
     const fecha = new Date(this.fechaSeleccionada);
     fecha.setDate(fecha.getDate() + 1);
     this.fechaSeleccionada = this.formatearFecha(fecha);
@@ -122,6 +132,8 @@ navegarHoy(): void {
   }
 
   cambiarDiaAnterior(): void {
+    this.isLoading = true; // Activar spinner
+
     const fecha = new Date(this.fechaSeleccionada);
     fecha.setDate(fecha.getDate() - 1);
     this.fechaSeleccionada = this.formatearFecha(fecha);

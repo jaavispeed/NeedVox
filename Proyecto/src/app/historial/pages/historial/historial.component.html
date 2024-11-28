@@ -1,7 +1,11 @@
 <div class="flex flex-col items-center justify-center w-full max-w-2xl mt-4 mx-auto">
-  <!-- Aumenté max-w-lg a max-w-2xl -->
-  <!-- Contenedor de la fecha -->
-  <div class="flex justify-center w-full mb-4">
+
+<!-- Contenedor de la fecha -->
+<div class="flex justify-center w-full mb-4">
+    <div *ngIf="isLoading" class="fixed inset-0 flex items-center justify-center z-[1000] bg-white bg-opacity-50">
+      <app-spinner></app-spinner>
+    </div>
+
     <button
       class="bg-[#7688AD] text-white rounded-full px-4 py-2 hover:bg-[#5b9892] flex items-center justify-center ml-4 shadow-md transition duration-300 transform hover:scale-105 mr-6">
       <i class="fas fa-cash-register"></i>
