@@ -60,26 +60,35 @@ export class ComprasComponent implements OnInit {
   getProducts(): void {
     this.isLoading = true; // Activar el spinner antes de la solicitud
     const offset = (this.currentPage - 1) * this.itemsPerPage; // Calcular el desplazamiento para la paginación
+
     this.productService.getProducts(this.itemsPerPage, offset).subscribe({
       next: (data) => {
-        // Verifica si estamos en la primera página o cargando más productos
+        // Manejo de caso vacío
+        if (!data.products || data.products.length === 0) {
+          console.warn('El backend devolvió productos vacíos');
+        }
+
         if (this.currentPage === 1) {
-          this.products = data.products;
+          this.products = data.products || []; // Manejar el caso de datos vacíos
         } else {
-          this.products = [...this.products, ...data.products]; // Agregar productos a la lista existente
+          this.products = [...this.products, ...(data.products || [])];
         }
 
         this.filteredProducts = this.products; // Actualiza los productos filtrados
-        this.hasMoreProducts = data.hasMore; // Asegúrate de que el backend esté devolviendo esta propiedad
+        this.hasMoreProducts = data.hasMore || false; // Asegúrate de manejar valores nulos o indefinidos
         this.isLoading = false; // Desactivar el spinner cuando los datos sean recibidos
-
       },
-      error: () => {
+      error: (err) => {
+        console.error('Error al obtener productos:', err);
         this.showAlert('Error al obtener los productos.', 'error');
         this.isLoading = false; // Desactivar el spinner en caso de error
+      },
+      complete: () => {
+        this.isLoading = false; // Asegúrate de que el spinner siempre se desactive
       }
     });
   }
+
 
 
 
