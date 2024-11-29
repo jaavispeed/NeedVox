@@ -27,7 +27,7 @@ class="absolute top-4 left-1/2 transform -translate-x-1/2 z-50"
           </div>
           <div class="flex flex-col items-center justify-center">
               <p class="font-dm text-sm font-medium text-gray-600">Ventas Mensuales</p>
-              <h4 class="text-xl font-bold text-green-500">+ ${{ ventasResumen.ventasMensuales | number: '1.0-2' }}</h4>
+              <h4 class="text-xl font-bold text-green-500">+ {{ ventasResumen.ventasMensuales | number: '1.0-2' }}</h4>
             </div>
       </div>
 
@@ -44,7 +44,7 @@ class="absolute top-4 left-1/2 transform -translate-x-1/2 z-50"
           </div>
           <div class="flex flex-col items-center justify-center">
               <p class="font-dm text-sm font-medium text-gray-600">Ventas Diarias</p>
-              <h4 class="text-xl font-bold text-green-500">+ ${{ ventasResumen.ventasDiarias | number: '1.0-2' }}</h4>
+              <h4 class="text-xl font-bold text-green-500">+ {{ ventasResumen.ventasDiarias | number: '1.0-2' }}</h4>
             </div>
       </div>
 
@@ -61,7 +61,7 @@ class="absolute top-4 left-1/2 transform -translate-x-1/2 z-50"
           </div>
           <div class="flex flex-col items-center justify-center">
               <p class="font-dm text-sm font-medium text-gray-600">Ventas Anuales</p>
-              <h4 class="text-xl font-bold text-green-500">+ ${{ ventasResumen.ventasAnuales | number: '1.0-2' }}</h4>
+              <h4 class="text-xl font-bold text-green-500">+ {{ ventasResumen.ventasAnuales | number: '1.0-2' }}</h4>
             </div>
       </div>
   </div>
