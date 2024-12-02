@@ -177,31 +177,47 @@ export class CrudProductComponent implements OnInit {
     };
 
     if (this.isEditing) {
+      // Si estamos editando un producto
       this.productService.updateProduct(this.product.id!, productToSend).subscribe({
         next: () => {
           this.onSuccess('Producto actualizado con éxito.', 'success');
           this.closeModal(); // Cerrar el modal después de actualizar
         },
-        error: (error) => this.handleError(error, 'actualizar'),
-        complete: () => this.isLoading = false // Ocultar el spinner
+        error: (error) => this.handleError(error, 'actualizar'),  // Maneja el error si es necesario
+        complete: () => {
+          this.isLoading = false;  // Asegúrate de que el spinner se oculte cuando termine
+        }
       });
     } else {
+      // Si estamos creando un nuevo producto
       this.productService.createProduct(productToSend).subscribe({
         next: () => {
           this.onSuccess('Producto creado con éxito.', 'success');
           this.closeModal(); // Cerrar el modal después de crear
         },
-        error: (error) => this.handleError(error, 'crear'),
-        complete: () => this.isLoading = false // Ocultar el spinner
+        error: (error) => {
+          // Verifica si el error está relacionado con el nombre duplicado
+          if (error.error?.message.includes('Nombre ya creado')) {
+            this.showAlert('El nombre del producto ya fue creado.', 'error');
+          } else {
+            this.handleError(error, 'crear');  // Llama a handleError para otros errores
+          }
+        },
+        complete: () => {
+          this.isLoading = false;  // Asegúrate de que el spinner se oculte cuando termine
+        }
       });
     }
   }
+
+
 
 
   private handleError(error: any, action: 'crear' | 'actualizar'): void {
     const errorMessage = error.error?.message || 'Error desconocido';
     console.log('Error recibido:', error);
 
+    // Manejo de errores específicos
     switch (error.status) {
       case 400:
         if (errorMessage.includes('Nombre ya creado')) {
@@ -218,7 +234,11 @@ export class CrudProductComponent implements OnInit {
       default:
         this.showAlert('Ocurrió un error inesperado. Intente nuevamente.', 'error');
     }
+
+    // Asegúrate de que el spinner se oculte después de manejar el error
+    this.isLoading = false;  // Esto asegura que el spinner se detiene independientemente del tipo de error
   }
+
 
   private onSuccess(message: string, type: 'success' | 'error'): void {
     this.showAlert(message, type);
