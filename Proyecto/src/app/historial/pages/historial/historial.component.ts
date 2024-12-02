@@ -4,6 +4,8 @@ import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { Venta } from '../../../venta/models/venta-car.model';
 import { SpinnerComponent } from '../../../shared/pages/spinner/spinner.component';
+import { format, toZonedTime } from 'date-fns-tz';
+
 
 @Component({
   selector: 'app-historial',
@@ -16,13 +18,13 @@ export class HistorialComponent {
   ventas: Venta[] = [];
   ventaSeleccionada: any | null = null; // Cambiado a any para incluir los detalles del producto
   productos: any[] = []; // Lista de productos
-  fechaSeleccionada: string = ''; // Fecha seleccionada para filtrar
+  fechaSeleccionada: Date = new Date(); // Fecha seleccionada como objeto Date
   ventasPorPagina: number = 10;
   paginaActual: number = 1;
   isLoading: boolean = false; // Para controlar la visualización del spinner
 
 
-  constructor(private historialService: HistorialService) {}
+  constructor(private historialService: HistorialService) { }
 
   ngOnInit(): void {
     this.cargarProductos(); // Cargar productos al iniciar
@@ -41,27 +43,44 @@ export class HistorialComponent {
   }
 
   cargarVentas(): void {
-    this.isLoading = true; // Activar el spinner antes de la carga
+    this.isLoading = true;
+    const timeZone = 'America/Santiago'; // Zona horaria de Chile
+
     this.historialService.getVentas().subscribe(
       (data: Venta[]) => {
+        // Obtener la fecha seleccionada
+        const fechaSeleccionada = new Date(this.fechaSeleccionada);
+
+        // Filtrar las ventas para que solo se muestren las que coincidan con la fecha seleccionada
         this.ventas = data
           .map(venta => {
-            // Convertir la fecha UTC a hora local en Chile
-            const fechaUTC = new Date(venta.fecha);
-            fechaUTC.setHours(fechaUTC.getHours() - 3);  // Ajusta la diferencia de zona horaria manualmente
-            return {
-              ...venta,
-              fecha: fechaUTC.toISOString().split('T')[0] // Formato YYYY-MM-DD
-            };
-          })
-          .sort((a, b) => new Date(b.fecha).getTime() - new Date(a.fecha).getTime());
-          this.isLoading = false; // Desactivar el spinner cuando termine de cargar
+            const fechaUTC = new Date(venta.fecha); // Fecha original en UTC
+            const fechaLocal = toZonedTime(fechaUTC, timeZone); // Convertir a hora local en Chile
 
+            // Formatear la fecha de la venta en el formato YYYY-MM-DD
+            const fechaVentaFormateada = format(fechaLocal, 'yyyy-MM-dd');
+
+            // Convertir la fecha seleccionada al mismo formato para la comparación
+            const fechaSeleccionadaFormateada = format(fechaSeleccionada, 'yyyy-MM-dd');
+
+            // Si la fecha de la venta coincide con la fecha seleccionada, incluirla
+            if (fechaVentaFormateada === fechaSeleccionadaFormateada) {
+              return {
+                ...venta,
+                fecha: fechaVentaFormateada // Guardamos solo la fecha (sin hora) para comparación futura
+              };
+            }
+
+            return null; // Si no coincide, devolver null
+          })
+          .filter(venta => venta !== null) // Eliminar los nulls (ventas que no coinciden con la fecha seleccionada)
+          .sort((a, b) => new Date(b.fecha).getTime() - new Date(a.fecha).getTime());
+
+        this.isLoading = false; // Detener el spinner cuando termine de cargar
       },
       (error) => {
         console.error('Error al obtener ventas', error);
-        this.isLoading = false; // Desactivar el spinner cuando termine de cargar
-
+        this.isLoading = false; // Detener el spinner en caso de error
       }
     );
   }
@@ -69,78 +88,87 @@ export class HistorialComponent {
 
 
 
+
   filtrarVentasPorFecha(): void {
     if (!this.fechaSeleccionada) {
-      this.isLoading = true; // Activar el spinner antes de la carga
-
+      this.isLoading = true;
+      console.log("No hay fecha seleccionada, cargando todas las ventas");
       this.cargarVentas(); // Cargar todas las ventas si no hay filtro
     } else {
-      // Convertir la fecha seleccionada a YYYY-MM-DD para comparación sin hora
-      const fechaFiltro = this.fechaSeleccionada.split('T')[0];
+      // Convertir la fecha seleccionada a un objeto Date
+      const fechaFiltro = new Date(this.fechaSeleccionada);
+      const fechaFiltroFormateada = fechaFiltro.toISOString().split('T')[0]; // Formato YYYY-MM-DD
+      console.log("Filtrando ventas para la fecha: ", fechaFiltroFormateada);
 
       this.historialService.getVentas().subscribe(
         (data: Venta[]) => {
-          // Filtrar las ventas para la fecha seleccionada
-          this.ventas = data.filter(venta => {
-            // Convertir la fecha de la venta al formato YYYY-MM-DD (sin hora)
-            const fechaVenta = new Date(venta.fecha).toISOString().split('T')[0];
-            return fechaVenta === fechaFiltro; // Compara solo la parte de la fecha
-          }).sort((a, b) => new Date(b.fecha).getTime() - new Date(a.fecha).getTime());
+          console.log("Ventas originales: ", data);
 
-          // Mostrar un log con las ventas filtradas para la fecha seleccionada
-          console.log(`Ventas recibidas para el día ${fechaFiltro}:`, this.ventas);
+          this.ventas = data.filter(venta => {
+            const fechaVenta = toZonedTime(new Date(venta.fecha), 'America/Santiago');
+            const fechaVentaFormateada = format(fechaVenta, 'yyyy-MM-dd');
+
+
+            // Mostrar las fechas para depuración
+            console.log(`Fecha venta: ${fechaVentaFormateada}, Fecha filtro: ${fechaFiltroFormateada}`);
+
+            return fechaVentaFormateada === fechaFiltroFormateada; // Comparar solo las fechas (sin horas)
+          })
+            .sort((a, b) => new Date(b.fecha).getTime() - new Date(a.fecha).getTime());
+
+          console.log("Ventas filtradas: ", this.ventas);
 
           this.paginaActual = 1; // Reiniciar a la primera página después de filtrar
-          this.isLoading = false; // Desactivar el spinner después de filtrar
-
+          this.isLoading = false; // Detener el spinner
         },
         (error) => {
           console.error('Error al obtener ventas por fecha', error);
-          this.isLoading = false; // Desactivar el spinner después de filtrar
-
+          this.isLoading = false; // Detener el spinner en caso de error
         }
       );
     }
   }
 
-// Método que verifica si el día siguiente es válido
-esDiaSiguienteNoValido(): boolean {
-  // Obtener la fecha actual
-  const fechaHoy = new Date();
-
-  // Comprobar si la fecha seleccionada es hoy o posterior
-  const fechaSeleccionada = new Date(this.fechaSeleccionada);
-
-  // Comparar si la fecha seleccionada es mayor o igual a hoy (no se puede navegar al día siguiente si aún no es ese día)
-  return fechaSeleccionada >= fechaHoy; // Si la fecha seleccionada es hoy o después, deshabilitar el botón
-}
 
 
-navegarHoy(): void {
-  this.isLoading = true; // Activar spinner
+  // Método que verifica si el día siguiente es válido
+  esDiaSiguienteNoValido(): boolean {
+    // Obtener la fecha actual
+    const fechaHoy = new Date();
 
-  const hoy = new Date();
-  this.fechaSeleccionada = this.formatearFecha(hoy);
-  this.filtrarVentasPorFecha();
-}
+    // Comprobar si la fecha seleccionada es hoy o posterior
+    const fechaSeleccionada = new Date(this.fechaSeleccionada);
+
+    // Comparar si la fecha seleccionada es mayor o igual a hoy (no se puede navegar al día siguiente si aún no es ese día)
+    return fechaSeleccionada >= fechaHoy; // Si la fecha seleccionada es hoy o después, deshabilitar el botón
+  }
+
+
+  navegarHoy(): void {
+    this.isLoading = true;
+    const hoy = new Date();
+    this.fechaSeleccionada = hoy;  // Ahora es un objeto Date
+    this.filtrarVentasPorFecha(); // Filtrar ventas por la fecha actual
+  }
+
 
 
   cambiarDiaSiguiente(): void {
-    this.isLoading = true; // Activar spinner
+    this.isLoading = true;
     const fecha = new Date(this.fechaSeleccionada);
     fecha.setDate(fecha.getDate() + 1);
-    this.fechaSeleccionada = this.formatearFecha(fecha);
-    this.filtrarVentasPorFecha();  // Llamar para obtener ventas para la nueva fecha
+    this.fechaSeleccionada = fecha;  // Ahora es un objeto Date
+    this.filtrarVentasPorFecha();
   }
 
   cambiarDiaAnterior(): void {
-    this.isLoading = true; // Activar spinner
-
+    this.isLoading = true;
     const fecha = new Date(this.fechaSeleccionada);
     fecha.setDate(fecha.getDate() - 1);
-    this.fechaSeleccionada = this.formatearFecha(fecha);
-    this.filtrarVentasPorFecha();  // Llamar para obtener ventas para la nueva fecha
+    this.fechaSeleccionada = fecha;  // Ahora es un objeto Date
+    this.filtrarVentasPorFecha();
   }
+
 
 
 
