@@ -56,7 +56,6 @@ export class ComprasComponent implements OnInit {
   ngOnInit(): void {
     this.getProducts();
   }
-
   getProducts(): void {
     this.isLoading = true;
     const offset = (this.currentPage - 1) * this.itemsPerPage;
@@ -64,10 +63,19 @@ export class ComprasComponent implements OnInit {
     this.productService.getProducts(this.itemsPerPage, offset).subscribe({
       next: (data) => {
         console.log('Productos recibidos:', data);
+
         if (this.currentPage === 1) {
+          // Si es la primera página, reemplaza todos los productos
           this.products = data.products || [];
         } else {
-          this.products = [...this.products, ...(data.products || [])];
+          // Si no es la primera página, agrega solo los productos que no estén en la lista actual
+          const newProducts: Product[] = data.products || [];
+          this.products = [
+            ...this.products,
+            ...newProducts.filter(
+              (newProduct: Product) => !this.products.some((existingProduct) => existingProduct.id === newProduct.id)
+            )
+          ];
         }
 
         this.filteredProducts = this.products;
@@ -80,6 +88,8 @@ export class ComprasComponent implements OnInit {
       },
     });
   }
+
+
 
 
 
