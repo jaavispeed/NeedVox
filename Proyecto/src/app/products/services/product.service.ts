@@ -23,7 +23,7 @@ export class ProductService {
   }
 
 
-  getProducts(limit = 10, offset = 0): Observable<any> {
+  getProducts(limit = 1000, offset = 0): Observable<any> {
     const headers = this.getHeaders();
     const params = new HttpParams()
       .set('limit', limit.toString())
@@ -73,14 +73,6 @@ export class ProductService {
       })
     );
   }
-
-
-
-
-
-
-
-
 
 
   // Obtener todos los productos como admin

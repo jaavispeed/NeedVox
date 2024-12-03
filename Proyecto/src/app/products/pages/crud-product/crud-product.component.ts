@@ -51,15 +51,13 @@ export class CrudProductComponent implements OnInit {
   }
 
   getProducts(): void {
-    // Mostrar el spinner
     this.isLoadingList = true;
 
-    const offset = (this.currentPage - 1) * this.itemsPerPage; // Calcular el offset según la página actual
+    const offset = (this.currentPage - 1) * this.itemsPerPage;
+
     this.productService.getProducts(this.itemsPerPage, offset).subscribe({
       next: (data) => {
-        console.log("Datos de productos: ", data); // Verifica qué datos recibes
-
-        // Si estamos en la primera página, actualiza todos los productos
+        // Actualizar los productos según la respuesta
         if (this.currentPage === 1) {
           this.products = data.products.map((product: Product) => ({
             ...product,
@@ -71,7 +69,6 @@ export class CrudProductComponent implements OnInit {
             }) : 'Fecha no disponible'
           }));
         } else {
-          // Si no estamos en la primera página, agrega los productos formateando las fechas
           this.products = [...this.products, ...data.products.map((product: Product) => ({
             ...product,
             fechaCreacion: product.fechaCreacion ? new Date(product.fechaCreacion).toLocaleDateString('es-ES', {
@@ -83,26 +80,28 @@ export class CrudProductComponent implements OnInit {
           }))];
         }
 
+        // Filtrar los productos según el término de búsqueda
+        this.filterProducts();
+
         this.hasMoreProducts = data.hasMore;
-        this.filteredProducts = this.products; // Asegúrate de que filteredProducts siempre esté actualizado
       },
       error: () => {
         this.showAlert('Error al obtener los productos.', 'error');
       },
-      // Finalmente ocultamos el spinner, ya sea con éxito o error
       complete: () => {
-      this.isLoadingList = false; // Ocultar el spinner después de la carga
+        this.isLoadingList = false;
       }
     });
   }
 
 
 
-  // Métodos de paginación
   get paginatedProducts(): Product[] {
+    // Aplicar la paginación sobre los productos filtrados
     const startIndex = (this.currentPage - 1) * this.itemsPerPage;
     return this.filteredProducts.slice(startIndex, startIndex + this.itemsPerPage);
   }
+
 
   nextPage(): void {
     if (this.hasMoreProducts) {
@@ -274,14 +273,20 @@ export class CrudProductComponent implements OnInit {
   }
 
   onSearchTermChange(): void {
+    // Filtrar todos los productos (no solo los actuales)
     if (this.searchTerm.trim()) {
       this.filteredProducts = this.products.filter(product =>
         product.title.toLowerCase().includes(this.searchTerm.toLowerCase())
       );
     } else {
-      this.filteredProducts = this.products; // Restablece los productos si no hay término de búsqueda
+      // Si no hay búsqueda, mostrar todos los productos
+      this.filteredProducts = this.products;
     }
+
+    // Reiniciar la página a la primera después de la búsqueda
+    this.currentPage = 1;
   }
+
 
 
 
