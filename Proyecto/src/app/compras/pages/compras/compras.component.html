@@ -71,20 +71,24 @@
     <!-- Componente de paginación -->
 
     <div class="flex justify-between mt-4">
-      <button (click)="previousPage()" [disabled]="currentPage === 1 || filteredProducts.length === 0"
-        class="mx-2 px-4 py-2 bg-[#76ABAE] text-white rounded-md disabled:opacity-50 flex items-center"
-        aria-label="Página anterior">
-        <i class="fas fa-chevron-left mr-2"></i>
-        Anterior
-      </button>
+      <button
+      (click)="previousPage()"
+      [disabled]="currentPage === 1"
+      class="mx-2 px-4 py-2 bg-[#76ABAE] text-white rounded-md disabled:opacity-50 flex items-center"
+      aria-label="Página anterior"
+    >
+      <i class="fas fa-chevron-left mr-2"></i> Anterior
+    </button>
 
 
-      <button (click)="nextPage()" [disabled]="!hasMorePages() || filteredProducts.length === 0"
-        class="mx-2 px-4 py-2 bg-[#76ABAE] text-white rounded-md disabled:opacity-50 flex items-center"
-        aria-label="Siguiente página">
-        Siguiente
-        <i class="fas fa-chevron-right ml-2"></i>
-      </button>
+    <button
+    (click)="nextPage()"
+    [disabled]="currentPage * itemsPerPage >= filteredProducts.length"
+    class="mx-2 px-4 py-2 bg-[#76ABAE] text-white rounded-md disabled:opacity-50 flex items-center"
+    aria-label="Siguiente página"
+  >
+    Siguiente <i class="fas fa-chevron-right ml-2"></i>
+  </button>
 
     </div>
 

@@ -58,37 +58,28 @@ export class ComprasComponent implements OnInit {
   }
 
   getProducts(): void {
-    this.isLoading = true; // Activar el spinner antes de la solicitud
-    const offset = (this.currentPage - 1) * this.itemsPerPage; // Calcular el desplazamiento para la paginación
+    this.isLoading = true;
+    const offset = (this.currentPage - 1) * this.itemsPerPage;
 
     this.productService.getProducts(this.itemsPerPage, offset).subscribe({
       next: (data) => {
-        // Manejo de caso vacío
-        if (!data.products || data.products.length === 0) {
-          console.warn('El backend devolvió productos vacíos');
-        }
-
+        console.log('Productos recibidos:', data);
         if (this.currentPage === 1) {
-          this.products = data.products || []; // Manejar el caso de datos vacíos
+          this.products = data.products || [];
         } else {
           this.products = [...this.products, ...(data.products || [])];
         }
 
-        this.filteredProducts = this.products; // Actualiza los productos filtrados
-        this.hasMoreProducts = data.hasMore || false; // Asegúrate de manejar valores nulos o indefinidos
-        this.isLoading = false; // Desactivar el spinner cuando los datos sean recibidos
+        this.filteredProducts = this.products;
+        this.isLoading = false;
       },
       error: (err) => {
         console.error('Error al obtener productos:', err);
         this.showAlert('Error al obtener los productos.', 'error');
-        this.isLoading = false; // Desactivar el spinner en caso de error
+        this.isLoading = false;
       },
-      complete: () => {
-        this.isLoading = false; // Asegúrate de que el spinner siempre se desactive
-      }
     });
   }
-
 
 
 
@@ -99,38 +90,39 @@ export class ComprasComponent implements OnInit {
         product.title?.toLowerCase().includes(this.searchTerm.toLowerCase())
       );
     } else {
-      this.filteredProducts = [...this.products]; // Restablece a una copia del array original
+      this.filteredProducts = [...this.products];
     }
-    console.log('Productos filtrados:', this.filteredProducts);
-    this.currentPage = 1; // Reinicia la página actual
+    this.currentPage = 1;
   }
+
 
 
   // Métodos de paginación
   get paginatedProducts(): Product[] {
-    if (!Array.isArray(this.filteredProducts)) {
-      console.error('filteredProducts no es un array:', this.filteredProducts);
-      return [];
-    }
     const startIndex = (this.currentPage - 1) * this.itemsPerPage;
-    return this.filteredProducts.slice(startIndex, startIndex + this.itemsPerPage);
+    const endIndex = startIndex + this.itemsPerPage;
+    return this.filteredProducts.slice(startIndex, endIndex);
   }
+
 
 
   nextPage(): void {
     if (this.hasMoreProducts) {
-      this.currentPage++;  // Aumenta la página actual
-      this.getProducts();  // Carga los productos de la siguiente página
+      this.currentPage++;
+      this.getProducts();
     }
   }
 
 
   previousPage(): void {
     if (this.currentPage > 1) {
-      this.currentPage--;  // Disminuye la página actual
-      this.getProducts();  // Recarga los productos de la página anterior
+      this.currentPage--;
+      this.getProducts();
     }
   }
+
+
+
 
 
   hasMorePages(): boolean {
@@ -138,10 +130,10 @@ export class ComprasComponent implements OnInit {
   }
 
 
-
   totalPages(): number {
     return Math.ceil(this.filteredProducts.length / this.itemsPerPage);
   }
+
 
   // Resto del código...
   openAddLoteForm(product: Product): void {
