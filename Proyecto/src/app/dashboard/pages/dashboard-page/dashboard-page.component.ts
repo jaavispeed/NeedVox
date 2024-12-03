@@ -26,10 +26,11 @@ export default class DashboardPageComponent implements OnInit {
   gastosAnuales: number = 0;
 
   ventasResumen = {
-    ventasDiarias: 0,
-    ventasMensuales: 0,
-    ventasAnuales: 0
+    ventasDiarias: { total: 0, suma: 0 },
+    ventasMensuales: { total: 0, suma: 0 },
+    ventasAnuales: { total: 0, suma: 0 },
   };
+
 
 
   constructor(private dashboardService: DashboardService) {}
@@ -112,17 +113,32 @@ export default class DashboardPageComponent implements OnInit {
     this.dashboardService.getVentasResumen().subscribe(
       (response) => {
         console.log('Resumen de ventas:', response); // Depuración
-        this.ventasResumen = response; // Asignar los datos del resumen
-        this.setLoadingState(false); // Desactivar el spinner después de obtener las ventas
 
+        // Asignar los valores del resumen directamente
+        this.ventasResumen = {
+          ventasDiarias: {
+            total: response.ventasDiarias?.total || 0,
+            suma: response.ventasDiarias?.suma || 0,
+          },
+          ventasMensuales: {
+            total: response.ventasMensuales?.total || 0,
+            suma: response.ventasMensuales?.suma || 0,
+          },
+          ventasAnuales: {
+            total: response.ventasAnuales?.total || 0,
+            suma: response.ventasAnuales?.suma || 0,
+          },
+        };
+
+        this.setLoadingState(false); // Desactivar el spinner
       },
       (error) => {
         console.error('Error al obtener el resumen de ventas:', error);
-        this.setLoadingState(false); // Desactivar el spinner después de obtener las ventas
-
+        this.setLoadingState(false); // Desactivar el spinner si hay error
       }
     );
   }
+
 
 
 }

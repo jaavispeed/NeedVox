@@ -13,6 +13,61 @@ class="absolute top-4 left-1/2 transform -translate-x-1/2 z-50"
     <h2 class="text-2xl font-bold">¡Bienvenido, {{userName}}!</h2>
 </div>
 
+<div class="relative flex flex-col items-center rounded-[10px] border-[1px] border-gray-200 bg-white bg-clip-border shadow-md shadow-[#F3F3F3] transform transition-transform duration-200 hover:shadow-lg hover:-translate-y-1 p-4 w-60">
+  <div class="flex h-[90px] w-auto items-center justify-center">
+      <div class="rounded-full bg-lightPrimary p-3">
+          <span class="flex items-center text-brand-500">
+              <svg stroke="currentColor" fill="currentColor" stroke-width="0" viewBox="0 0 24 24" class="h-7 w-7">
+                  <path fill="none" d="M0 0h24v24H0z"></path>
+                  <path d="M4 9h4v11H4zM16 13h4v7h-4zM10 4h4v16h-4z"></path>
+              </svg>
+          </span>
+      </div>
+  </div>
+  <div class="flex flex-col items-center justify-center">
+      <p class="font-dm text-sm font-medium text-gray-600">Ventas Totales Mensuales</p>
+      <h4 class="text-xl font-bold text-green-500">+ ${{ ventasResumen.ventasMensuales.suma| number: '1.0-2' }}</h4>
+
+  </div>
+</div>
+
+<div class="relative flex flex-col items-center rounded-[10px] border-[1px] border-gray-200 bg-white bg-clip-border shadow-md shadow-[#F3F3F3] transform transition-transform duration-200 hover:shadow-lg hover:-translate-y-1 p-4 w-60">
+  <div class="flex h-[90px] w-auto items-center justify-center">
+      <div class="rounded-full bg-lightPrimary p-3">
+          <span class="flex items-center text-brand-500">
+              <svg stroke="currentColor" fill="currentColor" stroke-width="0" viewBox="0 0 24 24" class="h-7 w-7">
+                  <path fill="none" d="M0 0h24v24H0z"></path>
+                  <path d="M4 9h4v11H4zM16 13h4v7h-4zM10 4h4v16h-4z"></path>
+              </svg>
+          </span>
+      </div>
+  </div>
+  <div class="flex flex-col items-center justify-center">
+      <p class="font-dm text-sm font-medium text-gray-600">Ventas Totales Diarias</p>
+      <h4 class="text-xl font-bold text-green-500">+ ${{ ventasResumen.ventasDiarias.suma| number: '1.0-2' }}</h4>
+
+  </div>
+</div>
+
+<div class="relative flex flex-col items-center rounded-[10px] border-[1px] border-gray-200 bg-white bg-clip-border shadow-md shadow-[#F3F3F3] transform transition-transform duration-200 hover:shadow-lg hover:-translate-y-1 p-4 w-60">
+  <div class="flex h-[90px] w-auto items-center justify-center">
+      <div class="rounded-full bg-lightPrimary p-3">
+          <span class="flex items-center text-brand-500">
+              <svg stroke="currentColor" fill="currentColor" stroke-width="0" viewBox="0 0 24 24" class="h-7 w-7">
+                  <path fill="none" d="M0 0h24v24H0z"></path>
+                  <path d="M4 9h4v11H4zM16 13h4v7h-4zM10 4h4v16h-4z"></path>
+              </svg>
+          </span>
+      </div>
+  </div>
+  <div class="flex flex-col items-center justify-center">
+      <p class="font-dm text-sm font-medium text-gray-600">Ventas Totales Anuales</p>
+      <h4 class="text-xl font-bold text-green-500">+ ${{ ventasResumen.ventasAnuales.suma| number: '1.0-2' }}</h4>
+
+  </div>
+</div>
+</div>
+
   <div class="flex flex-wrap justify-center gap-4 w-full">
       <div class="relative flex flex-col items-center rounded-[10px] border-[1px] border-gray-200 bg-white bg-clip-border shadow-md shadow-[#F3F3F3] transform transition-transform duration-200 hover:shadow-lg hover:-translate-y-1 p-4 w-60">
           <div class="flex h-[90px] w-auto items-center justify-center">
@@ -27,7 +82,7 @@ class="absolute top-4 left-1/2 transform -translate-x-1/2 z-50"
           </div>
           <div class="flex flex-col items-center justify-center">
               <p class="font-dm text-sm font-medium text-gray-600">Ventas Mensuales</p>
-              <h4 class="text-xl font-bold text-green-500">+ {{ ventasResumen.ventasMensuales | number: '1.0-2' }}</h4>
+              <h4 class="text-xl font-bold text-green-500">+ {{ ventasResumen.ventasMensuales.total| number: '1.0-2' }}</h4>
             </div>
       </div>
 
@@ -44,7 +99,7 @@ class="absolute top-4 left-1/2 transform -translate-x-1/2 z-50"
           </div>
           <div class="flex flex-col items-center justify-center">
               <p class="font-dm text-sm font-medium text-gray-600">Ventas Diarias</p>
-              <h4 class="text-xl font-bold text-green-500">+ {{ ventasResumen.ventasDiarias | number: '1.0-2' }}</h4>
+              <h4 class="text-xl font-bold text-green-500">+ {{ ventasResumen.ventasDiarias.total | number: '1.0-2' }}</h4>
             </div>
       </div>
 
@@ -61,7 +116,7 @@ class="absolute top-4 left-1/2 transform -translate-x-1/2 z-50"
           </div>
           <div class="flex flex-col items-center justify-center">
               <p class="font-dm text-sm font-medium text-gray-600">Ventas Anuales</p>
-              <h4 class="text-xl font-bold text-green-500">+ {{ ventasResumen.ventasAnuales | number: '1.0-2' }}</h4>
+              <h4 class="text-xl font-bold text-green-500">+ {{ ventasResumen.ventasAnuales.total | number: '1.0-2' }}</h4>
             </div>
       </div>
   </div>
@@ -170,5 +225,5 @@ class="absolute top-4 left-1/2 transform -translate-x-1/2 z-50"
               <h4 class="text-xl font-bold text-red-500">- ${{ gastosAnuales | number: '1.0-2' }}</h4>
             </div>
       </div>
+
   </div>
-</div>
