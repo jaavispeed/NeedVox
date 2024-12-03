@@ -12,7 +12,7 @@ import { SpinnerComponent } from '../../../shared/pages/spinner/spinner.componen
   templateUrl: './venta.component.html',
   styleUrls: ['./venta.component.css'],
   standalone: true,
-  imports: [FormsModule, CommonModule,AlertComponent, SpinnerComponent],
+  imports: [FormsModule, CommonModule, AlertComponent, SpinnerComponent],
 })
 export class VentaComponent {
   @ViewChild('codigoBarraInput') codigoBarraInput!: ElementRef;
@@ -28,9 +28,12 @@ export class VentaComponent {
   alertMessage: string = '';
   alertType: 'success' | 'error' = 'success';
   currentPage = 1;
-  itemsPerPage = 10;
+  itemsPerPage = 5;
   hasMoreProducts = true;
   metodoPagoSeleccionado: 'EFECTIVO' | 'TARJETA' | 'TRANSFERENCIA' | 'OTRO' = 'EFECTIVO';
+  totalPages: number = 1;
+
+
 
   isLoading: boolean = false; // Para controlar la visualización del spinner
   isLoadingList: boolean = false; // Para controlar la visualización del spinner
@@ -73,60 +76,70 @@ export class VentaComponent {
   }
 
   cargarProductos() {
-    this.isLoadingList = true; // Activar el spinner antes de la carga
-
-    const offset = (this.currentPage - 1) * this.itemsPerPage;
+    this.isLoadingList = true; // Activar spinner mientras carga
+    const offset = (this.currentPage - 1) * this.itemsPerPage; // Calcular el offset
 
     this.ventaService.getProducts(this.itemsPerPage, offset).subscribe(
       (response) => {
-        const productos: Product[] = response.products; // Especifica el tipo de productos
+        const productos: Product[] = response.products;
 
-        productos.forEach((producto: Product) => {  // Agrega el tipo Product a producto
+        // Ordenar productos por stock de lotes
+        productos.forEach((producto: Product) => {
           producto.lotes = producto.lotes || [];
-
           if (producto.lotes.length > 0) {
-            producto.lotes.sort((a, b) => {
-              const fechaA = new Date(a.fechaCreacion).getTime();
-              const fechaB = new Date(b.fechaCreacion).getTime();
-              return fechaA - fechaB;
-            });
+            producto.lotes.sort((a, b) => b.stock - a.stock); // Ordenar lotes por stock
           }
+        });
 
-          const oldestLote = producto.lotes[0] || null;
-          producto.oldestLotPrice = oldestLote ? oldestLote.precioVenta : null;
+        // Ordenar productos por stock del lote principal
+        productos.sort((a, b) => {
+          const stockA = a.lotes?.[0]?.stock || 0;
+          const stockB = b.lotes?.[0]?.stock || 0;
+          return stockB - stockA;
         });
 
         this.productosFiltrados = productos;
+
+        // Calcular el total de páginas según el número de productos
+        this.totalPages = Math.ceil(this.productosFiltrados.length / this.itemsPerPage);
+
+        // Verificar si hay más productos para cargar
         this.hasMoreProducts = productos.length === this.itemsPerPage;
       },
       (error) => {
+        this.errorMessage = 'Error al cargar los productos.';
         console.error("Error al obtener los productos:", error);
-        this.errorMessage = "Error al cargar los productos. Intenta de nuevo más tarde.";
       }
     ).add(() => {
-      this.isLoadingList = false; // Desactivar el spinner cuando termina de cargar
+      this.isLoadingList = false; // Desactivar spinner después de cargar
     });
   }
 
 
 
+
+
+
+
+
+
   nextPage() {
-    if (this.hasMoreProducts) {
-      this.currentPage++;
-      this.cargarProductos();
+    if (this.currentPage < this.totalPages) {
+      this.currentPage++;  // Avanzar a la siguiente página
     }
   }
 
   previousPage() {
     if (this.currentPage > 1) {
-      this.currentPage--;
-      this.cargarProductos();
+      this.currentPage--;  // Retroceder a la página anterior
     }
   }
 
+
+
   filtrarProductos() {
     if (this.searchTerm.trim() === '') {
-      this.cargarProductos();
+      this.cargarProductos(); // Cargar productos si no hay búsqueda
       return;
     }
 
@@ -135,6 +148,10 @@ export class VentaComponent {
       producto.barcode?.toLowerCase().includes(this.searchTerm.toLowerCase())
     );
   }
+
+
+
+
 
   agregarProductoDesdeBusqueda() {
     const productoEncontrado = this.productosFiltrados.find(
@@ -322,46 +339,56 @@ export class VentaComponent {
 
   formatPrecio(precio: number): string {
     return precio.toLocaleString('es-ES', { minimumFractionDigits: 0, maximumFractionDigits: 0 });
-}
+  }
 
-private onSuccess(message: string, type: 'success' | 'error'): void {
-  this.showAlert(message, type);
+  private onSuccess(message: string, type: 'success' | 'error'): void {
+    this.showAlert(message, type);
 
-}
+  }
 
-private showAlert(message: string, type: 'success' | 'error'): void {
-  this.alertMessage = message;
-  this.alertType = type;
-  this.alertVisible = true;
+  private showAlert(message: string, type: 'success' | 'error'): void {
+    this.alertMessage = message;
+    this.alertType = type;
+    this.alertVisible = true;
 
-  setTimeout(() => {
-    this.alertVisible = false;
-  }, 3000); // Ocultar el mensaje después de 3 segundos
-}
+    setTimeout(() => {
+      this.alertVisible = false;
+    }, 3000); // Ocultar el mensaje después de 3 segundos
+  }
 
-establecerHoraCarrito(): void {
-  const now = new Date();
-  const hours = now.getHours().toString().padStart(2, '0');
-  const minutes = now.getMinutes().toString().padStart(2, '0');
-  this.horaCarrito = `${hours}:${minutes}`;
-}
+  establecerHoraCarrito(): void {
+    const now = new Date();
+    const hours = now.getHours().toString().padStart(2, '0');
+    const minutes = now.getMinutes().toString().padStart(2, '0');
+    this.horaCarrito = `${hours}:${minutes}`;
+  }
 
-// Abrir el modal
-abrirModal() {
-  this.modalAbierto = true;
-}
+  // Abrir el modal
+  abrirModal() {
+    this.modalAbierto = true;
+  }
 
-confirmarVenta() {
-  console.log('Método de pago seleccionado:', this.metodoPagoSeleccionado); // Verificar el valor
-  this.procesarVenta();
-  this.cerrarModal();
-}
+  confirmarVenta() {
+    console.log('Método de pago seleccionado:', this.metodoPagoSeleccionado); // Verificar el valor
+    this.procesarVenta();
+    this.cerrarModal();
+  }
 
-cantidadEnCarrito(producto: any): number {
-  const item = this.carrito.find((p: any) => p.product.id === producto.id);
-  return item ? item.cantidad : 0;
-}
+  cantidadEnCarrito(producto: any): number {
+    const item = this.carrito.find((p: any) => p.product.id === producto.id);
+    return item ? item.cantidad : 0;
+  }
 
+  // Getter para obtener los productos de la página actual
+  get productosPagina() {
+    const startIndex = (this.currentPage - 1) * this.itemsPerPage;
+    return this.productosFiltrados.slice(startIndex, startIndex + this.itemsPerPage);
+  }
+
+  // Getter para saber si el botón "Siguiente" está desactivado
+  get isNextButtonDisabled() {
+    return this.currentPage >= this.totalPages;
+  }
 
 
 }
