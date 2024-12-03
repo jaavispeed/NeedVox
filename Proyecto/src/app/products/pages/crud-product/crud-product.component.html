@@ -76,15 +76,15 @@
       <div class="flex justify-between mt-4 ">
         <!-- Botón anterior en la esquina izquierda -->
         <button (click)="previousPage()" [disabled]="currentPage === 1 || !paginatedProducts.length"
-          class="mx-2 px-4 py-2 bg-[#76ABAE] text-white rounded-md disabled:opacity-50" aria-label="Página anterior">
-          <i class="fas fa-chevron-left mr-2"></i> Anterior
-        </button>
+        class="mx-2 px-4 py-2 bg-[#76ABAE] text-white rounded-md disabled:opacity-50" aria-label="Página anterior">
+        <i class="fas fa-chevron-left mr-2"></i> Anterior
+      </button>
 
         <!-- Botón siguiente en la esquina derecha -->
-        <button (click)="nextPage()" [disabled]="!hasMoreProducts || !paginatedProducts.length"
-          class="mx-2 px-4 py-2 bg-[#76ABAE] text-white rounded-md disabled:opacity-50" aria-label="Siguiente página">
-          Siguiente <i class="fas fa-chevron-right ml-2"></i>
-        </button>
+        <button (click)="nextPage()" [disabled]="paginatedProducts.length < 10"
+    class="mx-2 px-4 py-2 bg-[#76ABAE] text-white rounded-md disabled:opacity-50" aria-label="Siguiente página">
+    Siguiente <i class="fas fa-chevron-right ml-2"></i>
+  </button>
       </div>
 
     </div>

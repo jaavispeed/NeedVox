@@ -83,7 +83,7 @@ export class CrudProductComponent implements OnInit {
         // Filtrar los productos según el término de búsqueda
         this.filterProducts();
 
-        this.hasMoreProducts = data.hasMore;
+        this.hasMoreProducts = data.hasMore;  // Este es el valor que el backend te devuelve
       },
       error: () => {
         this.showAlert('Error al obtener los productos.', 'error');
@@ -96,6 +96,7 @@ export class CrudProductComponent implements OnInit {
 
 
 
+
   get paginatedProducts(): Product[] {
     // Aplicar la paginación sobre los productos filtrados
     const startIndex = (this.currentPage - 1) * this.itemsPerPage;
@@ -103,8 +104,10 @@ export class CrudProductComponent implements OnInit {
   }
 
 
+
   nextPage(): void {
-    if (this.hasMoreProducts) {
+    // Habilitar "Siguiente" solo si hay más productos que los mostrados
+    if (this.filteredProducts.length > this.currentPage * this.itemsPerPage) {
       this.currentPage++;
       this.getProducts(); // Cargar productos de la nueva página
     }
@@ -119,9 +122,12 @@ export class CrudProductComponent implements OnInit {
 
 
 
+
   totalPages(): number {
-    return Math.ceil(this.filteredProducts.length / this.itemsPerPage);
+    // Asegúrate de que hasMoreProducts esté correctamente asignado
+    return Math.ceil(this.products.length / this.itemsPerPage);
   }
+
 
 
   promptDelete(id: string): void {
@@ -291,14 +297,16 @@ export class CrudProductComponent implements OnInit {
 
 
   filterProducts(): void {
-    if (this.searchTerm) {
+    if (this.searchTerm.trim()) {
       this.filteredProducts = this.products.filter(product =>
-        product.title.toLowerCase().includes(this.searchTerm.toLowerCase())
+        product.title.toLowerCase().includes(this.searchTerm.toLowerCase()) ||
+        (product.barcode && product.barcode.toString().includes(this.searchTerm.trim()))
       );
     } else {
-      this.filteredProducts = this.products; // Restablece la lista si no hay término de búsqueda
+      this.filteredProducts = this.products; // Si no hay término de búsqueda, muestra todos los productos
     }
   }
+
 
   openModal(): void {
     this.resetForm(); // Resetea el formulario antes de abrir el modal
