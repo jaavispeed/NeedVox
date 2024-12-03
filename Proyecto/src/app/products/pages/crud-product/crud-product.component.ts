@@ -59,6 +59,7 @@ export class CrudProductComponent implements OnInit {
       next: (data) => {
         // Actualizar los productos según la respuesta
         if (this.currentPage === 1) {
+          // Para la primera página, sobrescribir todos los productos
           this.products = data.products.map((product: Product) => ({
             ...product,
             fechaCreacion: product.fechaCreacion ? new Date(product.fechaCreacion).toLocaleDateString('es-ES', {
@@ -69,7 +70,8 @@ export class CrudProductComponent implements OnInit {
             }) : 'Fecha no disponible'
           }));
         } else {
-          this.products = [...this.products, ...data.products.map((product: Product) => ({
+          // Para páginas siguientes, agregar solo los productos de esa página
+          this.products = this.products.slice(0, (this.currentPage - 1) * this.itemsPerPage).concat(data.products.map((product: Product) => ({
             ...product,
             fechaCreacion: product.fechaCreacion ? new Date(product.fechaCreacion).toLocaleDateString('es-ES', {
               year: 'numeric',
@@ -77,7 +79,7 @@ export class CrudProductComponent implements OnInit {
               day: 'numeric',
               timeZone: 'America/Santiago'
             }) : 'Fecha no disponible'
-          }))];
+          })));
         }
 
         // Filtrar los productos según el término de búsqueda
@@ -93,6 +95,7 @@ export class CrudProductComponent implements OnInit {
       }
     });
   }
+
 
 
 
