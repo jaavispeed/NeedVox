@@ -116,13 +116,6 @@ export class VentaComponent {
   }
 
 
-
-
-
-
-
-
-
   nextPage() {
     if (this.currentPage < this.totalPages) {
       this.currentPage++;  // Avanzar a la siguiente página
@@ -148,9 +141,6 @@ export class VentaComponent {
       producto.barcode?.toLowerCase().includes(this.searchTerm.toLowerCase())
     );
   }
-
-
-
 
 
   agregarProductoDesdeBusqueda() {
@@ -207,9 +197,6 @@ export class VentaComponent {
 
     this.actualizarTotal();
   }
-
-
-
 
 
 
@@ -302,8 +289,6 @@ export class VentaComponent {
   }
 
 
-
-
   reiniciarCarrito() {
     this.carrito = [];
     this.totalPrecio = 0;
@@ -389,6 +374,5 @@ export class VentaComponent {
   get isNextButtonDisabled() {
     return this.currentPage >= this.totalPages;
   }
-
 
 }
