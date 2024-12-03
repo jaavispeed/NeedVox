@@ -32,17 +32,17 @@ export class DashboardService {
     return this.http.get<number>(`${this.apiUrlprod}/count/${userId}`, { headers });
   }
 
-  getGastos(tipo: 'dia' | 'mes' | 'año'): Observable<any> {
+  getGastos(): Observable<any> {
     const token = localStorage.getItem('token'); // Obtener el token del localStorage
     const headers = new HttpHeaders({
       'Authorization': `Bearer ${token}` // Añadir el encabezado de autorización
     });
 
-    console.log(`Llamando a la API para gastos de tipo: ${tipo}`);  // Log para saber que se hace la solicitud
+    console.log('Llamando a la API para obtener los gastos...');
 
-    return this.http.get<any>(`${this.apiUrlStats}?tipo=${tipo}`, { headers }).pipe(  // Usar apiUrlStats
+    return this.http.get<any>(`${this.apiUrlStats}`, { headers }).pipe(  // Llamar a la nueva API sin 'tipo'
       tap((response) => {
-        console.log(`Respuesta de la API para ${tipo}:`, response);
+        console.log('Respuesta de la API para los gastos:', response);
       })
     );
   }

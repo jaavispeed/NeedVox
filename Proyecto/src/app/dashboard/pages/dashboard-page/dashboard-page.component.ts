@@ -87,40 +87,24 @@ export default class DashboardPageComponent implements OnInit {
 
     console.log('Llamando a obtener gastos...');
 
-    this.dashboardService.getGastos('dia').subscribe(
+    this.dashboardService.getGastos().subscribe(
       (response) => {
-        console.log('Respuesta de gastos diarios:', response);
-        this.gastosDiarios = response.estadisticas?.[0]?.totalcompra || 0;
+        console.log('Respuesta de gastos:', response);
+
+        // Asignar los valores de los gastos directamente desde la respuesta
+        this.gastosDiarios = response.gastosDia || 0;
+        this.gastosMensuales = response.gastosMes || 0;
+        this.gastosAnuales = response.gastosAnio || 0;
+
+        this.setLoadingState(false); // Desactivar el spinner después de obtener los gastos
       },
       (error) => {
-        console.error('Error al obtener los gastos diarios:', error);
-      }
-    );
-
-    this.dashboardService.getGastos('mes').subscribe(
-      (response) => {
-        console.log('Respuesta de gastos mensuales:', response);
-        this.gastosMensuales = response.estadisticas?.[0]?.totalcompra || 0;
-      },
-      (error) => {
-        console.error('Error al obtener los gastos mensuales:', error);
-      }
-    );
-
-    this.dashboardService.getGastos('año').subscribe(
-      (response) => {
-        console.log('Respuesta de gastos anuales:', response);
-        this.gastosAnuales = response.estadisticas?.[0]?.totalcompra || 0;
-        this.setLoadingState(false); // Desactivar el spinner después de obtener los gastos anuales
-
-      },
-      (error) => {
-        console.error('Error al obtener los gastos anuales:', error);
-        this.setLoadingState(false); // Desactivar el spinner después de obtener los gastos anuales
-
+        console.error('Error al obtener los gastos:', error);
+        this.setLoadingState(false); // Desactivar el spinner si hay error
       }
     );
   }
+
 
   obtenerVentasResumen(): void {
     this.setLoadingState(true); // Activar el spinner
