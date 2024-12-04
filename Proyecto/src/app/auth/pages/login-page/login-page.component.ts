@@ -44,7 +44,7 @@ export default class LoginPageComponent {
         this.authService.login({ email, password }).subscribe({
           next: (response: User) => {
             if (response && response.token) { // Verifica que la respuesta sea válida
-              console.log('Login correcto', response);
+              console.log('Login correcto');
               localStorage.setItem('token', response.token);
               this.onSuccess.emit(); // Emitir evento de éxito
 

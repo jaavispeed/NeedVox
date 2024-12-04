@@ -86,11 +86,9 @@ export default class DashboardPageComponent implements OnInit {
   obtenerGastos(): void {
     this.setLoadingState(true); // Activar el spinner
 
-    console.log('Llamando a obtener gastos...');
 
     this.dashboardService.getGastos().subscribe(
       (response) => {
-        console.log('Respuesta de gastos:', response);
 
         // Asignar los valores de los gastos directamente desde la respuesta
         this.gastosDiarios = response.gastosDia || 0;
@@ -112,7 +110,6 @@ export default class DashboardPageComponent implements OnInit {
 
     this.dashboardService.getVentasResumen().subscribe(
       (response) => {
-        console.log('Resumen de ventas:', response); // Depuración
 
         // Asignar los valores del resumen directamente
         this.ventasResumen = {

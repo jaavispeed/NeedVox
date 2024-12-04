@@ -37,14 +37,7 @@ export class DashboardService {
     const headers = new HttpHeaders({
       'Authorization': `Bearer ${token}` // Añadir el encabezado de autorización
     });
-
-    console.log('Llamando a la API para obtener los gastos...');
-
-    return this.http.get<any>(`${this.apiUrlStats}`, { headers }).pipe(  // Llamar a la nueva API sin 'tipo'
-      tap((response) => {
-        console.log('Respuesta de la API para los gastos:', response);
-      })
-    );
+    return this.http.get<any>(`${this.apiUrlStats}`, { headers })
   }
 
 
