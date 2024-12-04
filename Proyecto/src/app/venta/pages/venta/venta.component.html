@@ -59,13 +59,17 @@
             <td class="p-3 text-center">{{ producto.stockTotal > 0 ? producto.stockTotal : 'Sin stock' }}</td>
             <td class="p-3 text-center">{{ producto.barcode || 'Sin codigo de barra' }}</td>
             <td class="p-3 text-center">
-              <button *ngIf="hayLotesDisponibles(producto)"
-                (click)="agregarAlCarrito(producto, obtenerLoteDisponible(producto))"
-                [disabled]="producto.stockTotal <= cantidadEnCarrito(producto) || !hayLotesDisponibles(producto)" class="px-4 py-2 bg-green-500 text-white rounded-lg
-                     disabled:bg-gray-400 disabled:text-gray-800 disabled:cursor-not-allowed font-rubik">
+              <button (click)="agregarAlCarrito(producto, obtenerLoteDisponible(producto))"
+                [disabled]="producto.stockTotal <= cantidadEnCarrito(producto) || !hayLotesDisponibles(producto)"
+                [ngClass]="{
+    'bg-green-500': producto.stockTotal > 0 && hayLotesDisponibles(producto),
+    'bg-gray-400': producto.stockTotal <= 0 || !hayLotesDisponibles(producto),
+    'disabled:text-gray-800': producto.stockTotal <= 0 || !hayLotesDisponibles(producto)
+  }" class="px-4 py-2 text-white rounded-lg disabled:cursor-not-allowed font-rubik">
                 <i class="fas fa-plus mr-1"></i>
                 Agregar
               </button>
+
             </td>
           </tr>
         </tbody>
