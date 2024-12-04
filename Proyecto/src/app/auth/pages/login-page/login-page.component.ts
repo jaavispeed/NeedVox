@@ -31,8 +31,12 @@ export default class LoginPageComponent {
 
   onSubmit() {
     if (this.loginform.valid) {
-      const email = this.loginform.get('email')?.value;
-      const password = this.loginform.get('password')?.value;
+      let email = this.loginform.get('email')?.value;
+      let password = this.loginform.get('password')?.value;
+
+      // Convierte todo a minúsculas
+      email = email?.toLowerCase();
+      password = password?.toLowerCase(); // Opcional, si también deseas convertir la contraseña (aunque esto depende del contexto)
 
       this.startLoading.emit(); // Emitir el evento para iniciar el spinner
 
@@ -70,6 +74,7 @@ export default class LoginPageComponent {
       this.stopLoading.emit(); // Detener el spinner si el formulario es inválido
     }
   }
+
 
   // Función para manejar errores de inicio de sesión
   private handleLoginError() {
