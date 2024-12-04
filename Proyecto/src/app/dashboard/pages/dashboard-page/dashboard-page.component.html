@@ -1,149 +1,163 @@
-<app-alert class="absolute top-4 left-1/2 transform -translate-x-1/2 z-50" [message]="welcomeMessage || ''"
-  [isVisible]="!!(welcomeMessage && welcomeMessage.length > 0)" [type]="'success'"></app-alert>
+<app-alert class="absolute top-4 left-1/2 transform -translate-x-1/2 z-50"
+           [message]="welcomeMessage || ''"
+           [isVisible]="!!(welcomeMessage && welcomeMessage.length > 0)"
+           [type]="'success'"></app-alert>
 
 <div *ngIf="isLoading" class="fixed inset-0 flex items-center justify-center z-[1000] bg-white bg-opacity-50">
   <app-spinner></app-spinner>
 </div>
 
-<div class="flex flex-wrap justify-center gap-4 max-w-6xl mx-auto mt-10">
+<div class="flex flex-col items-center gap-2 max-w-6xl mx-auto mt-10">
   <div class="w-full text-center mb-4">
     <h2 class="text-2xl font-bold">¡Bienvenido, {{userName}}!</h2>
   </div>
-  <div
-    class="relative flex flex-col items-center rounded-[10px] border-[1px] border-gray-200 bg-white bg-clip-border shadow-md shadow-[#F3F3F3] transform transition-transform duration-200 hover:shadow-lg hover:-translate-y-1 p-4 w-60">
-    <div class="flex h-[90px] w-auto items-center justify-center">
-      <div class="rounded-full bg-lightPrimary p-3">
-        <span class="flex items-center text-brand-500">
-          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" class="size-6">
-            <path d="M18.375 2.25c-1.035 0-1.875.84-1.875 1.875v15.75c0 1.035.84 1.875 1.875 1.875h.75c1.035 0 1.875-.84 1.875-1.875V4.125c0-1.036-.84-1.875-1.875-1.875h-.75ZM9.75 8.625c0-1.036.84-1.875 1.875-1.875h.75c1.036 0 1.875.84 1.875 1.875v11.25c0 1.035-.84 1.875-1.875 1.875h-.75a1.875 1.875 0 0 1-1.875-1.875V8.625ZM3 13.125c0-1.036.84-1.875 1.875-1.875h.75c1.036 0 1.875.84 1.875 1.875v6.75c0 1.035-.84 1.875-1.875 1.875h-.75A1.875 1.875 0 0 1 3 19.875v-6.75Z" />
-          </svg>
-        </span>
+
+  <!-- Categorías -->
+  <div class="flex justify-center w-full gap-2">
+
+    <!-- Resumen de Ventas -->
+    <div class="w-1/3">
+      <h3 class="text-lg font-bold text-center mb-4">Resumen de Ventas</h3>
+      <div class="flex flex-col gap-2 items-center">
+        <!-- Ventas Diarias -->
+        <div class="relative flex flex-col items-center rounded-[10px] border-[1px] border-gray-200 bg-white bg-clip-border shadow-md shadow-[#F3F3F3] transform transition-transform duration-200 hover:shadow-lg hover:-translate-y-1 p-4 w-52">
+          <div class="flex h-[70px] w-auto items-center justify-center">
+            <div class="rounded-full bg-lightPrimary p-2">
+              <span class="flex items-center text-brand-500">
+                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" class="size-5">
+                  <path d="M18.375 2.25c-1.035 0-1.875.84-1.875 1.875v15.75c0 1.035.84 1.875 1.875 1.875h.75c1.035 0 1.875-.84 1.875-1.875V4.125c0-1.036-.84-1.875-1.875-1.875h-.75ZM9.75 8.625c0-1.036.84-1.875 1.875-1.875h.75c1.036 0 1.875.84 1.875 1.875v11.25c0 1.035-.84 1.875-1.875 1.875h-.75a1.875 1.875 0 0 1-1.875-1.875V8.625ZM3 13.125c0-1.036.84-1.875 1.875-1.875h.75c1.036 0 1.875.84 1.875 1.875v6.75c0 1.035-.84 1.875-1.875 1.875h-.75A1.875 1.875 0 0 1 3 19.875v-6.75Z" />
+                </svg>
+              </span>
+            </div>
+          </div>
+          <div class="flex flex-col items-center justify-center text-sm">
+            <p class="font-dm text-xs font-medium text-gray-600">Ventas Diarias</p>
+            <h4 class="text-lg font-bold text-green-500">+ ${{ ventasResumen.ventasDiarias.suma | number: '1.0-2' }}</h4>
+            <p class="text-xs text-gray-500">Cantidad: {{ ventasResumen.ventasDiarias.total }}</p>
+          </div>
+        </div>
+
+        <!-- Ventas Mensuales -->
+        <div class="relative flex flex-col items-center rounded-[10px] border-[1px] border-gray-200 bg-white bg-clip-border shadow-md shadow-[#F3F3F3] transform transition-transform duration-200 hover:shadow-lg hover:-translate-y-1 p-4 w-52">
+          <div class="flex h-[70px] w-auto items-center justify-center">
+            <div class="rounded-full bg-lightPrimary p-2">
+              <span class="flex items-center text-brand-500">
+                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" class="size-5">
+                  <path d="M18.375 2.25c-1.035 0-1.875.84-1.875 1.875v15.75c0 1.035.84 1.875 1.875 1.875h.75c1.035 0 1.875-.84 1.875-1.875V4.125c0-1.036-.84-1.875-1.875-1.875h-.75ZM9.75 8.625c0-1.036.84-1.875 1.875-1.875h.75c1.036 0 1.875.84 1.875 1.875v11.25c0 1.035-.84 1.875-1.875 1.875h-.75a1.875 1.875 0 0 1-1.875-1.875V8.625ZM3 13.125c0-1.036.84-1.875 1.875-1.875h.75c1.036 0 1.875.84 1.875 1.875v6.75c0 1.035-.84 1.875-1.875 1.875h-.75A1.875 1.875 0 0 1 3 19.875v-6.75Z" />
+                </svg>
+              </span>
+            </div>
+          </div>
+          <div class="flex flex-col items-center justify-center text-sm">
+            <p class="font-dm text-xs font-medium text-gray-600">Ventas Mensuales</p>
+            <h4 class="text-lg font-bold text-green-500">+ ${{ ventasResumen.ventasMensuales.suma | number: '1.0-2' }}</h4>
+            <p class="text-xs text-gray-500">Cantidad: {{ ventasResumen.ventasMensuales.total }}</p>
+          </div>
+        </div>
+
+        <!-- Ventas Anuales -->
+        <div class="relative flex flex-col items-center rounded-[10px] border-[1px] border-gray-200 bg-white bg-clip-border shadow-md shadow-[#F3F3F3] transform transition-transform duration-200 hover:shadow-lg hover:-translate-y-1 p-4 w-52">
+          <div class="flex h-[70px] w-auto items-center justify-center">
+            <div class="rounded-full bg-lightPrimary p-2">
+              <span class="flex items-center text-brand-500">
+                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" class="size-5">
+                  <path d="M18.375 2.25c-1.035 0-1.875.84-1.875 1.875v15.75c0 1.035.84 1.875 1.875 1.875h.75c1.035 0 1.875-.84 1.875-1.875V4.125c0-1.036-.84-1.875-1.875-1.875h-.75ZM9.75 8.625c0-1.036.84-1.875 1.875-1.875h.75c1.036 0 1.875.84 1.875 1.875v11.25c0 1.035-.84 1.875-1.875 1.875h-.75a1.875 1.875 0 0 1-1.875-1.875V8.625ZM3 13.125c0-1.036.84-1.875 1.875-1.875h.75c1.036 0 1.875.84 1.875 1.875v6.75c0 1.035-.84 1.875-1.875 1.875h-.75A1.875 1.875 0 0 1 3 19.875v-6.75Z" />
+                </svg>
+              </span>
+            </div>
+          </div>
+          <div class="flex flex-col items-center justify-center text-sm">
+            <p class="font-dm text-xs font-medium text-gray-600">Ventas Anuales</p>
+            <h4 class="text-lg font-bold text-green-500">+ ${{ ventasResumen.ventasAnuales.suma | number: '1.0-2' }}</h4>
+            <p class="text-xs text-gray-500">Cantidad: {{ ventasResumen.ventasAnuales.total }}</p>
+          </div>
+        </div>
       </div>
     </div>
-    <div class="flex flex-col items-center justify-center">
-      <p class="font-dm text-sm font-medium text-gray-600">Ventas Totales Mensuales</p>
-      <h4 class="text-xl font-bold text-green-500">+ ${{ ventasResumen.ventasMensuales.suma| number: '1.0-2' }}</h4>
-      <p class="text-sm text-gray-500">Cantidad: {{ ventasResumen.ventasMensuales.total }}</p>
-    </div>
-  </div>
 
-  <div
-    class="relative flex flex-col items-center rounded-[10px] border-[1px] border-gray-200 bg-white bg-clip-border shadow-md shadow-[#F3F3F3] transform transition-transform duration-200 hover:shadow-lg hover:-translate-y-1 p-4 w-60">
-    <div class="flex h-[90px] w-auto items-center justify-center">
-      <div class="rounded-full bg-lightPrimary p-3">
-        <span class="flex items-center text-brand-500">
-          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" class="size-6">
-            <path d="M18.375 2.25c-1.035 0-1.875.84-1.875 1.875v15.75c0 1.035.84 1.875 1.875 1.875h.75c1.035 0 1.875-.84 1.875-1.875V4.125c0-1.036-.84-1.875-1.875-1.875h-.75ZM9.75 8.625c0-1.036.84-1.875 1.875-1.875h.75c1.036 0 1.875.84 1.875 1.875v11.25c0 1.035-.84 1.875-1.875 1.875h-.75a1.875 1.875 0 0 1-1.875-1.875V8.625ZM3 13.125c0-1.036.84-1.875 1.875-1.875h.75c1.036 0 1.875.84 1.875 1.875v6.75c0 1.035-.84 1.875-1.875 1.875h-.75A1.875 1.875 0 0 1 3 19.875v-6.75Z" />
-          </svg>
-        </span>
+    <!-- Resumen de Gastos -->
+    <div class="w-1/3">
+      <h3 class="text-lg font-bold text-center mb-4">Resumen de Gastos</h3>
+      <div class="flex flex-col gap-2 items-center">
+        <!-- Gastos Diarias -->
+        <div class="relative flex flex-col items-center rounded-[10px] border-[1px] border-gray-200 bg-white bg-clip-border shadow-md shadow-[#F3F3F3] transform transition-transform duration-200 hover:shadow-lg hover:-translate-y-1 p-4 w-52">
+          <div class="flex h-[70px] w-auto items-center justify-center">
+            <div class="rounded-full bg-lightPrimary p-2">
+              <span class="flex items-center text-brand-500">
+                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" class="size-6">
+                  <path d="M10.464 8.746c.227-.18.497-.311.786-.394v2.795a2.252 2.252 0 0 1-.786-.393c-.394-.313-.546-.681-.546-1.004 0-.323.152-.691.546-1.004ZM12.75 15.662v-2.824c.347.085.664.228.921.421.427.32.579.686.579.991 0 .305-.152.671-.579.991a2.534 2.534 0 0 1-.921.42Z" />
+                  <path fill-rule="evenodd" d="M12 2.25c-5.385 0-9.75 4.365-9.75 9.75s4.365 9.75 9.75 9.75 9.75-4.365 9.75-9.75S17.385 2.25 12 2.25ZM12.75 6a.75.75 0 0 0-1.5 0v.816a3.836 3.836 0 0 0-1.72.756c-.712.566-1.112 1.35-1.112 2.178 0 .829.4 1.612 1.113 2.178.502.4 1.102.647 1.719.756v2.978a2.536 2.536 0 0 1-.921-.421l-.879-.66a.75.75 0 0 0-.9 1.2l.879.66c.533.4 1.169.645 1.821.75V18a.75.75 0 0 0 1.5 0v-.81a4.124 4.124 0 0 0 1.821-.749c.745-.559 1.179-1.344 1.179-2.191 0-.847-.434-1.632-1.179-2.191a4.122 4.122 0 0 0-1.821-.75V8.354c.29.082.559.213.786.393l.415.33a.75.75 0 0 0 .933-1.175l-.415-.33a3.836 3.836 0 0 0-1.719-.755V6Z" clip-rule="evenodd" />
+                </svg>
+              </span>
+            </div>
+          </div>
+          <div class="flex flex-col items-center justify-center text-sm">
+            <p class="font-dm text-xs font-medium text-gray-600">Gastos Diarios</p>
+            <h4 class="text-lg font-bold text-red-500">- ${{ gastosResumen.gastosDiarios.totalCompra | number: '1.0-2' }}</h4>
+            <p class="text-xs text-gray-500">Cantidad: {{ gastosResumen.gastosDiarios.cantidad }}</p>
+          </div>
+        </div>
+
+        <!-- Gastos Diarios -->
+        <div class="relative flex flex-col items-center rounded-[10px] border-[1px] border-gray-200 bg-white bg-clip-border shadow-md shadow-[#F3F3F3] transform transition-transform duration-200 hover:shadow-lg hover:-translate-y-1 p-4 w-52">
+          <div class="flex h-[70px] w-auto items-center justify-center">
+            <div class="rounded-full bg-lightPrimary p-2">
+              <span class="flex items-center text-brand-500">
+                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" class="size-6">
+                  <path d="M10.464 8.746c.227-.18.497-.311.786-.394v2.795a2.252 2.252 0 0 1-.786-.393c-.394-.313-.546-.681-.546-1.004 0-.323.152-.691.546-1.004ZM12.75 15.662v-2.824c.347.085.664.228.921.421.427.32.579.686.579.991 0 .305-.152.671-.579.991a2.534 2.534 0 0 1-.921.42Z" />
+                  <path fill-rule="evenodd" d="M12 2.25c-5.385 0-9.75 4.365-9.75 9.75s4.365 9.75 9.75 9.75 9.75-4.365 9.75-9.75S17.385 2.25 12 2.25ZM12.75 6a.75.75 0 0 0-1.5 0v.816a3.836 3.836 0 0 0-1.72.756c-.712.566-1.112 1.35-1.112 2.178 0 .829.4 1.612 1.113 2.178.502.4 1.102.647 1.719.756v2.978a2.536 2.536 0 0 1-.921-.421l-.879-.66a.75.75 0 0 0-.9 1.2l.879.66c.533.4 1.169.645 1.821.75V18a.75.75 0 0 0 1.5 0v-.81a4.124 4.124 0 0 0 1.821-.749c.745-.559 1.179-1.344 1.179-2.191 0-.847-.434-1.632-1.179-2.191a4.122 4.122 0 0 0-1.821-.75V8.354c.29.082.559.213.786.393l.415.33a.75.75 0 0 0 .933-1.175l-.415-.33a3.836 3.836 0 0 0-1.719-.755V6Z" clip-rule="evenodd" />
+                </svg>
+              </span>
+            </div>
+          </div>
+          <div class="flex flex-col items-center justify-center text-sm">
+            <p class="font-dm text-xs font-medium text-gray-600">Gastos Mensuales</p>
+            <h4 class="text-lg font-bold text-red-500">- ${{ gastosResumen.gastosMensuales.totalCompra | number: '1.0-2' }}</h4>
+            <p class="text-xs text-gray-500">Cantidad: {{ gastosResumen.gastosMensuales.cantidad }}</p>
+          </div>
+        </div>
+
+        <!-- Gastos Anuales -->
+        <div class="relative flex flex-col items-center rounded-[10px] border-[1px] border-gray-200 bg-white bg-clip-border shadow-md shadow-[#F3F3F3] transform transition-transform duration-200 hover:shadow-lg hover:-translate-y-1 p-4 w-52">
+          <div class="flex h-[70px] w-auto items-center justify-center">
+            <div class="rounded-full bg-lightPrimary p-2">
+              <span class="flex items-center text-brand-500">
+                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" class="size-6">
+                  <path d="M10.464 8.746c.227-.18.497-.311.786-.394v2.795a2.252 2.252 0 0 1-.786-.393c-.394-.313-.546-.681-.546-1.004 0-.323.152-.691.546-1.004ZM12.75 15.662v-2.824c.347.085.664.228.921.421.427.32.579.686.579.991 0 .305-.152.671-.579.991a2.534 2.534 0 0 1-.921.42Z" />
+                  <path fill-rule="evenodd" d="M12 2.25c-5.385 0-9.75 4.365-9.75 9.75s4.365 9.75 9.75 9.75 9.75-4.365 9.75-9.75S17.385 2.25 12 2.25ZM12.75 6a.75.75 0 0 0-1.5 0v.816a3.836 3.836 0 0 0-1.72.756c-.712.566-1.112 1.35-1.112 2.178 0 .829.4 1.612 1.113 2.178.502.4 1.102.647 1.719.756v2.978a2.536 2.536 0 0 1-.921-.421l-.879-.66a.75.75 0 0 0-.9 1.2l.879.66c.533.4 1.169.645 1.821.75V18a.75.75 0 0 0 1.5 0v-.81a4.124 4.124 0 0 0 1.821-.749c.745-.559 1.179-1.344 1.179-2.191 0-.847-.434-1.632-1.179-2.191a4.122 4.122 0 0 0-1.821-.75V8.354c.29.082.559.213.786.393l.415.33a.75.75 0 0 0 .933-1.175l-.415-.33a3.836 3.836 0 0 0-1.719-.755V6Z" clip-rule="evenodd" />
+                </svg>
+              </span>
+            </div>
+          </div>
+          <div class="flex flex-col items-center justify-center text-sm">
+            <p class="font-dm text-xs font-medium text-gray-600">Gastos Totales Anuales</p>
+            <h4 class="text-lg font-bold text-red-500">- ${{ gastosResumen.gastosAnuales.totalCompra | number: '1.0-2' }}</h4>
+            <p class="text-xs text-gray-500">Cantidad: {{ gastosResumen.gastosAnuales.cantidad }}</p>
+          </div>
+        </div>
       </div>
     </div>
-    <div class="flex flex-col items-center justify-center">
-      <p class="font-dm text-sm font-medium text-gray-600">Ventas Totales Diarias</p>
-      <h4 class="text-xl font-bold text-green-500">+ ${{ ventasResumen.ventasDiarias.suma| number: '1.0-2' }}</h4>
-      <p class="text-sm text-gray-500">Cantidad: {{ ventasResumen.ventasDiarias.total }}</p>
-    </div>
-  </div>
 
-  <div
-    class="relative flex flex-col items-center rounded-[10px] border-[1px] border-gray-200 bg-white bg-clip-border shadow-md shadow-[#F3F3F3] transform transition-transform duration-200 hover:shadow-lg hover:-translate-y-1 p-4 w-60">
-    <div class="flex h-[90px] w-auto items-center justify-center">
-      <div class="rounded-full bg-lightPrimary p-3">
-        <span class="flex items-center text-brand-500">
-          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" class="size-6">
-            <path d="M18.375 2.25c-1.035 0-1.875.84-1.875 1.875v15.75c0 1.035.84 1.875 1.875 1.875h.75c1.035 0 1.875-.84 1.875-1.875V4.125c0-1.036-.84-1.875-1.875-1.875h-.75ZM9.75 8.625c0-1.036.84-1.875 1.875-1.875h.75c1.036 0 1.875.84 1.875 1.875v11.25c0 1.035-.84 1.875-1.875 1.875h-.75a1.875 1.875 0 0 1-1.875-1.875V8.625ZM3 13.125c0-1.036.84-1.875 1.875-1.875h.75c1.036 0 1.875.84 1.875 1.875v6.75c0 1.035-.84 1.875-1.875 1.875h-.75A1.875 1.875 0 0 1 3 19.875v-6.75Z" />
-          </svg>
-        </span>
-      </div>
-    </div>
-    <div class="flex flex-col items-center justify-center">
-      <p class="font-dm text-sm font-medium text-gray-600">Ventas Totales Anuales</p>
-      <h4 class="text-xl font-bold text-green-500">+ ${{ ventasResumen.ventasAnuales.suma| number: '1.0-2' }}</h4>
-      <p class="text-sm text-gray-500">Cantidad: {{ ventasResumen.ventasAnuales.total }}</p>
-    </div>
-  </div>
-</div>
-
-
-<div class="flex flex-wrap justify-center gap-4 w-full">
-  <div
-    class="relative flex flex-col items-center rounded-[10px] border-[1px] border-gray-200 bg-white bg-clip-border shadow-md shadow-[#F3F3F3] transform transition-transform duration-200 hover:shadow-lg hover:-translate-y-1 p-4 w-60">
-    <div class="flex h-[90px] w-auto items-center justify-center">
-      <div class="rounded-full bg-lightPrimary p-3">
-        <span class="flex items-center text-brand-500">
-          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" class="size-6">
-            <path
-              d="M3.375 3C2.339 3 1.5 3.84 1.5 4.875v.75c0 1.036.84 1.875 1.875 1.875h17.25c1.035 0 1.875-.84 1.875-1.875v-.75C22.5 3.839 21.66 3 20.625 3H3.375Z" />
-            <path fill-rule="evenodd"
-              d="m3.087 9 .54 9.176A3 3 0 0 0 6.62 21h10.757a3 3 0 0 0 2.995-2.824L20.913 9H3.087Zm6.163 3.75A.75.75 0 0 1 10 12h4a.75.75 0 0 1 0 1.5h-4a.75.75 0 0 1-.75-.75Z"
-              clip-rule="evenodd" />
-          </svg>
-        </span>
-      </div>
-    </div>
-    <div class="flex flex-col items-center justify-center">
-      <p class="font-dm text-sm font-medium text-gray-600">Productos Totales</p>
-      <h4 class="text-xl font-bold text-black">{{ totalProducts }}</h4>
-    </div>
-  </div>
-</div>
-
-<div class="flex flex-wrap justify-center gap-4 w-full">
-  <div
-    class="relative flex flex-col items-center rounded-[10px] border-[1px] border-gray-200 bg-white bg-clip-border shadow-md shadow-[#F3F3F3] transform transition-transform duration-200 hover:shadow-lg hover:-translate-y-1 p-4 w-60">
-    <div class="flex h-[90px] w-auto items-center justify-center">
-      <div class="rounded-full bg-lightPrimary p-3">
-        <span class="flex items-center text-brand-500">
-          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" class="size-6">
-            <path d="M10.464 8.746c.227-.18.497-.311.786-.394v2.795a2.252 2.252 0 0 1-.786-.393c-.394-.313-.546-.681-.546-1.004 0-.323.152-.691.546-1.004ZM12.75 15.662v-2.824c.347.085.664.228.921.421.427.32.579.686.579.991 0 .305-.152.671-.579.991a2.534 2.534 0 0 1-.921.42Z" />
-            <path fill-rule="evenodd" d="M12 2.25c-5.385 0-9.75 4.365-9.75 9.75s4.365 9.75 9.75 9.75 9.75-4.365 9.75-9.75S17.385 2.25 12 2.25ZM12.75 6a.75.75 0 0 0-1.5 0v.816a3.836 3.836 0 0 0-1.72.756c-.712.566-1.112 1.35-1.112 2.178 0 .829.4 1.612 1.113 2.178.502.4 1.102.647 1.719.756v2.978a2.536 2.536 0 0 1-.921-.421l-.879-.66a.75.75 0 0 0-.9 1.2l.879.66c.533.4 1.169.645 1.821.75V18a.75.75 0 0 0 1.5 0v-.81a4.124 4.124 0 0 0 1.821-.749c.745-.559 1.179-1.344 1.179-2.191 0-.847-.434-1.632-1.179-2.191a4.122 4.122 0 0 0-1.821-.75V8.354c.29.082.559.213.786.393l.415.33a.75.75 0 0 0 .933-1.175l-.415-.33a3.836 3.836 0 0 0-1.719-.755V6Z" clip-rule="evenodd" />
-          </svg>
-        </span>
-      </div>
-    </div>
-    <div class="flex flex-col items-center justify-center">
-      <p class="font-dm text-sm font-medium text-gray-600">Gastos Mensuales</p>
-      <h4 class="text-xl font-bold text-red-500">- ${{ gastosResumen.gastosMensuales.totalCompra | number: '1.0-2' }}
-      </h4>
-      <p class="text-sm text-gray-500">Cantidad: {{ gastosResumen.gastosMensuales.cantidad }}</p>
-    </div>
-  </div>
-
-  <div
-    class="relative flex flex-col items-center rounded-[10px] border-[1px] border-gray-200 bg-white bg-clip-border shadow-md shadow-[#F3F3F3] transform transition-transform duration-200 hover:shadow-lg hover:-translate-y-1 p-4 w-60">
-    <div class="flex h-[90px] w-auto items-center justify-center">
-      <div class="rounded-full bg-lightPrimary p-3">
-        <span class="flex items-center text-brand-500">
-          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" class="size-6">
-            <path d="M10.464 8.746c.227-.18.497-.311.786-.394v2.795a2.252 2.252 0 0 1-.786-.393c-.394-.313-.546-.681-.546-1.004 0-.323.152-.691.546-1.004ZM12.75 15.662v-2.824c.347.085.664.228.921.421.427.32.579.686.579.991 0 .305-.152.671-.579.991a2.534 2.534 0 0 1-.921.42Z" />
-            <path fill-rule="evenodd" d="M12 2.25c-5.385 0-9.75 4.365-9.75 9.75s4.365 9.75 9.75 9.75 9.75-4.365 9.75-9.75S17.385 2.25 12 2.25ZM12.75 6a.75.75 0 0 0-1.5 0v.816a3.836 3.836 0 0 0-1.72.756c-.712.566-1.112 1.35-1.112 2.178 0 .829.4 1.612 1.113 2.178.502.4 1.102.647 1.719.756v2.978a2.536 2.536 0 0 1-.921-.421l-.879-.66a.75.75 0 0 0-.9 1.2l.879.66c.533.4 1.169.645 1.821.75V18a.75.75 0 0 0 1.5 0v-.81a4.124 4.124 0 0 0 1.821-.749c.745-.559 1.179-1.344 1.179-2.191 0-.847-.434-1.632-1.179-2.191a4.122 4.122 0 0 0-1.821-.75V8.354c.29.082.559.213.786.393l.415.33a.75.75 0 0 0 .933-1.175l-.415-.33a3.836 3.836 0 0 0-1.719-.755V6Z" clip-rule="evenodd" />
-          </svg>
-        </span>
-      </div>
-    </div>
-    <div class="flex flex-col items-center justify-center">
-      <p class="font-dm text-sm font-medium text-gray-600">Gastos Diarios</p>
-      <h4 class="text-xl font-bold text-red-500">- ${{ gastosResumen.gastosDiarios.totalCompra | number: '1.0-2' }}</h4>
-      <p class="text-sm text-gray-500">Cantidad: {{ gastosResumen.gastosDiarios.cantidad }}</p>
-    </div>
-  </div>
-
-  <div
-    class="relative flex flex-col items-center rounded-[10px] border-[1px] border-gray-200 bg-white bg-clip-border shadow-md shadow-[#F3F3F3] transform transition-transform duration-200 hover:shadow-lg hover:-translate-y-1 p-4 w-60">
-    <div class="flex h-[90px] w-auto items-center justify-center">
-      <div class="rounded-full bg-lightPrimary p-3">
-        <span class="flex items-center text-brand-500">
-          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" class="size-6">
-            <path d="M10.464 8.746c.227-.18.497-.311.786-.394v2.795a2.252 2.252 0 0 1-.786-.393c-.394-.313-.546-.681-.546-1.004 0-.323.152-.691.546-1.004ZM12.75 15.662v-2.824c.347.085.664.228.921.421.427.32.579.686.579.991 0 .305-.152.671-.579.991a2.534 2.534 0 0 1-.921.42Z" />
-            <path fill-rule="evenodd" d="M12 2.25c-5.385 0-9.75 4.365-9.75 9.75s4.365 9.75 9.75 9.75 9.75-4.365 9.75-9.75S17.385 2.25 12 2.25ZM12.75 6a.75.75 0 0 0-1.5 0v.816a3.836 3.836 0 0 0-1.72.756c-.712.566-1.112 1.35-1.112 2.178 0 .829.4 1.612 1.113 2.178.502.4 1.102.647 1.719.756v2.978a2.536 2.536 0 0 1-.921-.421l-.879-.66a.75.75 0 0 0-.9 1.2l.879.66c.533.4 1.169.645 1.821.75V18a.75.75 0 0 0 1.5 0v-.81a4.124 4.124 0 0 0 1.821-.749c.745-.559 1.179-1.344 1.179-2.191 0-.847-.434-1.632-1.179-2.191a4.122 4.122 0 0 0-1.821-.75V8.354c.29.082.559.213.786.393l.415.33a.75.75 0 0 0 .933-1.175l-.415-.33a3.836 3.836 0 0 0-1.719-.755V6Z" clip-rule="evenodd" />
-          </svg>
-        </span>
-      </div>
-    </div>
-    <div class="flex flex-col items-center justify-center">
-      <p class="font-dm text-sm font-medium text-gray-600">Gastos Anuales</p>
-      <h4 class="text-xl font-bold text-red-500">- ${{ gastosResumen.gastosAnuales.totalCompra | number: '1.0-2' }}</h4>
-      <p class="text-sm text-gray-500">Cantidad: {{ gastosResumen.gastosAnuales.cantidad }}</p>
-    </div>
+    <!-- Total Productos -->
+    <div class="w-1/3">
+      <h3 class="text-lg font-bold text-center mb-4">Productos</h3>
+      <div class="flex flex-col gap-2 items-center">
+        <!-- Contador de productos -->
+        <div class="relative flex flex-col items-center rounded-[10px] border-[1px] border-gray-200 bg-white bg-clip-border shadow-md shadow-[#F3F3F3] transform transition-transform duration-200 hover:shadow-lg hover:-translate-y-1 p-4 w-52">
+          <div class="flex h-[70px] w-auto items-center justify-center">
+            <div class="rounded-full bg-lightPrimary p-2">
+              <span class="flex items-center text-brand-500">
+                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" class="size-6">
+                  <path d="M3.375 3C2.339 3 1.5 3.84 1.5 4.875v.75c0 1.036.84 1.875 1.875 1.875h17.25c1.035 0 1.875-.84 1.875-1.875v-.75C22.5 3.839 21.66 3 20.625 3H3.375Z" />
+                  <path fill-rule="evenodd" d="m3.087 9 .54 9.176A3 3 0 0 0 6.62 21h10.757a3 3 0 0 0 2.995-2.824L20.913 9H3.087Zm6.163 3.75A.75.75 0 0 1 10 12h4a.75.75 0 0 1 0 1.5h-4a.75.75 0 0 1-.75-.75Z" clip-rule="evenodd" />
+                </svg>
+              </span>
+            </div>
+          </div>
+          <div class="flex flex-col items-center justify-center text-sm">
+            <p class="font-dm text-xs font-medium text-gray-600">Cantidad de productos</p>
+            <h4 class="text-lg font-bold">{{ totalProducts}}</h4>
+          </div>
+        </div>
   </div>
 </div>
