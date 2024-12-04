@@ -371,8 +371,10 @@ export class VentaComponent {
   }
 
   // Getter para saber si el botón "Siguiente" está desactivado
+  // Getter para saber si el botón "Siguiente" está desactivado
   get isNextButtonDisabled() {
-    return this.currentPage >= this.totalPages;
+    return this.currentPage >= this.totalPages || this.productosFiltrados.length < this.itemsPerPage;
   }
+
 
 }

@@ -21,56 +21,56 @@
       <h3 class="text-sm font-bold text-gray-600 font-rubik">Productos Disponibles</h3>
     </div>
 
-<!-- Spinner dentro de la lista de productos sin expandir la tabla -->
-<div *ngIf="isLoadingList" class="relative">
-  <div class="absolute inset-0 flex justify-center items-center bg-white bg-opacity-50 z-10">
-    <app-spinner></app-spinner>
-  </div>
-</div>
+    <!-- Spinner dentro de la lista de productos sin expandir la tabla -->
+    <div *ngIf="isLoadingList" class="relative">
+      <div class="absolute inset-0 flex justify-center items-center bg-white bg-opacity-50 z-10">
+        <app-spinner></app-spinner>
+      </div>
+    </div>
 
-<div *ngIf="!isLoadingList">
-    <table class="w-full text-left border-collapse">
-      <thead class="bg-gray-100 sticky top-0">
-        <tr class="text-center">
-          <th class="p-3 text-sm font-bold font-rubik">Nombre</th>
-          <th class="p-3 text-sm font-bold font-rubik">Precio Antiguo</th>
-          <th class="p-3 text-sm font-bold font-rubik">Stock</th>
-          <th class="p-3 text-sm font-bold font-rubik">Codigo de barra</th>
-          <th class="p-3 text-sm font-bold text-center font-rubik">Acción</th>
-        </tr>
-      </thead>
-      <tbody>
-        <!-- Mostrar mensaje si no hay productos -->
-        <tr *ngIf="productosPagina .length === 0" class="border-t hover:bg-gray-50">
-          <td colspan="4" class="p-3 text-center text-gray-500 font-rubik">
-            No hay productos disponibles.
-          </td>
-        </tr>
-        <tr *ngFor="let producto of productosPagina " class="border-t hover:bg-gray-50">
-          <td class="p-3 text-center" >{{ producto.title }}</td>
-          <td class="p-3 text-center">
-            <ng-container *ngIf="producto.oldestLotPrice && producto.stockTotal; else sinDatos">
-              $ {{ producto.oldestLotPrice | number:'1.0-0' }}
-            </ng-container>
-            <ng-template #sinDatos>
-              <span *ngIf="!producto.oldestLotPrice">Sin precio</span>
-            </ng-template>
-          </td>
-          <td class="p-3 text-center">{{ producto.stockTotal > 0 ? producto.stockTotal : 'Sin stock' }}</td>
-          <td class="p-3 text-center">{{ producto.barcode || 'Sin codigo de barra' }}</td>
-          <td class="p-3 text-center">
-            <button *ngIf="hayLotesDisponibles(producto)"
-              (click)="agregarAlCarrito(producto, obtenerLoteDisponible(producto))"
-              [disabled]="producto.stockTotal <= cantidadEnCarrito(producto) || !hayLotesDisponibles(producto)" class="px-4 py-2 bg-green-500 text-white rounded-lg
+    <div *ngIf="!isLoadingList">
+      <table class="w-full text-left border-collapse">
+        <thead class="bg-gray-100 sticky top-0">
+          <tr class="text-center">
+            <th class="p-3 text-sm font-bold font-rubik">Nombre</th>
+            <th class="p-3 text-sm font-bold font-rubik">Precio Antiguo</th>
+            <th class="p-3 text-sm font-bold font-rubik">Stock</th>
+            <th class="p-3 text-sm font-bold font-rubik">Codigo de barra</th>
+            <th class="p-3 text-sm font-bold text-center font-rubik">Acción</th>
+          </tr>
+        </thead>
+        <tbody>
+          <!-- Mostrar mensaje si no hay productos -->
+          <tr *ngIf="productosPagina .length === 0" class="border-t hover:bg-gray-50">
+            <td colspan="4" class="p-3 text-center text-gray-500 font-rubik">
+              No hay productos disponibles.
+            </td>
+          </tr>
+          <tr *ngFor="let producto of productosPagina " class="border-t hover:bg-gray-50">
+            <td class="p-3 text-center">{{ producto.title }}</td>
+            <td class="p-3 text-center">
+              <ng-container *ngIf="producto.oldestLotPrice && producto.stockTotal; else sinDatos">
+                $ {{ producto.oldestLotPrice | number:'1.0-0' }}
+              </ng-container>
+              <ng-template #sinDatos>
+                <span *ngIf="!producto.oldestLotPrice">Sin precio</span>
+              </ng-template>
+            </td>
+            <td class="p-3 text-center">{{ producto.stockTotal > 0 ? producto.stockTotal : 'Sin stock' }}</td>
+            <td class="p-3 text-center">{{ producto.barcode || 'Sin codigo de barra' }}</td>
+            <td class="p-3 text-center">
+              <button *ngIf="hayLotesDisponibles(producto)"
+                (click)="agregarAlCarrito(producto, obtenerLoteDisponible(producto))"
+                [disabled]="producto.stockTotal <= cantidadEnCarrito(producto) || !hayLotesDisponibles(producto)" class="px-4 py-2 bg-green-500 text-white rounded-lg
                      disabled:bg-gray-400 disabled:text-gray-800 disabled:cursor-not-allowed font-rubik">
-              <i class="fas fa-plus mr-1"></i>
-              Agregar
-            </button>
-          </td>
-        </tr>
-      </tbody>
-    </table>
-</div>
+                <i class="fas fa-plus mr-1"></i>
+                Agregar
+              </button>
+            </td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
 
     <!-- Botones de paginación -->
     <div class="flex justify-between items-center mt-6 font-rubik">
@@ -79,13 +79,10 @@
         <i class="fas fa-chevron-left mr-2"></i> Anterior
       </button>
 
-      <button (click)="nextPage()" [disabled]="productosPagina.length < 5"
-      class="mx-2 px-4 py-2 bg-[#76ABAE] text-white rounded-md disabled:opacity-50"
-      aria-label="Siguiente página">
-      Siguiente <i class="fas fa-chevron-right ml-2"></i>
-</button>
-
-
+      <button (click)="nextPage()" [disabled]="isNextButtonDisabled"
+        class="mx-2 px-4 py-2 bg-[#76ABAE] text-white rounded-md disabled:opacity-50" aria-label="Siguiente página">
+        Siguiente <i class="fas fa-chevron-right ml-2"></i>
+      </button>
 
     </div>
   </div>

@@ -15,7 +15,7 @@ export class VentaService {
   private loteApiUrl = `${environment.apiUrl}/lotes`; // URL para obtener lotes
   private authApiUrl = `${environment.apiUrl}/auth`; // URL para autenticación
 
-  constructor(private httpClient: HttpClient, private lotesService: LotesService) {}
+  constructor(private httpClient: HttpClient, private lotesService: LotesService) { }
 
   checkStatus(): Observable<any> {
     const token = localStorage.getItem('token');
@@ -47,11 +47,10 @@ export class VentaService {
     return this.httpClient.post<any>(`${environment.apiUrl}/ventas`, venta, {
       headers: this.getHeaders()
     })
-    .pipe(
-      catchError(this.handleError) // Manejo de errores
-    );
+      .pipe(
+        catchError(this.handleError) // Manejo de errores
+      );
   }
-
 
 
   getProducts(limit = 10, offset = 0): Observable<any> {
@@ -61,7 +60,6 @@ export class VentaService {
       .set('offset', offset.toString());
 
     return this.httpClient.get<any>(this.apiUrl, { headers, params }).pipe(
-      tap((response) => console.log('Respuesta de productos:', response)), // Log de respuesta
       map(response => ({
         products: response.data,  // Aquí almacenamos los productos
         hasMore: response.hasMore // Y aquí el valor de "hasMore"
@@ -75,7 +73,6 @@ export class VentaService {
               let lotes: Lote[] = loteResponse.lotes; // Obtenemos el arreglo de lotes
 
               // Log de lotes obtenidos
-              console.log('Lotes para el producto:', product.id, lotes);
 
               // Filtrar los lotes con stock disponible
               lotes = lotes.filter(lote => lote.stock > 0);
@@ -102,12 +99,6 @@ export class VentaService {
                 }
 
                 const oldestLotPrice = oldestLote ? oldestLote.precioVenta : null;
-
-                // Log del lote más reciente y más antiguo y sus precios
-                console.log('Lote más reciente para el producto', product.id, lastLote);
-                console.log('Precio del lote más reciente:', lastLotPrice);
-                console.log('Lote más antiguo para el producto', product.id, oldestLote);
-                console.log('Precio del lote más antiguo:', oldestLotPrice);
 
                 // Verificar que fechaCreacion no sea undefined
                 const fechaCreacion = product.fechaCreacion ? new Date(product.fechaCreacion) : new Date(); // Usamos la fecha actual si es undefined
@@ -140,18 +131,12 @@ export class VentaService {
           }))
         );
       }),
-      tap((finalResponse) => console.log('Productos con lotes:', finalResponse)),
       catchError((error) => {
         console.error('Error al obtener productos', error);
         return of({ products: [], hasMore: false }); // Retornar productos vacíos si hay error
       })
     );
   }
-
-
-
-
-
 
 
 
