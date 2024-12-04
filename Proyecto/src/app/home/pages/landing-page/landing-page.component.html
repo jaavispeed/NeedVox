@@ -59,21 +59,23 @@
     <ng-container [ngSwitch]="modalType">
       <ng-container *ngSwitchCase="'login'">
         <app-login-page
-        (closeModal)="closeModal()"
-        (onSuccess)="handleLoginSuccess()"
-        (onError)="showAlert('Error al iniciar sesión. Verifica tus credenciales.', 'error')"
-        (startLoading)="startLoading()"
-        (stopLoading)="stopLoading()"></app-login-page>
-
+        (openRegisterModal)="openModal('register')"
+          (closeModal)="closeModal()"
+          (onSuccess)="handleLoginSuccess()"
+          (onError)="showAlert('Error al iniciar sesión. Verifica tus credenciales.', 'error')"
+          (startLoading)="startLoading()"
+          (stopLoading)="stopLoading()"></app-login-page>
       </ng-container>
       <ng-container *ngSwitchCase="'register'">
         <app-register-page
+        (openLoginModal)="openModal('login')"
           (closeModal)="closeModal()"
           (onSuccess)="showAlert('Registro exitoso, por favor ingresa con tus credenciales', 'success')"
-          (onError)="showAlert('Error en el registro', 'error')"></app-register-page> <!-- Carga el componente de Registro -->
+          (onError)="showAlert('Error en el registro', 'error')"></app-register-page>
       </ng-container>
     </ng-container>
   </div>
+
 
   <!-- Componente de alerta -->
   <app-alert

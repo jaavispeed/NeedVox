@@ -21,6 +21,8 @@ export default class LoginPageComponent {
   @Output() onError = new EventEmitter<string>(); // Evento de error
   @Output() startLoading = new EventEmitter<void>();
   @Output() stopLoading = new EventEmitter<void>();
+  @Output() openRegisterModal = new EventEmitter<void>();  // Nuevo EventEmitter
+
 
   loginform = new FormGroup({
     email: new FormControl('', [Validators.required, Validators.email,Validators.pattern('^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$')]),
@@ -78,4 +80,9 @@ export default class LoginPageComponent {
   close() {
     this.closeModal.emit();
   }
+
+  goToRegister() {
+    this.openRegisterModal.emit(); // Emitir evento para abrir el modal de registro
+  }
+
 }

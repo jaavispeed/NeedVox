@@ -16,6 +16,8 @@ export default class RegisterPageComponent {
   @Output() closeModal = new EventEmitter<void>();
   @Output() onSuccess = new EventEmitter<void>(); // Evento para éxito
   @Output() onError = new EventEmitter<void>();   // Evento para error
+  @Output() openLoginModal = new EventEmitter<void>();  // Nuevo EventEmitter
+
   router = inject(Router);
   registerform: FormGroup;
   authService = inject(AuthService);
@@ -53,4 +55,10 @@ export default class RegisterPageComponent {
   close() {
     this.closeModal.emit();
   }
+
+
+  goToLogin() {
+    this.openLoginModal.emit(); // Emitir evento para abrir el modal de registro
+  }
+
 }
