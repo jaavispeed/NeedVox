@@ -5,6 +5,7 @@ import { UsuariosService } from '../admin/pages/totalusers/total-users/usuarios.
 import { FormsModule } from '@angular/forms';
 import { CommonModule } from '@angular/common';
 import { AlertComponent } from '../shared/pages/alert/alert.component';
+import { Router } from '@angular/router';
 
 @Component({
   selector: 'app-perfil',
@@ -21,7 +22,7 @@ export class PerfilComponent implements OnInit {
   errorMessage: string = '';
   isEditing: boolean = false; // Nueva variable para el estado de edición
 
-  constructor(private authService: AuthService, private usuariosService: UsuariosService) {}
+  constructor(private authService: AuthService, private usuariosService: UsuariosService, private router: Router) {}
 
   ngOnInit(): void {
     this.authService.getCurrentUser().subscribe(
@@ -38,10 +39,12 @@ export class PerfilComponent implements OnInit {
     if (this.user) {
       this.authService.updateProfile({ username: this.user.username, email: this.user.email }).subscribe(
         (updatedUser) => {
-          // Actualiza los datos de usuario en el componente después de la actualización exitosa
-          this.user = updatedUser;
+          this.user = updatedUser; // Actualiza los datos del usuario en el componente
           this.showAlert('Perfil actualizado exitosamente.', 'success');
           this.isEditing = false; // Cambiar el estado a no editar
+
+          // Recargar la página como F5
+          window.location.reload(); // Esta línea fue añadida
         },
         (error) => {
           console.error('Error al actualizar el perfil del usuario:', error);
@@ -50,6 +53,7 @@ export class PerfilComponent implements OnInit {
       );
     }
   }
+
 
   // Método para activar el modo edición
   enableEditMode(): void {
