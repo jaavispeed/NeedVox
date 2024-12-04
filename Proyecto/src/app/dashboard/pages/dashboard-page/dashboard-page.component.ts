@@ -32,9 +32,15 @@ export default class DashboardPageComponent implements OnInit {
     ventasAnuales: { total: 0, suma: 0 },
   };
 
+  gananciasResumen = {
+    gananciaDiaria: 0,
+    gananciaMensual: 0,
+    gananciaAnual: 0,
+  };
 
 
-  constructor(private dashboardService: DashboardService) {}
+
+  constructor(private dashboardService: DashboardService) { }
 
   ngOnInit(): void {
     this.obtenerNombreUsuario();
@@ -84,38 +90,36 @@ export default class DashboardPageComponent implements OnInit {
 
 
 
-// Actualiza la función para obtener los gastos
-obtenerGastos(): void {
-  this.setLoadingState(true); // Activar el spinner
+  // Actualiza la función para obtener los gastos
+  obtenerGastos(): void {
+    this.setLoadingState(true); // Activar el spinner
 
-  this.dashboardService.getGastos().subscribe(
-    (response) => {
-      // Asignar los valores de los gastos directamente desde la respuesta
-      this.gastosResumen = {
-        gastosDiarios: {
-          totalCompra: response.gastosDia.totalCompra || 0,
-          cantidad: response.gastosDia.cantidad || 0,
-        },
-        gastosMensuales: {
-          totalCompra: response.gastosMes.totalCompra || 0,
-          cantidad: response.gastosMes.cantidad || 0,
-        },
-        gastosAnuales: {
-          totalCompra: response.gastosAnio.totalCompra || 0,
-          cantidad: response.gastosAnio.cantidad || 0,
-        },
-      };
-
-      this.setLoadingState(false); // Desactivar el spinner después de obtener los gastos
-    },
-    (error) => {
-      console.error('Error al obtener los gastos:', error);
-      this.setLoadingState(false); // Desactivar el spinner si hay error
-    }
-  );
-}
-
-
+    this.dashboardService.getGastos().subscribe(
+      (response) => {
+        // Asignar los valores de los gastos directamente desde la respuesta
+        this.gastosResumen = {
+          gastosDiarios: {
+            totalCompra: response.gastosDia.totalCompra || 0,
+            cantidad: response.gastosDia.cantidad || 0,
+          },
+          gastosMensuales: {
+            totalCompra: response.gastosMes.totalCompra || 0,
+            cantidad: response.gastosMes.cantidad || 0,
+          },
+          gastosAnuales: {
+            totalCompra: response.gastosAnio.totalCompra || 0,
+            cantidad: response.gastosAnio.cantidad || 0,
+          },
+        };
+        this.calcularGanancias();
+        this.setLoadingState(false); // Desactivar el spinner después de obtener los gastos
+      },
+      (error) => {
+        console.error('Error al obtener los gastos:', error);
+        this.setLoadingState(false); // Desactivar el spinner si hay error
+      }
+    );
+  }
 
 
   obtenerVentasResumen(): void {
@@ -139,7 +143,7 @@ obtenerGastos(): void {
             suma: response.ventasAnuales?.suma || 0,
           },
         };
-
+        this.calcularGanancias();
         this.setLoadingState(false); // Desactivar el spinner
       },
       (error) => {
@@ -149,6 +153,20 @@ obtenerGastos(): void {
     );
   }
 
+// Calcula las ganancias basadas en las ventas y los gastos
+calcularGanancias(): void {
+  // Ganancia diaria
+  this.gananciasResumen.gananciaDiaria =
+    this.ventasResumen.ventasDiarias.suma - this.gastosResumen.gastosDiarios.totalCompra;
+
+  // Ganancia mensual
+  this.gananciasResumen.gananciaMensual =
+    this.ventasResumen.ventasMensuales.suma - this.gastosResumen.gastosMensuales.totalCompra;
+
+  // Ganancia anual
+  this.gananciasResumen.gananciaAnual =
+    this.ventasResumen.ventasAnuales.suma - this.gastosResumen.gastosAnuales.totalCompra;
+}
 
 
 }
