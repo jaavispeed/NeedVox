@@ -65,5 +65,10 @@ export default class NavbarComponent {
     }
   }
 
+  closeMenu(): void {
+    this.isUserMenuOpen = false; // Cierra el menú
+  }
+
+
 
 }

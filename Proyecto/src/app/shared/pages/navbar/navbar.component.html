@@ -4,8 +4,10 @@
       <!-- Código existente para el botón de menú móvil y el logo -->
       <div class="left-0">
         <!-- Logo SVG -->
-        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="h-8 w-8 text-[#EEEEEE]">
-          <path stroke-linecap="round" stroke-linejoin="round" d="M13.5 21v-7.5a.75.75 0 0 1 .75-.75h3a.75.75 0 0 1 .75.75V21m-4.5 0H2.36m11.14 0H18m0 0h3.64m-1.39 0V9.349M3.75 21V9.349m0 0a3.001 3.001 0 0 0 3.75-.615A2.993 2.993 0 0 0 9.75 9.75c.896 0 1.7-.393 2.25-1.016a2.993 2.993 0 0 0 2.25 1.016c.896 0 1.7-.393 2.25-1.015a3.001 3.001 0 0 0 3.75.614m-16.5 0a3.004 3.004 0 0 1-.621-4.72l1.189-1.19A1.5 1.5 0 0 1 5.378 3h13.243a1.5 1.5 0 0 1 1.06.44l1.19 1.189a3 3 0 0 1-.621 4.72M6.75 18h3.75a.75.75 0 0 0 .75-.75V13.5a.75.75 0 0 0-.75-.75H6.75a.75.75 0 0 0-.75.75v3.75c0 .414.336.75.75.75Z" />
+        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor"
+          class="h-8 w-8 text-[#EEEEEE]">
+          <path stroke-linecap="round" stroke-linejoin="round"
+            d="M13.5 21v-7.5a.75.75 0 0 1 .75-.75h3a.75.75 0 0 1 .75.75V21m-4.5 0H2.36m11.14 0H18m0 0h3.64m-1.39 0V9.349M3.75 21V9.349m0 0a3.001 3.001 0 0 0 3.75-.615A2.993 2.993 0 0 0 9.75 9.75c.896 0 1.7-.393 2.25-1.016a2.993 2.993 0 0 0 2.25 1.016c.896 0 1.7-.393 2.25-1.015a3.001 3.001 0 0 0 3.75.614m-16.5 0a3.004 3.004 0 0 1-.621-4.72l1.189-1.19A1.5 1.5 0 0 1 5.378 3h13.243a1.5 1.5 0 0 1 1.06.44l1.19 1.189a3 3 0 0 1-.621 4.72M6.75 18h3.75a.75.75 0 0 0 .75-.75V13.5a.75.75 0 0 0-.75-.75H6.75a.75.75 0 0 0-.75.75v3.75c0 .414.336.75.75.75Z" />
           <!-- SVG Path -->
         </svg>
       </div>
@@ -15,19 +17,24 @@
         <!-- Menú para usuarios regulares -->
         <div *ngIf="userRole.includes('user')" class="hidden sm:ml-6 sm:block">
           <div class="flex space-x-4">
-            <a routerLink="/index/dashboard" routerLinkActive="bg-gray-700 text-white" class="rounded-md px-3 py-2 text-sm font-medium text-[#EEEEEE] hover:bg-gray-700 hover:text-white">
+            <a routerLink="/index/dashboard" routerLinkActive="bg-gray-700 text-white"
+              class="rounded-md px-3 py-2 text-sm font-medium text-[#EEEEEE] hover:bg-gray-700 hover:text-white">
               Dashboard
             </a>
-            <a routerLink="/index/crud-productos" routerLinkActive="bg-gray-700 text-white" class="rounded-md px-3 py-2 text-sm font-medium text-[#EEEEEE] hover:bg-gray-700 hover:text-white">
+            <a routerLink="/index/crud-productos" routerLinkActive="bg-gray-700 text-white"
+              class="rounded-md px-3 py-2 text-sm font-medium text-[#EEEEEE] hover:bg-gray-700 hover:text-white">
               Productos
             </a>
-            <a routerLink="/index/venta" routerLinkActive="bg-gray-700 text-white" class="rounded-md px-3 py-2 text-sm font-medium text-[#EEEEEE] hover:bg-gray-700 hover:text-white">
+            <a routerLink="/index/venta" routerLinkActive="bg-gray-700 text-white"
+              class="rounded-md px-3 py-2 text-sm font-medium text-[#EEEEEE] hover:bg-gray-700 hover:text-white">
               Venta
             </a>
-            <a routerLink="/index/historial" routerLinkActive="bg-gray-700 text-white" class="rounded-md px-3 py-2 text-sm font-medium text-[#EEEEEE] hover:bg-gray-700 hover:text-white">
+            <a routerLink="/index/historial" routerLinkActive="bg-gray-700 text-white"
+              class="rounded-md px-3 py-2 text-sm font-medium text-[#EEEEEE] hover:bg-gray-700 hover:text-white">
               Historial
             </a>
-            <a routerLink="/index/compras" routerLinkActive="bg-gray-700 text-white" class="rounded-md px-3 py-2 text-sm font-medium text-[#EEEEEE] hover:bg-gray-700 hover:text-white">
+            <a routerLink="/index/compras" routerLinkActive="bg-gray-700 text-white"
+              class="rounded-md px-3 py-2 text-sm font-medium text-[#EEEEEE] hover:bg-gray-700 hover:text-white">
               Compras
             </a>
           </div>
@@ -36,22 +43,19 @@
         <!-- Sección exclusiva para el rol admin -->
         <div *ngIf="userRole.includes('admin')" class="hidden sm:ml-6 sm:block">
           <div class="flex space-x-4">
-            <a routerLink="/admin-dashboard"
-            routerLinkActive="bg-gray-700 text-white"
-            class="rounded-md px-3 py-2 text-sm font-medium text-[#EEEEEE] hover:bg-gray-700 hover:text-white transition-all duration-200">
-            Admin Dashboard
-         </a>
-         <a routerLink="/index/total-users"
-         routerLinkActive="bg-gray-700 text-white"
-         class="rounded-md px-3 py-2 text-sm font-medium text-[#EEEEEE] hover:bg-gray-700 hover:text-white transition-all duration-200">
-         Usuarios
-      </a>
-      <a routerLink="/index/total-productos"
-      routerLinkActive="bg-gray-700 text-white"
-      class="rounded-md px-3 py-2 text-sm font-medium text-[#EEEEEE] hover:bg-gray-700 hover:text-white transition-all duration-200">
-      Productos
-   </a>
-  </div>
+            <a routerLink="/admin-dashboard" routerLinkActive="bg-gray-700 text-white"
+              class="rounded-md px-3 py-2 text-sm font-medium text-[#EEEEEE] hover:bg-gray-700 hover:text-white transition-all duration-200">
+              Admin Dashboard
+            </a>
+            <a routerLink="/index/total-users" routerLinkActive="bg-gray-700 text-white"
+              class="rounded-md px-3 py-2 text-sm font-medium text-[#EEEEEE] hover:bg-gray-700 hover:text-white transition-all duration-200">
+              Usuarios
+            </a>
+            <a routerLink="/index/total-productos" routerLinkActive="bg-gray-700 text-white"
+              class="rounded-md px-3 py-2 text-sm font-medium text-[#EEEEEE] hover:bg-gray-700 hover:text-white transition-all duration-200">
+              Productos
+            </a>
+          </div>
         </div>
       </div>
 
@@ -62,20 +66,28 @@
 
         <div class="relative ml-3">
           <div>
-            <button type="button" (click)="toggleMenu()" class="relative flex rounded-full bg-black text-sm focus:outline-none" id="user-menu-button" aria-expanded="false" aria-haspopup="true">
+            <button type="button" (click)="toggleMenu()"
+              class="relative flex rounded-full bg-black text-sm focus:outline-none" id="user-menu-button"
+              aria-expanded="false" aria-haspopup="true">
               <span class="absolute -inset-1.5"></span>
               <span class="sr-only">Open user menu</span>
-              <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor" class="h-8 w-8 text-white">
-                <path d="M10 8a3 3 0 1 0 0-6 3 3 0 0 0 0 6ZM3.465 14.493a1.23 1.23 0 0 0 .41 1.412A9.957 9.957 0 0 0 10 18c2.31 0 4.438-.784 6.131-2.1.43-.333.604-.903.408-1.41a7.002 7.002 0 0 0-13.074.003Z" />
+              <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor"
+                class="h-8 w-8 text-white">
+                <path
+                  d="M10 8a3 3 0 1 0 0-6 3 3 0 0 0 0 6ZM3.465 14.493a1.23 1.23 0 0 0 .41 1.412A9.957 9.957 0 0 0 10 18c2.31 0 4.438-.784 6.131-2.1.43-.333.604-.903.408-1.41a7.002 7.002 0 0 0-13.074.003Z" />
               </svg>
             </button>
           </div>
 
           <!-- Menú de usuario -->
-          <div id="user-menu" class="absolute right-0 z-10 mt-2 w-48 origin-top-right rounded-md bg-white py-1 shadow-lg ring-1 ring-black ring-opacity-5 focus:outline-none"
-               [ngClass]="{'hidden': !isUserMenuOpen}" role="menu" aria-orientation="vertical" aria-labelledby="user-menu-button">
-            <a routerLink="/index/perfil" class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-200" role="menuitem" tabindex="-1">Perfil</a>
-            <button (click)="logout()" class="block w-full text-left px-4 py-2 text-sm text-gray-700 hover:bg-gray-200" role="menuitem" tabindex="-1" id="user-menu-item-2">Cerrar sesión</button>
+          <div id="user-menu"
+            class="absolute right-0 z-10 mt-2 w-48 origin-top-right rounded-md bg-white py-1 shadow-lg ring-1 ring-black ring-opacity-5 focus:outline-none"
+            [ngClass]="{'hidden': !isUserMenuOpen}" role="menu" aria-orientation="vertical"
+            aria-labelledby="user-menu-button">
+            <a routerLink="/index/perfil" (click)="closeMenu()"
+              class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-200" role="menuitem" tabindex="-1">Perfil</a>
+            <button (click)="logout()" class="block w-full text-left px-4 py-2 text-sm text-gray-700 hover:bg-gray-200"
+              role="menuitem" tabindex="-1" id="user-menu-item-2">Cerrar sesión</button>
           </div>
         </div>
       </div>
@@ -85,54 +97,47 @@
   <!-- Menú móvil -->
   <div class="sm:hidden" id="mobile-menu">
     <div class="space-y-1 px-2 pb-3 pt-2">
-      <a *ngIf="userRole.includes('user')" routerLink="/index/dashboard"
-         routerLinkActive="bg-gray-700 text-white"
-         class="block rounded-md bg-gray-700 px-3 py-2 text-base font-medium text-[#EEEEEE] hover:bg-gray-700 hover:text-white transition-all duration-200">
-         Dashboard
+      <a *ngIf="userRole.includes('user')" routerLink="/index/dashboard" routerLinkActive="bg-gray-700 text-white"
+        class="block rounded-md bg-gray-700 px-3 py-2 text-base font-medium text-[#EEEEEE] hover:bg-gray-700 hover:text-white transition-all duration-200">
+        Dashboard
       </a>
 
-      <a *ngIf="userRole.includes('user')" routerLink="/index/crud-productos"
-         routerLinkActive="bg-gray-700 text-white"
-         class="block rounded-md px-3 py-2 text-base font-medium text-[#EEEEEE] hover:bg-gray-700 hover:text-white transition-all duration-200">
-         Productos
+      <a *ngIf="userRole.includes('user')" routerLink="/index/crud-productos" routerLinkActive="bg-gray-700 text-white"
+        class="block rounded-md px-3 py-2 text-base font-medium text-[#EEEEEE] hover:bg-gray-700 hover:text-white transition-all duration-200">
+        Productos
       </a>
 
-      <a *ngIf="userRole.includes('user')" routerLink="/index/venta"
-         routerLinkActive="bg-gray-700 text-white"
-         class="block rounded-md px-3 py-2 text-base font-medium text-[#EEEEEE] hover:bg-gray-700 hover:text-white transition-all duration-200">
-         Venta
+      <a *ngIf="userRole.includes('user')" routerLink="/index/venta" routerLinkActive="bg-gray-700 text-white"
+        class="block rounded-md px-3 py-2 text-base font-medium text-[#EEEEEE] hover:bg-gray-700 hover:text-white transition-all duration-200">
+        Venta
       </a>
 
-      <a *ngIf="userRole.includes('user')" routerLink="/index/historial"
-         routerLinkActive="bg-gray-700 text-white"
-         class="block rounded-md px-3 py-2 text-base font-medium text-[#EEEEEE] hover:bg-gray-700 hover:text-white transition-all duration-200">
-         Historial
+      <a *ngIf="userRole.includes('user')" routerLink="/index/historial" routerLinkActive="bg-gray-700 text-white"
+        class="block rounded-md px-3 py-2 text-base font-medium text-[#EEEEEE] hover:bg-gray-700 hover:text-white transition-all duration-200">
+        Historial
       </a>
 
-      <a *ngIf="userRole.includes('user')" routerLink="/index/compras"
-         routerLinkActive="bg-gray-700 text-white"
-         class="block rounded-md px-3 py-2 text-base font-medium text-[#EEEEEE] hover:bg-gray-700 hover:text-white transition-all duration-200">
-         Compras
+      <a *ngIf="userRole.includes('user')" routerLink="/index/compras" routerLinkActive="bg-gray-700 text-white"
+        class="block rounded-md px-3 py-2 text-base font-medium text-[#EEEEEE] hover:bg-gray-700 hover:text-white transition-all duration-200">
+        Compras
       </a>
 
-      <a *ngIf="userRole.includes('admin')" routerLink="/admin-dashboard"
-         routerLinkActive="bg-gray-700 text-white"
-         class="block rounded-md px-3 py-2 text-base font-medium text-[#EEEEEE] hover:bg-gray-700 hover:text-white transition-all duration-200">
-         Admin Dashboard
+      <a *ngIf="userRole.includes('admin')" routerLink="/admin-dashboard" routerLinkActive="bg-gray-700 text-white"
+        class="block rounded-md px-3 py-2 text-base font-medium text-[#EEEEEE] hover:bg-gray-700 hover:text-white transition-all duration-200">
+        Admin Dashboard
       </a>
 
-      <a *ngIf="userRole.includes('admin')" routerLink="/index/total-users"
-         routerLinkActive="bg-gray-700 text-white"
-         class="block rounded-md px-3 py-2 text-base font-medium text-[#EEEEEE] hover:bg-gray-700 hover:text-white transition-all duration-200">
-         Usuarios
+      <a *ngIf="userRole.includes('admin')" routerLink="/index/total-users" routerLinkActive="bg-gray-700 text-white"
+        class="block rounded-md px-3 py-2 text-base font-medium text-[#EEEEEE] hover:bg-gray-700 hover:text-white transition-all duration-200">
+        Usuarios
       </a>
 
       <a *ngIf="userRole.includes('admin')" routerLink="/index/total-productos"
-         routerLinkActive="bg-gray-700 text-white"
-         class="block rounded-md px-3 py-2 text-base font-medium text-[#EEEEEE] hover:bg-gray-700 hover:text-white transition-all duration-200">
-         Productos
+        routerLinkActive="bg-gray-700 text-white"
+        class="block rounded-md px-3 py-2 text-base font-medium text-[#EEEEEE] hover:bg-gray-700 hover:text-white transition-all duration-200">
+        Productos
       </a>
+    </div>
   </div>
-</div>
 </nav>
 <router-outlet></router-outlet>
