@@ -13,6 +13,8 @@ import { NavbarService } from '../../services/navbar.service';
 export default class NavbarComponent {
   router = inject(Router);
   isUserMenuOpen = false; // Propiedad para controlar el menú de usuario
+  userName: string = '';
+
 
   userRole: string[] = [];
 
@@ -21,6 +23,7 @@ export default class NavbarComponent {
 
   ngOnInit(): void {
     this.obtenerRole();
+    this.obtenerNombreUsuario(); // Llamar para obtener el nombre del usuario
   }
 
   toggleMenu(): void {
@@ -69,6 +72,15 @@ export default class NavbarComponent {
     this.isUserMenuOpen = false; // Cierra el menú
   }
 
-
+  obtenerNombreUsuario(): void {
+    this.navbarService.checkStatus().subscribe(
+      (response) => {
+        this.userName = response.username; // Obtener el nombre del usuario
+      },
+      (error) => {
+        console.error('Error al verificar el estado del usuario:', error);
+      }
+    );
+  }
 
 }
