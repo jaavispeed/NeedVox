@@ -53,11 +53,11 @@
               $ {{ producto.oldestLotPrice | number:'1.0-0' }}
             </ng-container>
             <ng-template #sinDatos>
-              <span *ngIf="!producto.stockTotal && !producto.oldestLotPrice">Sin precio</span>
+              <span *ngIf="!producto.oldestLotPrice">Sin precio</span>
             </ng-template>
           </td>
-          <td class="p-3 text-center">{{ producto.stockTotal || 'Sin stock' }}</td>
-          <td class="p-3 text-center">{{producto.barcode}}</td>
+          <td class="p-3 text-center">{{ producto.stockTotal > 0 ? producto.stockTotal : 'Sin stock' }}</td>
+          <td class="p-3 text-center">{{ producto.barcode || 'Sin codigo de barra' }}</td>
           <td class="p-3 text-center">
             <button *ngIf="hayLotesDisponibles(producto)"
               (click)="agregarAlCarrito(producto, obtenerLoteDisponible(producto))"
