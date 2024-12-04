@@ -20,10 +20,11 @@ export default class DashboardPageComponent implements OnInit {
 
 
 
-  // Variables para mostrar los gastos
-  gastosMensuales: number = 0;
-  gastosDiarios: number = 0;
-  gastosAnuales: number = 0;
+  gastosResumen = {
+    gastosDiarios: { totalCompra: 0, cantidad: 0 },
+    gastosMensuales: { totalCompra: 0, cantidad: 0 },
+    gastosAnuales: { totalCompra: 0, cantidad: 0 },
+  };
 
   ventasResumen = {
     ventasDiarias: { total: 0, suma: 0 },
@@ -83,26 +84,38 @@ export default class DashboardPageComponent implements OnInit {
 
 
 
-  obtenerGastos(): void {
-    this.setLoadingState(true); // Activar el spinner
+// Actualiza la función para obtener los gastos
+obtenerGastos(): void {
+  this.setLoadingState(true); // Activar el spinner
+
+  this.dashboardService.getGastos().subscribe(
+    (response) => {
+      // Asignar los valores de los gastos directamente desde la respuesta
+      this.gastosResumen = {
+        gastosDiarios: {
+          totalCompra: response.gastosDia.totalCompra || 0,
+          cantidad: response.gastosDia.cantidad || 0,
+        },
+        gastosMensuales: {
+          totalCompra: response.gastosMes.totalCompra || 0,
+          cantidad: response.gastosMes.cantidad || 0,
+        },
+        gastosAnuales: {
+          totalCompra: response.gastosAnio.totalCompra || 0,
+          cantidad: response.gastosAnio.cantidad || 0,
+        },
+      };
+
+      this.setLoadingState(false); // Desactivar el spinner después de obtener los gastos
+    },
+    (error) => {
+      console.error('Error al obtener los gastos:', error);
+      this.setLoadingState(false); // Desactivar el spinner si hay error
+    }
+  );
+}
 
 
-    this.dashboardService.getGastos().subscribe(
-      (response) => {
-
-        // Asignar los valores de los gastos directamente desde la respuesta
-        this.gastosDiarios = response.gastosDia || 0;
-        this.gastosMensuales = response.gastosMes || 0;
-        this.gastosAnuales = response.gastosAnio || 0;
-
-        this.setLoadingState(false); // Desactivar el spinner después de obtener los gastos
-      },
-      (error) => {
-        console.error('Error al obtener los gastos:', error);
-        this.setLoadingState(false); // Desactivar el spinner si hay error
-      }
-    );
-  }
 
 
   obtenerVentasResumen(): void {
