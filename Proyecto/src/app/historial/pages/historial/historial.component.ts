@@ -23,6 +23,16 @@ export class HistorialComponent {
   paginaActual: number = 1;
   isLoading: boolean = false; // Para controlar la visualización del spinner
 
+  informacionDelDia: any = {
+    efectivo: 0,
+    debito: 0,
+    tarjeta: 0,
+    otro: 0,
+    totalProductos: 0,
+    totalPrecio: 0,
+    totalVentas: 0 // Inicializa totalVentas
+  };
+
 
   constructor(private historialService: HistorialService) { }
 
@@ -93,11 +103,11 @@ export class HistorialComponent {
     if (!this.fechaSeleccionada) {
       this.isLoading = true;
       console.log("No hay fecha seleccionada, cargando todas las ventas");
-      this.cargarVentas(); // Cargar todas las ventas si no hay filtro
+      this.cargarVentas();
     } else {
-      // Convertir la fecha seleccionada a un objeto Date
       const fechaFiltro = new Date(this.fechaSeleccionada);
-      const fechaFiltroFormateada = fechaFiltro.toISOString().split('T')[0]; // Formato YYYY-MM-DD
+      const fechaFiltroFormateada = fechaFiltro.toISOString().split('T')[0];
+
       console.log("Filtrando ventas para la fecha: ", fechaFiltroFormateada);
 
       this.historialService.getVentas().subscribe(
@@ -108,28 +118,63 @@ export class HistorialComponent {
             const fechaVenta = toZonedTime(new Date(venta.fecha), 'America/Santiago');
             const fechaVentaFormateada = format(fechaVenta, 'yyyy-MM-dd');
 
-
-            // Mostrar las fechas para depuración
             console.log(`Fecha venta: ${fechaVentaFormateada}, Fecha filtro: ${fechaFiltroFormateada}`);
-
-            return fechaVentaFormateada === fechaFiltroFormateada; // Comparar solo las fechas (sin horas)
-          })
-            .sort((a, b) => new Date(b.fecha).getTime() - new Date(a.fecha).getTime());
+            return fechaVentaFormateada === fechaFiltroFormateada;
+          }).sort((a, b) => new Date(b.fecha).getTime() - new Date(a.fecha).getTime());
 
           console.log("Ventas filtradas: ", this.ventas);
 
-          this.paginaActual = 1; // Reiniciar a la primera página después de filtrar
-          this.isLoading = false; // Detener el spinner
+          this.informacionDelDia = this.calcularResumenDelDia(this.ventas); // Calcular el resumen
+
+          this.paginaActual = 1;
+          this.isLoading = false;
         },
         (error) => {
           console.error('Error al obtener ventas por fecha', error);
-          this.isLoading = false; // Detener el spinner en caso de error
+          this.isLoading = false;
         }
       );
     }
   }
 
+  calcularResumenDelDia(ventas: Venta[]): any {
+    const resumen = {
+      efectivo: 0,
+      debito: 0,
+      tarjeta: 0,
+      otro: 0,
+      totalProductos: 0,
+      totalPrecio: 0,
+      totalVentas: 0 // Añadir el campo para contar las ventas
+    };
 
+    ventas.forEach((venta) => {
+      const totalVenta = typeof venta.total === 'number' ? venta.total : parseFloat(venta.total);
+
+      if (!isNaN(totalVenta)) {
+        resumen.totalProductos += this.obtenerCantidadTotal(venta.productos);
+        resumen.totalPrecio += totalVenta;
+        resumen.totalVentas += 1; // Incrementa el contador de ventas
+
+        switch (venta.metodo_pago) {
+          case 'EFECTIVO':
+            resumen.efectivo += totalVenta;
+            break;
+          case 'TRANSFERENCIA':
+            resumen.debito += totalVenta;
+            break;
+          case 'TARJETA':
+            resumen.tarjeta += totalVenta;
+            break;
+          case 'OTRO':
+            resumen.otro += totalVenta;
+            break;
+        }
+      }
+    });
+
+    return resumen;
+  }
 
   // Método que verifica si el día siguiente es válido
   esDiaSiguienteNoValido(): boolean {
@@ -143,15 +188,12 @@ export class HistorialComponent {
     return fechaSeleccionada >= fechaHoy; // Si la fecha seleccionada es hoy o después, deshabilitar el botón
   }
 
-
   navegarHoy(): void {
     this.isLoading = true;
     const hoy = new Date();
     this.fechaSeleccionada = hoy;  // Ahora es un objeto Date
     this.filtrarVentasPorFecha(); // Filtrar ventas por la fecha actual
   }
-
-
 
   cambiarDiaSiguiente(): void {
     this.isLoading = true;
@@ -169,12 +211,9 @@ export class HistorialComponent {
     this.filtrarVentasPorFecha();
   }
 
-
   obtenerCantidadTotal(productos: any[]): number {
     return productos.reduce((total, producto) => total + producto.cantidad, 0);
   }
-
-
 
   abrirModal(venta: any): void {
     this.ventaSeleccionada = venta;
