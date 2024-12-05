@@ -116,7 +116,6 @@
 
 </div>
 
-
 <!-- Modal para mostrar detalles de la venta -->
 <div *ngIf="ventaSeleccionada" class="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50 z-50">
   <div class="bg-white rounded-lg shadow-2xl p-8 max-w-lg w-full font-rubik">
@@ -125,8 +124,13 @@
       fechaSeleccionada | date: 'yyyy' }})
     </h3>
 
-    <!-- Resumen del Día -->
-    <div *ngIf="informacionDelDia.totalPrecio > 0" class="mb-6 space-y-4">
+    <!-- Condición para mostrar mensaje si no hay ventas -->
+    <div *ngIf="ventas.length === 0" class="text-center text-gray-500 mb-4">
+      No se han realizado ventas.
+    </div>
+
+    <!-- Resumen del Día (solo muestra si hay ventas) -->
+    <div *ngIf="ventas.length > 0 && informacionDelDia.totalPrecio > 0" class="mb-6 space-y-4">
       <!-- Total de Productos, Total Vendido y Cantidad Total de Ventas -->
       <div class="space-y-3">
         <p class="text-sm text-gray-600">Total de Productos Vendidos:
