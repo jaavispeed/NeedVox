@@ -40,7 +40,7 @@ export class VentaService {
     productos: {
       productId: string;
       cantidad: number;
-      ventaPrice: number;
+      ventaPrice: number;  // Aquí ahora usaremos el precio del producto, no de los lotes
     }[];
     metodo_pago: 'EFECTIVO' | 'TARJETA' | 'TRANSFERENCIA' | 'OTRO'; // Añadimos el campo metodo_pago
   }): Observable<any> {
@@ -53,6 +53,7 @@ export class VentaService {
   }
 
 
+
   getProducts(limit = 10, offset = 0): Observable<any> {
     const headers = this.getHeaders();
     const params = new HttpParams()
@@ -60,83 +61,47 @@ export class VentaService {
       .set('offset', offset.toString());
 
     return this.httpClient.get<any>(this.apiUrl, { headers, params }).pipe(
-      map(response => ({
-        products: response.data,  // Aquí almacenamos los productos
-        hasMore: response.hasMore // Y aquí el valor de "hasMore"
-      })),
-      switchMap((response) => {
-        const productObservables = response.products.map((product: Product) => {
-          const productId = product.id ?? ''; // Si id es undefined, asigna una cadena vacía (o algún otro valor predeterminado)
+      switchMap(response => {
+        // Aquí declaramos explícitamente el tipo de productos
+        const products: Product[] = response.data;  // Usamos el tipo Product para productos
 
-          return this.lotesService.getLotesByProduct(productId).pipe(
-            map((loteResponse) => {
-              let lotes: Lote[] = loteResponse.lotes; // Obtenemos el arreglo de lotes
+        // Filtramos para asegurarnos de que todos los ids sean cadenas
+        const productIds: string[] = products
+          .map(product => product.id)
+          .filter((id): id is string => id !== undefined);  // Filtramos undefined
 
-              // Log de lotes obtenidos
-
-              // Filtrar los lotes con stock disponible
-              lotes = lotes.filter(lote => lote.stock > 0);
-
-              if (lotes.length > 0) {
-                // Ordenar los lotes por fecha de creación (descendente) para obtener el más reciente
-                const sortedLotesDesc = [...lotes].sort((a, b) => new Date(b.fechaCreacion).getTime() - new Date(a.fechaCreacion).getTime());
-                const lastLote = sortedLotesDesc[0]; // El más reciente
-                const lastLotPrice = lastLote ? lastLote.precioVenta : null;
-
-                // Ordenar los lotes por fecha de creación (ascendente) para obtener el más antiguo
-                const sortedLotesAsc = [...lotes].sort((a, b) => new Date(a.fechaCreacion).getTime() - new Date(b.fechaCreacion).getTime());
-                let oldestLote = sortedLotesAsc[0]; // El más antiguo
-
-                // Si el lote más antiguo no tiene stock, buscamos el siguiente lote más antiguo con stock
-                if (oldestLote && oldestLote.stock <= 0) {
-                  // Buscar el siguiente lote más antiguo con stock
-                  for (let i = 1; i < sortedLotesAsc.length; i++) {
-                    if (sortedLotesAsc[i].stock > 0) {
-                      oldestLote = sortedLotesAsc[i];
-                      break;
-                    }
-                  }
-                }
-
-                const oldestLotPrice = oldestLote ? oldestLote.precioVenta : null;
-
-                // Verificar que fechaCreacion no sea undefined
-                const fechaCreacion = product.fechaCreacion ? new Date(product.fechaCreacion) : new Date(); // Usamos la fecha actual si es undefined
-
-                return {
-                  ...product,
-                  lastLotPrice: lastLotPrice,  // Añadir el precioVenta del último lote
-                  oldestLotPrice: oldestLotPrice,  // Añadir el precioVenta del primer (más antiguo) lote
-                  fechaCreacion: fechaCreacion,  // Convierte a objeto Date
-                  lotes: lotes  // Mantener los lotes en el producto
-                };
-              } else {
-                // Si no tiene lotes, asegurarnos de asignar null a lastLotPrice y oldestLotPrice, y lotes vacíos
-                return {
-                  ...product,
-                  lastLotPrice: null,
-                  oldestLotPrice: null,
-                  fechaCreacion: product.fechaCreacion ? new Date(product.fechaCreacion) : new Date(),
-                  lotes: []  // Asegurarse de que la propiedad 'lotes' esté vacía si no tiene lotes
-                };
-              }
-            })
-          );
-        });
-
-        return forkJoin(productObservables).pipe(
-          map(productsWithDates => ({
-            products: productsWithDates,
-            hasMore: response.hasMore,  // Seguimos pasando el "hasMore"
+        // Obtenemos los lotes para cada producto
+        return forkJoin(
+          productIds.map((productId: string) =>
+            this.httpClient.get<any>(`${this.loteApiUrl}/producto/${productId}`, { headers })
+              .pipe(
+                map(lotesResponse => {
+                  const product = products.find(product => product.id === productId);
+                  return product ? {
+                    ...product,  // Ahora product está tipado correctamente
+                    lotes: lotesResponse.lotes || []  // Añadimos los lotes al producto
+                  } : null;
+                })
+              )
+          )
+        ).pipe(
+          map((productsWithLotes) => ({
+            products: productsWithLotes.filter(product => product !== null),  // Filtramos los nulls si no se encuentra el producto
+            hasMore: response.hasMore
           }))
         );
       }),
       catchError((error) => {
-        console.error('Error al obtener productos', error);
-        return of({ products: [], hasMore: false }); // Retornar productos vacíos si hay error
+        console.error('Error al obtener productos o lotes', error);
+        return of({ products: [], hasMore: false });
       })
     );
   }
+
+
+
+
+
 
 
 

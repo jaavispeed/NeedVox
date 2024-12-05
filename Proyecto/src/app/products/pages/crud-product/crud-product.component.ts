@@ -42,7 +42,9 @@ export class CrudProductComponent implements OnInit {
     this.crudForm = new FormGroup({
       title: new FormControl('', [Validators.required, Validators.minLength(3)]),
       slug: new FormControl(''),
-      barcode: new FormControl(null)
+      barcode: new FormControl(null),
+      precioVenta: new FormControl(null, [Validators.required, Validators.min(1)]),  // Cambiado a FormControl
+
     });
   }
 
@@ -185,8 +187,15 @@ export class CrudProductComponent implements OnInit {
     };
 
     if (this.isEditing) {
-      // Si estamos editando un producto
-      this.productService.updateProduct(this.product.id!, productToSend).subscribe({
+      // Si estamos editando un producto, asegúrate de que el ID esté presente
+      if (!this.product.id) {
+        console.error('ID del producto no encontrado para la actualización');
+        this.isLoading = false;
+        return;
+      }
+
+      // Enviar la solicitud de actualización al servidor
+      this.productService.updateProduct(this.product.id, productToSend).subscribe({
         next: () => {
           this.onSuccess('Producto actualizado con éxito.', 'success');
           this.closeModal(); // Cerrar el modal después de actualizar
@@ -217,6 +226,7 @@ export class CrudProductComponent implements OnInit {
       });
     }
   }
+
 
 
 
@@ -271,15 +281,26 @@ export class CrudProductComponent implements OnInit {
   }
 
   editProduct(product: Product): void {
-    this.product = product;
+    if (!product.id) {
+      console.error('El producto no tiene un ID válido');
+      return; // Evita proceder si el ID no está presente
+    }
+
     this.isEditing = true;
+    this.isModalOpen = true;
+
+    // Cargar los datos del producto en el formulario
     this.crudForm.patchValue({
       title: product.title,
-      slug: product.slug,
-      barcode: product.barcode
+      precioVenta: product.precioVenta,  // Aquí le pasas el valor de precioVenta
+      barcode: product.barcode || ''     // Si no hay código de barras, se puede dejar vacío
     });
-    this.isModalOpen = true; // Abre el modal
+
+    // Asignar el ID del producto a this.product
+    this.product = { ...product };  // Aquí se asigna todo el producto, incluyendo el ID
   }
+
+
 
   onSearchTermChange(): void {
     // Filtrar todos los productos (no solo los actuales)

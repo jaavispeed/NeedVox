@@ -170,6 +170,9 @@ export class HistorialComponent {
   }
 
 
+  obtenerCantidadTotal(productos: any[]): number {
+    return productos.reduce((total, producto) => total + producto.cantidad, 0);
+  }
 
 
 

@@ -112,18 +112,6 @@
           </div>
         </div>
 
-        <!-- Precio de Venta -->
-        <div class="mb-4">
-          <label class="block text-sm font-medium text-gray-700">Precio de Venta:</label>
-          <input formControlName="precioVenta" type="number" placeholder="Precio de venta"
-            class="mt-1 block w-full p-2 border border-gray-300 rounded-md focus:ring-blue-500 focus:border-blue-500 font-rubik text-black shadow-sm" />
-          <div *ngIf="loteForm.get('precioVenta')?.invalid && loteForm.get('precioVenta')?.touched"
-            class="text-red-500 text-sm">
-            <div *ngIf="loteForm.get('precioVenta')?.errors?.['required']">Este campo es obligatorio.</div>
-            <div *ngIf="loteForm.get('precioVenta')?.errors?.['min']">Debe ser mayor a 0.</div>
-          </div>
-        </div>
-
         <!-- Stock -->
         <div class="mb-4">
           <label class="block text-sm font-medium text-gray-700">Stock:</label>
@@ -172,7 +160,6 @@
       <thead class="text-xs uppercase bg-gray-50 font-bold font-rubik">
         <tr>
           <th class="px-2 py-3 text-center">Precio de Compra</th>
-          <th class="px-2 py-3 text-center">Precio de Venta</th>
           <th class="px-2 py-3 text-center">Stock</th>
           <th class="px-2 py-3 text-center">Fecha de Caducidad</th>
         </tr>
@@ -180,7 +167,6 @@
       <tbody>
         <tr *ngFor="let lote of paginatedLotes" class="bg-white border-b">
           <td class="px-4 py-3 text-center font-medium text-black font-rubik">$ {{ lote.precioCompra }}</td>
-          <td class="px-4 py-3 text-center font-medium text-black font-rubik">$ {{ lote.precioVenta }}</td>
           <td class="px-4 py-3 text-center font-medium text-black font-rubik">{{ lote.stock }}</td>
           <td class="px-4 py-3 text-center font-medium text-black font-rubik">
             {{ lote.fechaCaducidad ? (lote.fechaCaducidad | date:'d \'de\' MMMM \'del\' y') : 'Sin fecha de caducidad'

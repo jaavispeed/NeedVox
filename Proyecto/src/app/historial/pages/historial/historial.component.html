@@ -1,7 +1,7 @@
 <div class="flex flex-col items-center justify-center w-full max-w-2xl mt-4 mx-auto">
 
-<!-- Contenedor de la fecha -->
-<div class="flex justify-center w-full mb-4">
+  <!-- Contenedor de la fecha -->
+  <div class="flex justify-center w-full mb-4">
     <div *ngIf="isLoading" class="fixed inset-0 flex items-center justify-center z-[1000] bg-white bg-opacity-50">
       <app-spinner></app-spinner>
     </div>
@@ -58,8 +58,12 @@
       <tbody>
         <tr *ngFor="let venta of getVentasParaMostrar(); let i = index" class="bg-white border-b">
           <td class="px-4 py-3 text-center font-medium text-black font-rubik">{{ obtenerNumeroVenta(i) }}</td>
-          <td class="px-4 py-3 text-center text-black font-rubik">{{ venta.productos.length }} Producto{{
-            venta.productos.length > 1 ? 's' : '' }}</td>
+          <!-- En lugar de usar venta.productos.length, usa una suma de las cantidades -->
+          <td class="px-4 py-3 text-center text-black font-rubik">
+            {{ obtenerCantidadTotal(venta.productos) }} Producto{{ obtenerCantidadTotal(venta.productos) > 1 ? 's' : ''
+            }}
+          </td>
+
           <td class="px-4 py-3 text-center text-black font-rubik">{{ formatCurrency(venta.total) }}</td>
           <td class="px-4 py-1 text-center text-black font-rubik rounded-sm capitalize"
             [ngClass]="getColorMetodoPago(venta.metodo_pago)">

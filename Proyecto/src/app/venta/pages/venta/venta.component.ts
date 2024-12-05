@@ -76,34 +76,28 @@ export class VentaComponent {
   }
 
   cargarProductos() {
-    this.isLoadingList = true; // Activar spinner mientras carga
+    this.isLoadingList = true;
     const offset = (this.currentPage - 1) * this.itemsPerPage; // Calcular el offset
 
     this.ventaService.getProducts(this.itemsPerPage, offset).subscribe(
       (response) => {
+        console.log("Respuesta del servidor:", response); // Verificar la respuesta completa
         const productos: Product[] = response.products;
 
-        // Ordenar productos por stock de lotes
         productos.forEach((producto: Product) => {
-          producto.lotes = producto.lotes || [];
-          if (producto.lotes.length > 0) {
-            producto.lotes.sort((a, b) => b.stock - a.stock); // Ordenar lotes por stock
-          }
-        });
+          console.log("Producto cargado:", producto.title);
+          console.log("Lotes disponibles para este producto:", producto.lotes); // Verifica los lotes
 
-        // Ordenar productos por stock del lote principal
-        productos.sort((a, b) => {
-          const stockA = a.lotes?.[0]?.stock || 0;
-          const stockB = b.lotes?.[0]?.stock || 0;
-          return stockB - stockA;
+          // Si no hay lotes, añadir un log para ver el problema
+          if (!producto.lotes || producto.lotes.length === 0) {
+            console.log(`No hay lotes disponibles para el producto ${producto.title}`);
+          }
         });
 
         this.productosFiltrados = productos;
 
-        // Calcular el total de páginas según el número de productos
+        // Calcular el total de páginas
         this.totalPages = Math.ceil(this.productosFiltrados.length / this.itemsPerPage);
-
-        // Verificar si hay más productos para cargar
         this.hasMoreProducts = productos.length === this.itemsPerPage;
       },
       (error) => {
@@ -111,9 +105,12 @@ export class VentaComponent {
         console.error("Error al obtener los productos:", error);
       }
     ).add(() => {
-      this.isLoadingList = false; // Desactivar spinner después de cargar
+      this.isLoadingList = false;
     });
   }
+
+
+
 
 
   nextPage() {
@@ -169,19 +166,22 @@ export class VentaComponent {
   agregarAlCarrito(producto: Product, lote: any) {
     let loteAgregado = false;
 
-    // Verificar explícitamente que 'lotes' no es undefined
+    // Verificar que 'lotes' no sea undefined
     if (producto.lotes && producto.lotes.length > 0) {
       for (let i = 0; i < producto.lotes.length; i++) {
         const loteActual = producto.lotes[i];
 
+        // Buscar si el lote ya existe en el carrito
         const itemEnCarrito = this.carrito.find(item => item.product.id === producto.id && item.lote.id === loteActual.id);
         if (itemEnCarrito) {
+          // Si ya está en el carrito, verificar que no exceda el stock
           if (itemEnCarrito.cantidad < loteActual.stock) {
-            itemEnCarrito.cantidad++;
+            itemEnCarrito.cantidad++; // Incrementar cantidad
             loteAgregado = true;
             break;
           }
         } else {
+          // Si no está en el carrito, agregarlo si hay stock
           if (loteActual.stock > 0) {
             this.carrito.push({ product: producto, lote: loteActual, cantidad: 1 });
             loteAgregado = true;
@@ -197,6 +197,7 @@ export class VentaComponent {
 
     this.actualizarTotal();
   }
+
 
 
 
@@ -217,9 +218,23 @@ export class VentaComponent {
 
   actualizarTotal() {
     this.totalPrecio = this.carrito.reduce((total, item) => {
-      return total + (item.lote.precioVenta * item.cantidad); // Precio específico de cada lote
+      // Usamos el precio del producto (precioVenta)
+      const precioProducto = item.product.precioVenta;  // Precio del producto
+
+      // Verificar si el precioVenta está definido
+      if (precioProducto !== undefined) {
+        return total + (precioProducto * item.cantidad);  // Calculamos el total
+      } else {
+        // Si no tiene precioVenta, puedes decidir cómo manejarlo
+        console.warn('Producto sin precioVenta', item.product);
+        return total;  // No añadir nada si no tiene precio
+      }
     }, 0);
   }
+
+
+
+
 
   procesarVenta() {
     // Verificar si el carrito está vacío
@@ -315,8 +330,10 @@ export class VentaComponent {
   }
 
   hayLotesDisponibles(producto: Product): boolean {
-    return producto.lotes?.some(lote => lote.stock > 0) || false;
+    // Verifica si hay lotes con stock disponible
+    return producto.lotes?.some(lote => lote.stock > 0) || producto.stockTotal > 0;
   }
+
 
   obtenerLoteDisponible(producto: Product): Lote | undefined {
     return producto.lotes?.find(lote => lote.stock > 0);

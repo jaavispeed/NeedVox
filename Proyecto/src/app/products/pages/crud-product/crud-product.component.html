@@ -30,12 +30,12 @@
       </div>
 
       <!-- Tabla de productos, visible solo cuando no se está cargando -->
-      <table *ngIf="!isLoadingList"  class="w-full text-sm text-left text-black shadow-md sm:rounded-lg">
+      <table *ngIf="!isLoadingList" class="w-full text-sm text-left text-black shadow-md sm:rounded-lg">
         <thead class="text-xs uppercase bg-gray-50">
           <tr>
             <th scope="col" class="px-2 py-3 font-bold font-rubik text-center">Producto</th>
             <th scope="col" class="px-2 py-3 font-bold font-rubik text-center">Stock Total</th>
-            <th scope="col" class="px-2 py-3 font-bold font-rubik text-center">Precio Venta Reciente</th>
+            <th scope="col" class="px-2 py-3 font-bold font-rubik text-center">Precio Venta</th>
             <th scope="col" class="px-2 py-3 font-bold font-rubik text-center">Código de Barras</th>
             <th scope="col" class="px-2 py-3 font-bold font-rubik text-center">Fecha de Creación</th>
             <th scope="col" class="px-2 py-3 font-bold font-rubik text-center"><span class="sr-only">Acciones</span>
@@ -47,8 +47,10 @@
             <td class="px-4 py-3 text-center font-medium text-black font-rubik">{{ product.title }}</td>
             <td class="px-4 py-3 text-center text-black font-rubik">{{ product.stockTotal !== null && product.stockTotal
               !== undefined ? product.stockTotal : 0 }}</td>
-            <td class="px-4 py-3 text-center text-black font-rubik">{{ product.lastLotPrice !== null ? '$' +
-              product.lastLotPrice : 'Sin Precio' }}</td>
+            <td class="px-4 py-3 text-center text-black font-rubik">
+              {{ product.precioVenta !== null ? '$' + product.precioVenta : 'Sin Precio' }}
+            </td>
+
             <td class="px-4 py-3 text-center text-black font-rubik">{{ product.barcode || 'Sin código de barras' }}</td>
             <td class="px-4 py-3 text-center text-black font-rubik">{{ product.fechaCreacion }}</td>
             <td class="px-4 py-3 text-center flex justify-center space-x-2">
@@ -68,23 +70,23 @@
       </table>
 
       <!-- Condición para mostrar el mensaje de "No hay productos" solo cuando no haya productos y no se esté cargando -->
-<div *ngIf="!isLoadingList && products.length === 0" class="mt-4 flex items-center justify-center p-2">
-  <p class="text-base font-light text-black font-rubik">No hay productos agregados aún.</p>
-</div>
+      <div *ngIf="!isLoadingList && products.length === 0" class="mt-4 flex items-center justify-center p-2">
+        <p class="text-base font-light text-black font-rubik">No hay productos agregados aún.</p>
+      </div>
 
 
       <div class="flex justify-between mt-4 ">
         <!-- Botón anterior en la esquina izquierda -->
         <button (click)="previousPage()" [disabled]="currentPage === 1 || !paginatedProducts.length"
-        class="mx-2 px-4 py-2 bg-[#76ABAE] text-white rounded-md disabled:opacity-50" aria-label="Página anterior">
-        <i class="fas fa-chevron-left mr-2"></i> Anterior
-      </button>
+          class="mx-2 px-4 py-2 bg-[#76ABAE] text-white rounded-md disabled:opacity-50" aria-label="Página anterior">
+          <i class="fas fa-chevron-left mr-2"></i> Anterior
+        </button>
 
         <!-- Botón siguiente en la esquina derecha -->
         <button (click)="nextPage()" [disabled]="paginatedProducts.length < 10"
-    class="mx-2 px-4 py-2 bg-[#76ABAE] text-white rounded-md disabled:opacity-50" aria-label="Siguiente página">
-    Siguiente <i class="fas fa-chevron-right ml-2"></i>
-  </button>
+          class="mx-2 px-4 py-2 bg-[#76ABAE] text-white rounded-md disabled:opacity-50" aria-label="Siguiente página">
+          Siguiente <i class="fas fa-chevron-right ml-2"></i>
+        </button>
       </div>
 
     </div>
@@ -124,16 +126,37 @@
                 menos 3 caracteres.</div>
             </div>
           </div>
+
+          <div class="mb-4">
+            <label class="block text-sm font-medium text-gray-700">Precio de Venta:</label>
+            <input type="number" formControlName="precioVenta" placeholder="Precio de venta"
+              class="mt-1 block w-full p-2 border border-gray-300 rounded-md focus:ring-blue-500 focus:border-blue-500 font-rubik text-black"
+              min="1" />
+            <div
+              *ngIf="crudForm.get('precioVenta')?.invalid && (crudForm.get('precioVenta')?.touched || crudForm.get('precioVenta')?.dirty)">
+              <div *ngIf="crudForm.get('precioVenta')?.errors?.['required']" class="text-red-600">El precio es
+                obligatorio.</div>
+              <div *ngIf="crudForm.get('precioVenta')?.errors?.['min']" class="text-red-600">El precio debe ser mayor o
+                igual a 1.</div>
+              <div *ngIf="crudForm.get('precioVenta')?.errors?.['pattern']" class="text-red-600">El precio debe ser un
+                número entero.</div>
+            </div>
+          </div>
+
+
+
           <div class="mb-4">
             <label class="block text-sm font-medium text-gray-700">Código de Barras:</label>
             <input type="text" formControlName="barcode" placeholder="Código de barras (opcional)"
               class="mt-1 block w-full p-2 border border-gray-300 rounded-md focus:ring-blue-500 focus:border-blue-500 font-rubik text-black" />
           </div>
           <div class="flex justify-end">
-            <button type="submit"
-              class="inline-flex items-center px-4 py-2 bg-green-600 text-white font-light font-rubik rounded-md shadow hover:bg-green-700 focus:outline-none focus:ring-2 focus:ring-gray-500 transition duration-300 transform hover:scale-105">
+            <button type="submit" [disabled]="crudForm.invalid || isLoading"
+              class="inline-flex items-center px-4 py-2 bg-green-600 text-white font-light font-rubik rounded-md shadow hover:bg-green-700 focus:outline-none focus:ring-2 focus:ring-gray-500 transition duration-300 transform hover:scale-105 disabled:bg-gray-300 disabled:text-gray-500 disabled:cursor-not-allowed">
               <i class="fas fa-save mr-1"></i> {{ isEditing ? 'Actualizar' : 'Crear' }}
             </button>
+
+
 
             <button (click)="closeModal()" type="button"
               class="inline-flex items-center px-4 py-2 bg-gray-300 text-black font-light font-rubik rounded-md shadow hover:bg-gray-400 focus:outline-none focus:ring-2 focus:ring-gray-500 transition duration-300 transform hover:scale-105 ml-2">

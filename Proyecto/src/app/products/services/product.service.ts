@@ -22,7 +22,6 @@ export class ProductService {
     });
   }
 
-
   getProducts(limit = 1000, offset = 0): Observable<any> {
     const headers = this.getHeaders();
     const params = new HttpParams()
@@ -37,23 +36,16 @@ export class ProductService {
       })),
       switchMap((response) => {
         const productObservables = response.products.map((product: Product) => {
-          const productId = product.id ?? ''; // Si id es undefined, asigna una cadena vacía (o algún otro valor predeterminado)
-
-          return this.lotesService.getLotesByProduct(productId).pipe(
+          return this.lotesService.getLotesByProduct(product.id ?? '').pipe(
             map((loteResponse) => {
               const lotes: Lote[] = loteResponse.lotes; // Obtenemos el arreglo de lotes
 
-              // Obtener el precio de venta más reciente
-              const lastLote = lotes.sort((a, b) => new Date(b.fechaCreacion).getTime() - new Date(a.fechaCreacion).getTime())[0];
-              const lastLotPrice = lastLote ? lastLote.precioVenta : null;
-
-              // Verificar que fechaCreacion no sea undefined
-              const fechaCreacion = product.fechaCreacion ? new Date(product.fechaCreacion) : new Date(); // Usamos la fecha actual si es undefined
+              // Aquí ya no se hace el cálculo del precio más reciente
+              // Solo agregamos el producto tal como está
 
               return {
                 ...product,
-                lastLotPrice: lastLotPrice, // Añadir el precioVenta del último lote
-                fechaCreacion: fechaCreacion // Convierte a objeto Date
+                fechaCreacion: product.fechaCreacion ? new Date(product.fechaCreacion) : new Date(), // Usamos la fecha actual si es undefined
               };
             })
           );
@@ -75,6 +67,7 @@ export class ProductService {
   }
 
 
+
   // Obtener todos los productos como admin
   getProductsAdmin(limit = 10, offset = 0): Observable<any[]> {
     const headers = this.getHeaders();
@@ -88,6 +81,7 @@ export class ProductService {
   // Crear un producto
   createProduct(productData: {
     title: string;
+    precioVenta: number; // Ahora precioVenta es obligatorio
     slug?: string; // Opcional, si se genera automáticamente en el backend
     barcode?: string | null; // Opcional
   }): Observable<any> {
@@ -104,6 +98,7 @@ export class ProductService {
   // Actualizar un producto
   updateProduct(id: string, productData: {
     title: string;
+    precioVenta: number; // Asegúrate de que precioVenta esté en el DTO
     slug?: string; // Opcional
     barcode?: string | null; // Opcional
   }): Observable<any> {

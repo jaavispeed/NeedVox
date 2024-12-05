@@ -46,7 +46,6 @@ export class ComprasComponent implements OnInit {
   constructor(private productService: ProductService, private loteService: LotesService) {
     this.loteForm = new FormGroup({
       precioCompra: new FormControl(0, [Validators.required, Validators.min(1)]),
-      precioVenta: new FormControl(0, [Validators.required, Validators.min(1)]),
       stock: new FormControl(0, [Validators.required, Validators.min(1)]),
       fechaCaducidad: new FormControl(null), // Valor inicial como null
       productId: new FormControl('')
@@ -201,7 +200,6 @@ export class ComprasComponent implements OnInit {
   resetLoteForm(): void {
     this.loteForm.reset({
       precioCompra: 0,
-      precioVenta: 0,
       stock: 0,
       fechaCaducidad: null,
       productId: ''

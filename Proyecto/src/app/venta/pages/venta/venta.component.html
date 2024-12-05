@@ -33,7 +33,7 @@
         <thead class="bg-gray-100 sticky top-0">
           <tr class="text-center">
             <th class="p-3 text-sm font-bold font-rubik">Nombre</th>
-            <th class="p-3 text-sm font-bold font-rubik">Precio Antiguo</th>
+            <th class="p-3 text-sm font-bold font-rubik">Precio Venta</th>
             <th class="p-3 text-sm font-bold font-rubik">Stock</th>
             <th class="p-3 text-sm font-bold font-rubik">Codigo de barra</th>
             <th class="p-3 text-sm font-bold text-center font-rubik">Acción</th>
@@ -49,26 +49,30 @@
           <tr *ngFor="let producto of productosPagina " class="border-t hover:bg-gray-50">
             <td class="p-3 text-center">{{ producto.title }}</td>
             <td class="p-3 text-center">
-              <ng-container *ngIf="producto.oldestLotPrice && producto.stockTotal; else sinDatos">
-                $ {{ producto.oldestLotPrice | number:'1.0-0' }}
+              <ng-container *ngIf="producto.precioVenta; else sinDatos">
+                $ {{ producto.precioVenta | number:'1.0-0' }}
               </ng-container>
               <ng-template #sinDatos>
-                <span *ngIf="!producto.oldestLotPrice">Sin precio</span>
+                <span *ngIf="!producto.precioVenta">Sin precio</span>
               </ng-template>
             </td>
+
             <td class="p-3 text-center">{{ producto.stockTotal > 0 ? producto.stockTotal : 'Sin stock' }}</td>
             <td class="p-3 text-center">{{ producto.barcode || 'Sin codigo de barra' }}</td>
             <td class="p-3 text-center">
-              <button (click)="agregarAlCarrito(producto, obtenerLoteDisponible(producto))"
-                [disabled]="producto.stockTotal <= cantidadEnCarrito(producto) || !hayLotesDisponibles(producto)"
-                [ngClass]="{
+              <button
+  (click)="agregarAlCarrito(producto, obtenerLoteDisponible(producto))"
+  [disabled]="producto.stockTotal <= cantidadEnCarrito(producto) || !hayLotesDisponibles(producto)"
+  [ngClass]="{
     'bg-green-500': producto.stockTotal > 0 && hayLotesDisponibles(producto),
     'bg-gray-400': producto.stockTotal <= 0 || !hayLotesDisponibles(producto),
     'disabled:text-gray-800': producto.stockTotal <= 0 || !hayLotesDisponibles(producto)
-  }" class="px-4 py-2 text-white rounded-lg disabled:cursor-not-allowed font-rubik">
-                <i class="fas fa-plus mr-1"></i>
-                Agregar
-              </button>
+  }"
+  class="px-4 py-2 text-white rounded-lg disabled:cursor-not-allowed font-rubik"
+>
+  <i class="fas fa-plus mr-1"></i> Agregar
+</button>
+
 
             </td>
           </tr>
@@ -121,7 +125,7 @@
         <tr *ngFor="let item of carrito" class="border-t hover:bg-gray-50">
           <td class="p-3">{{ item.product.title }}</td>
           <td class="p-3">{{ item.cantidad }}</td>
-          <td class="p-3">$ {{ item.lote.precioVenta | number:'1.0-0' }}</td>
+          <td class="p-3">$ {{ item.product.precioVenta | number:'1.0-0' }}</td>
           <td class="p-3 text-center">
             <button (click)="eliminarDelCarrito(item)"
               class="px-4 py-2 bg-red-500 text-white rounded-lg hover:bg-red-600 inline-flex items-center justify-center">
