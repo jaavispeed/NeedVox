@@ -96,14 +96,17 @@ export class ComprasComponent implements OnInit {
 
   filterProducts(): void {
     if (this.searchTerm) {
+      const searchTermLower = this.searchTerm.toLowerCase();
       this.filteredProducts = this.products.filter(product =>
-        product.title?.toLowerCase().includes(this.searchTerm.toLowerCase())
+        (product.title?.toLowerCase().includes(searchTermLower) ||
+         product.barcode?.toLowerCase().includes(searchTermLower))
       );
     } else {
       this.filteredProducts = [...this.products];
     }
     this.currentPage = 1;
   }
+
 
 
 
