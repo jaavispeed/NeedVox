@@ -25,7 +25,7 @@ export class HistorialComponent {
 
   informacionDelDia: any = {
     efectivo: 0,
-    debito: 0,
+    transferencia: 0,
     tarjeta: 0,
     otro: 0,
     totalProductos: 0,
@@ -140,7 +140,7 @@ export class HistorialComponent {
   calcularResumenDelDia(ventas: Venta[]): any {
     const resumen = {
       efectivo: 0,
-      debito: 0,
+      transferencia: 0,
       tarjeta: 0,
       otro: 0,
       totalProductos: 0,
@@ -161,7 +161,7 @@ export class HistorialComponent {
             resumen.efectivo += totalVenta;
             break;
           case 'TRANSFERENCIA':
-            resumen.debito += totalVenta;
+            resumen.transferencia += totalVenta;
             break;
           case 'TARJETA':
             resumen.tarjeta += totalVenta;
