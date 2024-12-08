@@ -29,42 +29,18 @@ export class ProductService {
       .set('offset', offset.toString());
 
     return this.httpClient.get<any>(this.apiUrl, { headers, params }).pipe(
-      tap((response) => console.log('Respuesta de productos:', response)), // Log de respuesta
+      tap((response) => console.log('Respuesta de productos:', response)),
       map(response => ({
-        products: response.data,  // Aquí almacenamos los productos
-        hasMore: response.hasMore // Y aquí el valor de "hasMore"
+        products: response.data,  // Solo los productos
+        hasMore: response.hasMore // Indicador de más resultados
       })),
-      switchMap((response) => {
-        const productObservables = response.products.map((product: Product) => {
-          return this.lotesService.getLotesByProduct(product.id ?? '').pipe(
-            map((loteResponse) => {
-              const lotes: Lote[] = loteResponse.lotes; // Obtenemos el arreglo de lotes
-
-              // Aquí ya no se hace el cálculo del precio más reciente
-              // Solo agregamos el producto tal como está
-
-              return {
-                ...product,
-                fechaCreacion: product.fechaCreacion ? new Date(product.fechaCreacion) : new Date(), // Usamos la fecha actual si es undefined
-              };
-            })
-          );
-        });
-
-        return forkJoin(productObservables).pipe(
-          map(productsWithDates => ({
-            products: productsWithDates,
-            hasMore: response.hasMore,  // Seguimos pasando el "hasMore"
-          }))
-        );
-      }),
-      tap((finalResponse) => console.log('Productos con lotes:', finalResponse)),
       catchError((error) => {
         console.error('Error al obtener productos', error);
-        return of({ products: [], hasMore: false }); // Retornar productos vacíos si hay error
+        return of({ products: [], hasMore: false }); // Respuesta por defecto en caso de error
       })
     );
   }
+
 
 
 
