@@ -74,19 +74,15 @@ export class VentaComponent {
 
   cargarProductos() {
     this.isLoadingList = true;
-    const offset = (this.currentPage - 1) * this.itemsPerPage; // Calcular el offset
+    const offset = (this.currentPage - 1) * this.itemsPerPage;
 
     this.ventaService.getProducts(this.itemsPerPage, offset).subscribe(
       (response) => {
-        console.log("Respuesta del servidor:", response); // Verificar la respuesta completa
+        console.log("Respuesta del servidor:", response);
         const productos: Product[] = response.products;
 
-        productos.forEach((producto: Product) => {
-
-          // Si no hay lotes, añadir un log para ver el problema
-          if (!producto.lotes || producto.lotes.length === 0) {
-          }
-        });
+        // Ordenar los productos por stockTotal (de mayor a menor)
+        productos.sort((a, b) => b.stockTotal - a.stockTotal); // Ordena de mayor a menor
 
         this.productosFiltrados = productos;
 
@@ -102,6 +98,8 @@ export class VentaComponent {
       this.isLoadingList = false;
     });
   }
+
+
 
 
   nextPage() {
