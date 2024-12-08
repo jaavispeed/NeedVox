@@ -34,11 +34,8 @@ export class VentaComponent {
   totalPages: number = 1;
 
 
-
   isLoading: boolean = false; // Para controlar la visualización del spinner
   isLoadingList: boolean = false; // Para controlar la visualización del spinner
-
-
 
 
   // Propiedades para el modal
@@ -107,9 +104,6 @@ export class VentaComponent {
   }
 
 
-
-
-
   nextPage() {
     if (this.currentPage < this.totalPages) {
       this.currentPage++;  // Avanzar a la siguiente página
@@ -121,7 +115,6 @@ export class VentaComponent {
       this.currentPage--;  // Retroceder a la página anterior
     }
   }
-
 
 
   filtrarProductos() {
@@ -143,12 +136,13 @@ export class VentaComponent {
     );
 
     if (productoEncontrado) {
-      if (productoEncontrado.lotes && productoEncontrado.lotes.length > 0) {
-        const loteSeleccionado = productoEncontrado.lotes[0]; // Elegir el primer lote disponible
+      // Verificar si hay lotes disponibles o stock global
+      if ((productoEncontrado.lotes && productoEncontrado.lotes.length > 0) || productoEncontrado.stockTotal > 0) {
+        const loteSeleccionado = productoEncontrado.lotes?.find(lote => lote.stock > 0) || null;
         this.agregarAlCarrito(productoEncontrado, loteSeleccionado);
       } else {
-        this.errorMessage = "No hay lotes disponibles para este producto.";
-        console.log("No hay lotes disponibles para este producto.");
+        this.errorMessage = "No hay stock disponible para este producto.";
+        console.log("No hay stock disponible para este producto.");
       }
 
       this.searchTerm = '';
@@ -159,6 +153,7 @@ export class VentaComponent {
       console.log("Producto no encontrado.");
     }
   }
+
   agregarAlCarrito(producto: Product, lote: any) {
     let loteAgregado = false;
 
@@ -213,10 +208,6 @@ export class VentaComponent {
       }
     });
   }
-
-
-
-
 
 
   eliminarDelCarrito(item: { product: Product; lote: any; cantidad: number }) {

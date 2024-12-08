@@ -1,8 +1,7 @@
 import { HttpClient, HttpHeaders, HttpErrorResponse, HttpParams } from '@angular/common/http';
 import { Injectable } from '@angular/core';
-import { forkJoin, Observable, of, throwError } from 'rxjs';
-import { catchError, map, switchMap, tap } from 'rxjs/operators';
-import { Product } from '../../products/models/product.model';
+import { Observable, of, throwError } from 'rxjs';
+import { catchError, map, tap } from 'rxjs/operators';
 import { Lote, LoteResponse } from '../../compras/models/lotes.models';
 import { LotesService } from '../../compras/services/compras.service';
 import { environment } from '../../../environments/environment.prod';
@@ -73,7 +72,6 @@ export class VentaService {
   }
 
 
-
   // Obtener todos los lotes
   getLotes(): Observable<Lote[]> {
     return this.httpClient.get<Lote[]>(this.loteApiUrl, { headers: this.getHeaders() })
@@ -99,45 +97,29 @@ export class VentaService {
   }
 
 
+  // Obtener lotes de un producto
+  getLotesByProduct(productId: string): Observable<LoteResponse> {
+    const lotesUrl = `${this.loteApiUrl}/producto/${productId}`;
+    return this.httpClient.get<LoteResponse>(lotesUrl, { headers: this.getHeaders() }).pipe(
+      tap(response => {
+        console.log('Lotes obtenidos para el producto:', response);
 
-// Obtener lotes de un producto
-getLotesByProduct(productId: string): Observable<LoteResponse> {
-  const lotesUrl = `${this.loteApiUrl}/producto/${productId}`;
-  return this.httpClient.get<LoteResponse>(lotesUrl, { headers: this.getHeaders() }).pipe(
-    tap(response => {
-      console.log('Lotes obtenidos para el producto:', response);
+        if (Array.isArray(response.lotes)) {
+          response.lotes.forEach(lote => {
+            console.log('Lote:', lote);
 
-      if (Array.isArray(response.lotes)) {
-        response.lotes.forEach(lote => {
-          console.log('Lote:', lote);
-
-          // Acceder correctamente a la propiedad 'product' en lugar de 'producto'
-          if (lote.producto && lote.producto.title) {
-            console.log(`Lote ID: ${lote.id}, Stock: ${lote.stock}, Producto: ${lote.producto.title}`);
-          } else {
-            console.error('El lote no tiene un producto asignado o el producto no tiene título:', lote);
-          }
-        });
-      } else {
-        console.error('La respuesta no contiene un arreglo de lotes:', response);
-      }
-    }),
-    catchError(this.handleError)
-  );
-}
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
+            // Acceder correctamente a la propiedad 'product' en lugar de 'producto'
+            if (lote.producto && lote.producto.title) {
+              console.log(`Lote ID: ${lote.id}, Stock: ${lote.stock}, Producto: ${lote.producto.title}`);
+            } else {
+              console.error('El lote no tiene un producto asignado o el producto no tiene título:', lote);
+            }
+          });
+        } else {
+          console.error('La respuesta no contiene un arreglo de lotes:', response);
+        }
+      }),
+      catchError(this.handleError)
+    );
+  }
 }
