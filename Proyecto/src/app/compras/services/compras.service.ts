@@ -68,6 +68,7 @@ getLotesByProduct(productId: string): Observable<{ lotes: Lote[]; stockTotal: nu
     catchError(this.handleError<{ lotes: Lote[]; stockTotal: number }>('getLotesByProduct', { lotes: [], stockTotal: 0 }))
   );
 }
+//error
 
 
   // Manejo de errores
