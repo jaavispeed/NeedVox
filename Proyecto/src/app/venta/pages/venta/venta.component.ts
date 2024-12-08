@@ -85,12 +85,9 @@ export class VentaComponent {
         const productos: Product[] = response.products;
 
         productos.forEach((producto: Product) => {
-          console.log("Producto cargado:", producto.title);
-          console.log("Lotes disponibles para este producto:", producto.lotes); // Verifica los lotes
 
           // Si no hay lotes, añadir un log para ver el problema
           if (!producto.lotes || producto.lotes.length === 0) {
-            console.log(`No hay lotes disponibles para el producto ${producto.title}`);
           }
         });
 
