@@ -22,6 +22,8 @@ export class HistorialComponent {
   ventasPorPagina: number = 10;
   paginaActual: number = 1;
   isLoading: boolean = false; // Para controlar la visualización del spinner
+  productoSeleccionado: any | null = null;
+
 
   informacionDelDia: any = {
     efectivo: 0,
@@ -222,6 +224,18 @@ export class HistorialComponent {
   cerrarModal(): void {
     this.ventaSeleccionada = null;
   }
+
+  abrirModalProducto(venta: Venta): void {
+    // Asignar todos los productos de la venta seleccionada a la variable productoSeleccionado
+    this.productoSeleccionado = venta.productos;
+  }
+
+
+  cerrarModalProducto() {
+    this.productoSeleccionado = null;
+  }
+
+
 
   getVentasParaMostrar(): Venta[] {
     const inicio = (this.paginaActual - 1) * this.ventasPorPagina;

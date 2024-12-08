@@ -69,11 +69,12 @@
             {{ (venta.fecha ? (venta.fecha | date: 'HH:mm') : 'Hora no disponible') }}
           </td>
           <td class="px-4 py-3 text-center flex justify-center space-x-2">
-            <button
+            <button (click)="abrirModalProducto(venta)"
               class="inline-flex items-center px-4 py-2 bg-[#76ABAE] text-white font-light font-rubik rounded-md shadow hover:bg-[#5b9892] focus:outline-none focus:ring-2 focus:ring-gray-500 transition duration-300 transform hover:scale-105">
               <i class="fas fa-info-circle mr-1"></i> Info
             </button>
           </td>
+
         </tr>
       </tbody>
     </table>
@@ -191,5 +192,27 @@
         <i class="fas fa-times mr-2"></i> Cerrar
       </button>
     </div>
+  </div>
+</div>
+
+<!-- Modal para mostrar detalles del producto -->
+<div *ngIf="productoSeleccionado" class="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50 z-50">
+  <div class="bg-white rounded-lg shadow-2xl p-8 max-w-lg w-full font-rubik">
+    <h3 class="text-xl font-semibold text-gray-800 mb-4">
+      Información de los Productos
+    </h3>
+
+    <ul class="mt-4">
+      <!-- Recorremos todos los productos en productoSeleccionado -->
+      <li *ngFor="let producto of productoSeleccionado" class="border-b py-2">
+        <p class="text-black"><strong>Producto:</strong> {{ producto.product.title }}</p>
+        <p class="text-black"><strong>Cantidad:</strong> {{ producto.cantidad }}</p>
+        <p class="text-black"><strong>Precio de Venta:</strong> {{ formatCurrency(producto.ventaPrice) }}</p>
+      </li>
+    </ul>
+
+    <button (click)="cerrarModalProducto()" class="mt-4 bg-red-500 text-white px-4 py-2 rounded flex items-center">
+      <i class="fas fa-times mr-1"></i> Cerrar
+    </button>
   </div>
 </div>
