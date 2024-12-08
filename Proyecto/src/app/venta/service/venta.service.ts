@@ -3,7 +3,7 @@ import { Injectable } from '@angular/core';
 import { forkJoin, Observable, of, throwError } from 'rxjs';
 import { catchError, map, switchMap, tap } from 'rxjs/operators';
 import { Product } from '../../products/models/product.model';
-import { Lote } from '../../compras/models/lotes.models';
+import { Lote, LoteResponse } from '../../compras/models/lotes.models';
 import { LotesService } from '../../compras/services/compras.service';
 import { environment } from '../../../environments/environment.prod';
 
@@ -61,47 +61,16 @@ export class VentaService {
       .set('offset', offset.toString());
 
     return this.httpClient.get<any>(this.apiUrl, { headers, params }).pipe(
-      switchMap(response => {
-        // Aquí declaramos explícitamente el tipo de productos
-        const products: Product[] = response.data;  // Usamos el tipo Product para productos
-
-        // Filtramos para asegurarnos de que todos los ids sean cadenas
-        const productIds: string[] = products
-          .map(product => product.id)
-          .filter((id): id is string => id !== undefined);  // Filtramos undefined
-
-        // Obtenemos los lotes para cada producto
-        return forkJoin(
-          productIds.map((productId: string) =>
-            this.httpClient.get<any>(`${this.loteApiUrl}/producto/${productId}`, { headers })
-              .pipe(
-                map(lotesResponse => {
-                  const product = products.find(product => product.id === productId);
-                  return product ? {
-                    ...product,  // Ahora product está tipado correctamente
-                    lotes: lotesResponse.lotes || []  // Añadimos los lotes al producto
-                  } : null;
-                })
-              )
-          )
-        ).pipe(
-          map((productsWithLotes) => ({
-            products: productsWithLotes.filter(product => product !== null),  // Filtramos los nulls si no se encuentra el producto
-            hasMore: response.hasMore
-          }))
-        );
-      }),
+      map(response => ({
+        products: response.data,  // Solo los productos
+        hasMore: response.hasMore  // Indicador de más productos
+      })),
       catchError((error) => {
-        console.error('Error al obtener productos o lotes', error);
-        return of({ products: [], hasMore: false });
+        console.error('Error al obtener productos', error);
+        return of({ products: [], hasMore: false }); // Retorna productos vacíos si ocurre un error
       })
     );
   }
-
-
-
-
-
 
 
 
@@ -124,7 +93,51 @@ export class VentaService {
         `El servidor respondió con el código ${error.status}, ` +
         `detalle: ${error.error}`);
     }
-    // Retornar un observable con un mensaje de error
+    // Imprimir más detalles para depurar
+    console.error('Error completo:', error);
     return throwError('Algo salió mal; por favor intente nuevamente más tarde.');
   }
+
+
+
+// Obtener lotes de un producto
+getLotesByProduct(productId: string): Observable<LoteResponse> {
+  const lotesUrl = `${this.loteApiUrl}/producto/${productId}`;
+  return this.httpClient.get<LoteResponse>(lotesUrl, { headers: this.getHeaders() }).pipe(
+    tap(response => {
+      console.log('Lotes obtenidos para el producto:', response);
+
+      if (Array.isArray(response.lotes)) {
+        response.lotes.forEach(lote => {
+          console.log('Lote:', lote);
+
+          // Acceder correctamente a la propiedad 'product' en lugar de 'producto'
+          if (lote.producto && lote.producto.title) {
+            console.log(`Lote ID: ${lote.id}, Stock: ${lote.stock}, Producto: ${lote.producto.title}`);
+          } else {
+            console.error('El lote no tiene un producto asignado o el producto no tiene título:', lote);
+          }
+        });
+      } else {
+        console.error('La respuesta no contiene un arreglo de lotes:', response);
+      }
+    }),
+    catchError(this.handleError)
+  );
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 }

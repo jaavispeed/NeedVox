@@ -8,7 +8,7 @@ export interface Lote {
   stock: number;            // Stock disponible del lote
   fechaCaducidad: Date;     // Fecha de caducidad del lote
   fechaCreacion: string;    // Fecha de creación del lote (puede ser string según tu DTO)
-  product: Product;         // Producto asociado al lote
+  producto: Product;         // Producto asociado al lote
   user?: { id: string };    // Usuario asociado, opcional si es necesario
 }
 
@@ -18,4 +18,9 @@ export interface LoteCreate {
   stock: number;            // Stock disponible del lote
   fechaCaducidad: string;    // Fecha de caducidad del lote en formato string
   productId: string;        // ID del producto asociado (en lugar del objeto Product)
+}
+
+export interface LoteResponse {
+  lotes: Lote[];
+  stockTotal: number;
 }

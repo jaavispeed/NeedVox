@@ -159,41 +159,62 @@ export class VentaComponent {
       console.log("Producto no encontrado.");
     }
   }
-
   agregarAlCarrito(producto: Product, lote: any) {
     let loteAgregado = false;
 
-    // Verificar que 'lotes' no sea undefined
-    if (producto.lotes && producto.lotes.length > 0) {
-      for (let i = 0; i < producto.lotes.length; i++) {
-        const loteActual = producto.lotes[i];
+    const productId = producto.id ?? '';
 
-        // Buscar si el lote ya existe en el carrito
-        const itemEnCarrito = this.carrito.find(item => item.product.id === producto.id && item.lote.id === loteActual.id);
-        if (itemEnCarrito) {
-          // Si ya está en el carrito, verificar que no exceda el stock
-          if (itemEnCarrito.cantidad < loteActual.stock) {
-            itemEnCarrito.cantidad++; // Incrementar cantidad
-            loteAgregado = true;
-            break;
+    this.ventaService.getLotesByProduct(productId).subscribe({
+      next: (lotesResponse) => {
+        console.log("Lotes obtenidos para el producto con ID:", productId);
+        console.log("Lotes en la respuesta:", lotesResponse);
+
+        const lotesDisponibles = lotesResponse.lotes || [];
+
+        if (lotesDisponibles.length > 0) {
+          for (const loteActual of lotesDisponibles) {
+            console.log("Lote actual:", loteActual);
+
+            if (loteActual.stock && loteActual.stock > 0) {
+              const itemEnCarrito = this.carrito.find(
+                item => item.product.id === producto.id && item.lote.id === loteActual.id
+              );
+
+              if (itemEnCarrito) {
+                if (itemEnCarrito.cantidad < loteActual.stock) {
+                  itemEnCarrito.cantidad++;
+                  loteAgregado = true;
+                  console.log(`Cantidad incrementada en el carrito para el lote: ${loteActual.id}`);
+                  break;
+                }
+              } else {
+                this.carrito.push({ product: producto, lote: loteActual, cantidad: 1 });
+                loteAgregado = true;
+                console.log(`Lote agregado al carrito: ${loteActual.id}`);
+                break;
+              }
+            } else {
+              console.log(`No hay stock disponible para el lote: ${loteActual.id}`);
+            }
           }
         } else {
-          // Si no está en el carrito, agregarlo si hay stock
-          if (loteActual.stock > 0) {
-            this.carrito.push({ product: producto, lote: loteActual, cantidad: 1 });
-            loteAgregado = true;
-            break;
-          }
+          console.log('No hay lotes disponibles para este producto.');
         }
+
+        if (!loteAgregado) {
+          alert('No puedes agregar más productos. Stock máximo alcanzado o agotado.');
+        }
+
+        this.actualizarTotal();
+      },
+      error: (err) => {
+        console.error('Error al obtener los lotes:', err);
+        alert('Hubo un problema al obtener los lotes. Intenta nuevamente.');
       }
-    }
-
-    if (!loteAgregado) {
-      alert('No puedes agregar más productos. Stock máximo alcanzado o agotado.');
-    }
-
-    this.actualizarTotal();
+    });
   }
+
+
 
 
 
@@ -228,9 +249,6 @@ export class VentaComponent {
       }
     }, 0);
   }
-
-
-
 
 
   procesarVenta() {
@@ -330,6 +348,7 @@ export class VentaComponent {
     // Verifica si hay lotes con stock disponible
     return producto.lotes?.some(lote => lote.stock > 0) || producto.stockTotal > 0;
   }
+
 
 
   obtenerLoteDisponible(producto: Product): Lote | undefined {
