@@ -32,7 +32,7 @@
       <table class="w-full text-left border-collapse">
         <thead class="bg-gray-100 sticky top-0">
           <tr class="text-center">
-            <th class="p-3 text-sm font-bold font-rubik">Nombre</th>
+            <th class="p-3 text-sm font-bold font-rubik text-left">Nombre</th>
             <th class="p-3 text-sm font-bold font-rubik">Precio Venta</th>
             <th class="p-3 text-sm font-bold font-rubik">Stock</th>
             <th class="p-3 text-sm font-bold font-rubik">Codigo de barra</th>
@@ -47,7 +47,7 @@
             </td>
           </tr>
           <tr *ngFor="let producto of productosPagina " class="border-t hover:bg-gray-50">
-            <td class="p-3 text-center">{{ producto.title }}</td>
+            <td class="p-3 text-left">{{ producto.title }}</td>
             <td class="p-3 text-center">
               <ng-container *ngIf="producto.precioVenta; else sinDatos">
                 $ {{ producto.precioVenta | number:'1.0-0' }}
