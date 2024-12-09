@@ -5,7 +5,7 @@ describe('Página de inicio', () => {
     cy.visit('http://localhost:4200/home');
   });
   describe('Pruebas de registro y login', () => {
-    const username = 'cesar@gmail.com';
+    const username = 'usuario_ihvsy@gmail.com';
     const password = '123456';
 
    it('debería registrarse y luego iniciar sesión con las mismas credenciales', () => {
