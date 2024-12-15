@@ -19,30 +19,30 @@ describe('Página de inicio', () => {
     // Verificar si el login fue exitoso
     cy.contains('Bienvenido').should('exist'); // Cambia el mensaje si es diferente
     cy.wait(8000); // Espera 1 segundo (1000 ms)
-    cy.contains('Productos').click();
+    cy.contains('Compra').click();
     //Dirigir a crear productos
-    cy.contains('Agregar Producto').click();
+    cy.contains('Agregar Compra').click();
     // Verificar que los campos están vacíos antes de comenzar
-    cy.get('[formControlName="title"]').should('have.value', '');
+    cy.get('[formControlName="Precio de Compra"]').should('have.value', '');
 
-    cy.get('[formControlName="precioVenta"]').should('have.value', '');
-    cy.get('[formControlName="barcode"]').should('have.value', '');
+    cy.get('[formControlName="stock"]').should('have.value', '');
+    cy.get('[formControlName="fecha de Caducidad"]').should('have.value', '');
 
     // Rellenar el formulario
-    cy.get('[formControlName="title"]').type('Producto de Prueba 2');
-    cy.get('[formControlName="precioVenta"]').type('1000');
-    cy.get('[formControlName="barcode"]').type('2222222');
+    cy.get('[formControlName="Precio de Compra"]').type('3000');
+    cy.get('[formControlName="stock"]').type('20');
+    cy.get('[formControlName="fecha de caducidad"]').type('');
 
     // Verificar que los valores se ingresaron correctamente
-    cy.get('[formControlName="title"]').should('have.value', 'Producto de Prueba 2');
-    cy.get('[formControlName="precioVenta"]').should('have.value', '1000');
-    cy.get('[formControlName="barcode"]').should('have.value', '2222222');
+    cy.get('[formControlName="Precio de Compra"]').should('have.value', '3000');
+    cy.get('[formControlName="stock"]').should('have.value', '20');
+    cy.get('[formControlName="Fecha de caducidad"]').should('have.value', '');
 
     // Enviar el formulario
     cy.get('button[type="submit"]').click();
 
     // Verificar que se muestra el mensaje de éxito
-    cy.contains('Producto creado con éxito').should('be.visible');
+    cy.contains('Compra agregada con éxito').should('be.visible');
 
   });
 });

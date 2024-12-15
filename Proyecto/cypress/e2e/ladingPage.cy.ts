@@ -1,6 +1,6 @@
 describe('Página de inicio', () => {
   it('debería mostrar el título, las secciones y los botones correctos', () => {
-    cy.visit('http://localhost:4200/home'); // Asegúrate de que tu aplicación esté corriendo
+    cy.visit('https://needvox.com/home'); // Asegúrate de que tu aplicación esté corriendo
 
     // Verificar que el título principal esté presente
     cy.contains('Needvox').should('exist');

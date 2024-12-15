@@ -1,7 +1,7 @@
 describe('Página de inicio', () => {
   beforeEach(() => {
     // Visitar la página de inicio antes de cada prueba
-    cy.visit('http://localhost:4200/home');
+    cy.visit('https://needvox.com/home');
   });
   describe('Pruebas de registro y login', () => {
     const username = 'usuario_ihvsy@gmail.com';
@@ -22,7 +22,9 @@ describe('Página de inicio', () => {
     cy.contains('Venta').click();
     cy.wait(500); // Espera 1 segundo (1000 ms)
     cy.contains('Agregar').click();
-    cy.contains('Agregar Venta').click();
+    cy.contains('Finalizar Venta').click();
+    cy.contains('Efectivo').click();
+    cy.contains('Confirmar Venta').click();
 
 
 

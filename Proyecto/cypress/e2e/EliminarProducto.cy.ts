@@ -2,7 +2,7 @@
 describe('Página de inicio', () => {
   beforeEach(() => {
     // Visitar la página de inicio antes de cada prueba
-    cy.visit('http://localhost:4200/home');
+    cy.visit('https://needvox.com/home');
   });
   describe('Pruebas de registro y login', () => {
     const username = 'usuario_ihvsy@gmail.com';
